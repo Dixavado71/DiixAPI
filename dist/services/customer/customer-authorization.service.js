@@ -4,8 +4,6 @@ exports.CustomerAuthorizationService = void 0;
 const client_1 = require("@prisma/client");
 const repositories_1 = require("../../repositories");
 const phone_1 = require("../../utils/phone");
-const logger_1 = require("../../utils/logger");
-const logger = (0, logger_1.getLogger)().child({ module: 'customer-authorization' });
 /**
  * CustomerAuthorizationService
  *

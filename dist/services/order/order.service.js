@@ -1,27 +1,24 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderService = void 0;
-const database_js_1 = require("../../config/database.js");
-const order_repository_js_1 = require("../../repositories/order.repository.js");
-const cart_repository_js_1 = require("../../repositories/cart.repository.js");
-const product_repository_js_1 = require("../../repositories/product.repository.js");
-const store_settings_repository_js_1 = require("../../repositories/store-settings.repository.js");
-const customer_authorization_service_js_1 = require("../customer/customer-authorization.service.js");
-const order_state_machine_js_1 = require("./order-state-machine.js");
-const logger_js_1 = __importDefault(require("../../utils/logger.js"));
+const database_1 = require("../../config/database");
+const order_repository_1 = require("../../repositories/order.repository");
+const cart_repository_1 = require("../../repositories/cart.repository");
+const product_repository_1 = require("../../repositories/product.repository");
+const store_settings_repository_1 = require("../../repositories/store-settings.repository");
+const customer_authorization_service_1 = require("../customer/customer-authorization.service");
+const order_state_machine_1 = require("./order-state-machine");
+const logger_1 = require("../../utils/logger");
 class OrderService {
     orderRepository;
     cartRepository;
     productRepository;
     storeSettingsRepository;
     constructor() {
-        this.orderRepository = new order_repository_js_1.OrderRepository(database_js_1.prisma);
-        this.cartRepository = new cart_repository_js_1.CartRepository(database_js_1.prisma);
-        this.productRepository = new product_repository_js_1.ProductRepository(database_js_1.prisma);
-        this.storeSettingsRepository = new store_settings_repository_js_1.StoreSettingsRepository(database_js_1.prisma);
+        this.orderRepository = new order_repository_1.OrderRepository(database_1.prisma);
+        this.cartRepository = new cart_repository_1.CartRepository(database_1.prisma);
+        this.productRepository = new product_repository_1.ProductRepository(database_1.prisma);
+        this.storeSettingsRepository = new store_settings_repository_1.StoreSettingsRepository(database_1.prisma);
     }
     /**
      * Generate unique order number
@@ -42,11 +39,12 @@ class OrderService {
             paymentMethod,
             deliveryMethod,
         };
-        logger_js_1.default.info(logContext, 'Creating order from cart');
+        logger_1.logger.info(logContext, 'Creating order from cart');
         // 1. Verify customer authorization
-        const isAllowed = await customer_authorization_service_js_1.CustomerAuthorizationService.isCustomerAllowed(storeId, customerId);
+        const auth = new customer_authorization_service_1.CustomerAuthorizationService();
+        const isAllowed = await auth.isCustomerAllowed(storeId, customerId);
         if (!isAllowed) {
-            logger_js_1.default.warn(logContext, 'Customer not authorized for this store');
+            logger_1.logger.warn(logContext, 'Customer not authorized for this store');
             throw new Error('CUSTOMER_NOT_AUTHORIZED');
         }
         // 2. Get store settings
@@ -139,7 +137,7 @@ class OrderService {
             notes,
             items: orderItems,
         });
-        logger_js_1.default.info({ orderId: order.id, total }, 'Order created successfully');
+        logger_1.logger.info({ orderId: order.id, total }, 'Order created successfully');
         // 12. Convert cart to CONVERTED status
         await this.cartRepository.updateStatus(cart.id, 'CONVERTED');
         return {
@@ -173,9 +171,9 @@ class OrderService {
     async updateOrderStatus(orderId, storeId, newStatus) {
         const order = await this.getOrderById(orderId, storeId);
         // Validate state transition
-        order_state_machine_js_1.OrderStateMachine.transition(order.status, newStatus);
+        order_state_machine_1.OrderStateMachine.transition(order.status, newStatus);
         const updatedOrder = await this.orderRepository.updateStatus(orderId, newStatus);
-        logger_js_1.default.info({ orderId, oldStatus: order.status, newStatus }, 'Order status updated');
+        logger_1.logger.info({ orderId, oldStatus: order.status, newStatus }, 'Order status updated');
         return updatedOrder;
     }
     /**
@@ -184,11 +182,11 @@ class OrderService {
     async cancelOrder(orderId, storeId, reason) {
         const order = await this.getOrderById(orderId, storeId);
         // Check if order can be cancelled
-        if (!order_state_machine_js_1.OrderStateMachine.canCancel(order.status)) {
+        if (!order_state_machine_1.OrderStateMachine.canCancel(order.status)) {
             throw new Error(`ORDER_CANNOT_BE_CANCELLED: Current status is ${order.status}`);
         }
         const cancelledOrder = await this.orderRepository.updateStatus(orderId, 'CANCELLED');
-        logger_js_1.default.info({ orderId, reason, previousStatus: order.status }, 'Order cancelled');
+        logger_1.logger.info({ orderId, reason, previousStatus: order.status }, 'Order cancelled');
         return cancelledOrder;
     }
     /**
@@ -199,7 +197,7 @@ class OrderService {
         const updatedOrder = await this.orderRepository.updatePaymentStatus(orderId, paymentStatus);
         // If payment is confirmed and order is in PAYMENT_PENDING, transition to PAID or PREPARING
         if (paymentStatus === 'PAID' && order.status === 'PAYMENT_PENDING') {
-            const nextStatus = order_state_machine_js_1.OrderStateMachine.canTransition('PAYMENT_PENDING', 'PAID') ? 'PAID' : 'PREPARING';
+            const nextStatus = order_state_machine_1.OrderStateMachine.canTransition('PAYMENT_PENDING', 'PAID') ? 'PAID' : 'PREPARING';
             return this.orderRepository.updateStatus(orderId, nextStatus);
         }
         return updatedOrder;

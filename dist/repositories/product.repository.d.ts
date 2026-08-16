@@ -5,8 +5,8 @@ export declare class ProductRepository {
     findById(id: string): Promise<({
         category: {
             name: string;
-            storeId: string;
             id: string;
+            storeId: string;
             createdAt: Date;
             updatedAt: Date;
             description: string | null;
@@ -23,8 +23,8 @@ export declare class ProductRepository {
         }[];
     } & {
         name: string;
-        storeId: string;
         id: string;
+        storeId: string;
         createdAt: Date;
         updatedAt: Date;
         categoryId: string | null;
@@ -45,8 +45,8 @@ export declare class ProductRepository {
         products: ({
             category: {
                 name: string;
-                storeId: string;
                 id: string;
+                storeId: string;
                 createdAt: Date;
                 updatedAt: Date;
                 description: string | null;
@@ -63,8 +63,8 @@ export declare class ProductRepository {
             }[];
         } & {
             name: string;
-            storeId: string;
             id: string;
+            storeId: string;
             createdAt: Date;
             updatedAt: Date;
             categoryId: string | null;
@@ -94,8 +94,8 @@ export declare class ProductRepository {
     }): Promise<{
         category: {
             name: string;
-            storeId: string;
             id: string;
+            storeId: string;
             createdAt: Date;
             updatedAt: Date;
             description: string | null;
@@ -104,8 +104,8 @@ export declare class ProductRepository {
         } | null;
     } & {
         name: string;
-        storeId: string;
         id: string;
+        storeId: string;
         createdAt: Date;
         updatedAt: Date;
         categoryId: string | null;
@@ -129,8 +129,8 @@ export declare class ProductRepository {
         categoryId?: string;
     }>): Promise<{
         name: string;
-        storeId: string;
         id: string;
+        storeId: string;
         createdAt: Date;
         updatedAt: Date;
         categoryId: string | null;
@@ -144,8 +144,8 @@ export declare class ProductRepository {
     }>;
     activate(id: string): Promise<{
         name: string;
-        storeId: string;
         id: string;
+        storeId: string;
         createdAt: Date;
         updatedAt: Date;
         categoryId: string | null;
@@ -159,8 +159,8 @@ export declare class ProductRepository {
     }>;
     deactivate(id: string): Promise<{
         name: string;
-        storeId: string;
         id: string;
+        storeId: string;
         createdAt: Date;
         updatedAt: Date;
         categoryId: string | null;

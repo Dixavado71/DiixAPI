@@ -4,12 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const health_routes_js_1 = __importDefault(require("./health.routes.js"));
-const webhook_routes_js_1 = __importDefault(require("./webhook.routes.js"));
-const order_routes_js_1 = __importDefault(require("./order.routes.js"));
+const health_routes_1 = __importDefault(require("./health.routes"));
+const webhook_routes_1 = __importDefault(require("./webhook.routes"));
+const order_routes_1 = require("./order.routes");
 const router = (0, express_1.Router)();
-router.use('/health', health_routes_js_1.default);
-router.use('/webhooks', webhook_routes_js_1.default);
-router.use('/orders', order_routes_js_1.default);
+router.use('/health', health_routes_1.default);
+router.use('/webhooks', webhook_routes_1.default);
+router.use('/orders', (0, order_routes_1.createOrderRoutes)());
 exports.default = router;
 //# sourceMappingURL=index.js.map

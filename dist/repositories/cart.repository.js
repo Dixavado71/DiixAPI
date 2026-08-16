@@ -6,6 +6,21 @@ class CartRepository {
     constructor(prisma) {
         this.prisma = prisma;
     }
+    async findActiveCart(storeId, customerId) {
+        return this.prisma.cart.findFirst({
+            where: {
+                storeId,
+                customerId,
+                status: 'ACTIVE',
+            },
+        });
+    }
+    async getCartItems(cartId) {
+        const cartItems = await this.prisma.cartItem.findMany({
+            where: { cartId },
+        });
+        return cartItems;
+    }
     async getOrCreateCart(storeId, customerId) {
         // Try to find active cart
         let cart = await this.prisma.cart.findFirst({

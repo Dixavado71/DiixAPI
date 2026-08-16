@@ -11,8 +11,8 @@ export declare class StoreService {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        phone: string | null;
         slug: string;
+        phone: string | null;
         timezone: string;
         currency: string;
         evolutionInstanceId: string | null;
@@ -24,8 +24,8 @@ export declare class StoreService {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        phone: string | null;
         slug: string;
+        phone: string | null;
         timezone: string;
         currency: string;
         evolutionInstanceId: string | null;
@@ -37,8 +37,8 @@ export declare class StoreService {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        phone: string | null;
         slug: string;
+        phone: string | null;
         timezone: string;
         currency: string;
         evolutionInstanceId: string | null;
@@ -50,8 +50,8 @@ export declare class StoreService {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        phone: string | null;
         slug: string;
+        phone: string | null;
         timezone: string;
         currency: string;
         evolutionInstanceId: string | null;
@@ -63,8 +63,8 @@ export declare class StoreService {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        phone: string | null;
         slug: string;
+        phone: string | null;
         timezone: string;
         currency: string;
         evolutionInstanceId: string | null;
@@ -76,8 +76,8 @@ export declare class StoreService {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        phone: string | null;
         slug: string;
+        phone: string | null;
         timezone: string;
         currency: string;
         evolutionInstanceId: string | null;
@@ -89,8 +89,8 @@ export declare class StoreService {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        phone: string | null;
         slug: string;
+        phone: string | null;
         timezone: string;
         currency: string;
         evolutionInstanceId: string | null;
@@ -102,8 +102,8 @@ export declare class StoreService {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        phone: string | null;
         slug: string;
+        phone: string | null;
         timezone: string;
         currency: string;
         evolutionInstanceId: string | null;
@@ -115,8 +115,8 @@ export declare class StoreService {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        phone: string | null;
         slug: string;
+        phone: string | null;
         timezone: string;
         currency: string;
         evolutionInstanceId: string | null;

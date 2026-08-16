@@ -13,7 +13,7 @@ declare const envSchema: z.ZodObject<{
     RATE_LIMIT_WINDOW_MS: z.ZodPipeline<z.ZodEffects<z.ZodString, number, string>, z.ZodNumber>;
     RATE_LIMIT_MAX: z.ZodPipeline<z.ZodEffects<z.ZodString, number, string>, z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
-    LOG_LEVEL: "fatal" | "error" | "warn" | "info" | "debug" | "trace";
+    LOG_LEVEL: "info" | "fatal" | "error" | "warn" | "debug" | "trace";
     REDIS_URL: string;
     CORS_ORIGIN: string;
     RATE_LIMIT_WINDOW_MS: number;
@@ -36,7 +36,7 @@ declare const envSchema: z.ZodObject<{
     EVOLUTION_API_KEY: string;
     EVOLUTION_WEBHOOK_SECRET: string;
     JWT_SECRET: string;
-    LOG_LEVEL?: "fatal" | "error" | "warn" | "info" | "debug" | "trace" | undefined;
+    LOG_LEVEL?: "info" | "fatal" | "error" | "warn" | "debug" | "trace" | undefined;
     NODE_ENV?: "production" | "development" | "test" | undefined;
 }>;
 export type Env = z.infer<typeof envSchema>;

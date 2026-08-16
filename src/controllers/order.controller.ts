@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
-import { OrderService } from '../../services/order/order.service';
-import { OrderStateMachine } from '../../services/order/order-state-machine';
+import { OrderService } from '../services/order/order.service';
+import { OrderStateMachine } from '../services/order/order-state-machine';
 import {
   createOrderSchema,
   updateOrderStatusSchema,
   cancelOrderSchema,
   orderQuerySchema,
-} from '../../validators/order.validator';
-import { logger } from '../../utils/logger';
+} from '../validators/order.validator';
+import { logger } from '../utils/logger';
 
 export class OrderController {
   private orderService: OrderService;
@@ -22,8 +22,8 @@ export class OrderController {
    */
   async createOrder(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const storeId = req.params.storeId;
-      const customerId = req.body.customerId; // Will come from auth context in real scenario
+      const storeId = req.params.storeId as string;
+      const customerId = req.body.customerId as string; // Will come from auth context in real scenario
 
       // Validate request body
       const validationResult = createOrderSchema.safeParse(req.body);
@@ -89,7 +89,7 @@ export class OrderController {
    */
   async getOrders(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const storeId = req.params.storeId;
+      const storeId = req.params.storeId as string;
 
       // Validate query parameters
       const validationResult = orderQuerySchema.safeParse(req.query);
@@ -106,8 +106,8 @@ export class OrderController {
       }
 
       const orders = await this.orderService.getOrdersByStore(storeId, {
-        status: validationResult.data.status,
-        customerId: validationResult.data.customerId,
+        status: validationResult.data.status as any,
+        customerId: validationResult.data.customerId as string | undefined,
         limit: validationResult.data.limit,
         offset: validationResult.data.offset,
       });
@@ -128,7 +128,7 @@ export class OrderController {
    */
   async getOrderById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { orderId, storeId } = req.params;
+      const { orderId, storeId } = req.params as { orderId: string; storeId: string };
 
       const order = await this.orderService.getOrderById(orderId, storeId);
 
@@ -160,7 +160,7 @@ export class OrderController {
    */
   async updateOrderStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { orderId, storeId } = req.params;
+      const { orderId, storeId } = req.params as { orderId: string; storeId: string };
 
       // Validate request body
       const validationResult = updateOrderStatusSchema.safeParse(req.body);
@@ -179,7 +179,7 @@ export class OrderController {
       const order = await this.orderService.updateOrderStatus(
         orderId,
         storeId,
-        validationResult.data.status
+        validationResult.data.status as any
       );
 
       res.json({
@@ -222,7 +222,7 @@ export class OrderController {
    */
   async cancelOrder(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { orderId, storeId } = req.params;
+      const { orderId, storeId } = req.params as { orderId: string; storeId: string };
 
       // Validate request body
       const validationResult = cancelOrderSchema.safeParse(req.body);
@@ -241,7 +241,7 @@ export class OrderController {
       const order = await this.orderService.cancelOrder(
         orderId,
         storeId,
-        validationResult.data.reason
+        validationResult.data.reason as string | undefined
       );
 
       res.json({
@@ -284,7 +284,7 @@ export class OrderController {
    */
   async getPossibleStates(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { orderId, storeId } = req.params;
+      const { orderId, storeId } = req.params as { orderId: string; storeId: string };
 
       const order = await this.orderService.getOrderById(orderId, storeId);
 
