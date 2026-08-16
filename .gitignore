@@ -7,33 +7,39 @@ dist/
 build/
 target/
 
-# TypeScript/JavaScript
-*.tsbuildinfo
-*.js.map
-*.ts.map
-
 # Environment variables
 .env
 .env.local
 *.env.*
 
-# IDE specific
+# IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
+*.tmp
 
 # Logs
 *.log
 
-# Temp files
-*.tmp
+# Python artifacts (if any Python in project)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.egg-info/
 
-# Coverage
+# Coverage reports
 coverage/
 htmlcov/
 .coverage
 
-# Prisma
-prisma/migrations/
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
 ```

@@ -54,8 +54,9 @@ export class StoreController {
         success: true,
         data: store,
       });
-    } catch (error: any) {
-      if (error.message === 'STORE_ALREADY_EXISTS') {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
+      if (err.message === 'STORE_ALREADY_EXISTS') {
         return res.status(409).json({
           success: false,
           error: {
@@ -64,7 +65,7 @@ export class StoreController {
           },
         });
       }
-      if (error.message === 'EVOLUTION_INSTANCE_ALREADY_EXISTS') {
+      if (err.message === 'EVOLUTION_INSTANCE_ALREADY_EXISTS') {
         return res.status(409).json({
           success: false,
           error: {
@@ -89,8 +90,9 @@ export class StoreController {
         success: true,
         data: store,
       });
-    } catch (error: any) {
-      if (error.message === 'STORE_NOT_FOUND') {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
+      if (err.message === 'STORE_NOT_FOUND') {
         return res.status(404).json({
           success: false,
           error: {
@@ -99,7 +101,7 @@ export class StoreController {
           },
         });
       }
-      if (error.message === 'STORE_ALREADY_EXISTS') {
+      if (err.message === 'STORE_ALREADY_EXISTS') {
         return res.status(409).json({
           success: false,
           error: {
@@ -108,7 +110,7 @@ export class StoreController {
           },
         });
       }
-      if (error.message === 'EVOLUTION_INSTANCE_ALREADY_EXISTS') {
+      if (err.message === 'EVOLUTION_INSTANCE_ALREADY_EXISTS') {
         return res.status(409).json({
           success: false,
           error: {
@@ -130,8 +132,9 @@ export class StoreController {
         success: true,
         data: store,
       });
-    } catch (error: any) {
-      if (error.message === 'STORE_NOT_FOUND') {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
+      if (err.message === 'STORE_NOT_FOUND') {
         return res.status(404).json({
           success: false,
           error: {
@@ -153,8 +156,9 @@ export class StoreController {
         success: true,
         data: store,
       });
-    } catch (error: any) {
-      if (error.message === 'STORE_NOT_FOUND') {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
+      if (err.message === 'STORE_NOT_FOUND') {
         return res.status(404).json({
           success: false,
           error: {
@@ -176,8 +180,9 @@ export class StoreController {
         success: true,
         data: settings,
       });
-    } catch (error: any) {
-      if (error.message === 'STORE_NOT_FOUND') {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
+      if (err.message === 'STORE_NOT_FOUND') {
         return res.status(404).json({
           success: false,
           error: {
@@ -202,8 +207,9 @@ export class StoreController {
         success: true,
         data: settings,
       });
-    } catch (error: any) {
-      if (error.message === 'STORE_NOT_FOUND') {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
+      if (err.message === 'STORE_NOT_FOUND') {
         return res.status(404).json({
           success: false,
           error: {

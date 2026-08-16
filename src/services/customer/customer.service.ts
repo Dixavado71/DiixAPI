@@ -1,9 +1,8 @@
-import { Customer, StoreCustomer, StoreCustomerStatus } from '@prisma/client';
-import { getCustomerRepository } from '../repositories';
-import { getStoreCustomerRepository } from '../repositories';
-import { CreateCustomerInput, UpdateCustomerInput } from '../validators/customer.validator';
-import { normalizePhone } from '../utils/phone';
-import { getLogger } from '../utils/logger';
+import { Customer, StoreCustomer } from '@prisma/client';
+import { getCustomerRepository, getStoreCustomerRepository } from '../../repositories';
+import { CreateCustomerInput, UpdateCustomerInput } from '../../validators/customer.validator';
+import { normalizePhone } from '../../utils/phone';
+import { getLogger } from '../../utils/logger';
 
 const logger = getLogger().child({ module: 'customer-service' });
 
@@ -170,11 +169,11 @@ export class CustomerService {
     logger.info({ storeId, customerId }, 'Customer removed from store');
   }
 
-  async getStoreCustomers(storeId: string): Promise<(StoreCustomer & { customer: Customer })[]> {
+  async getStoreCustomers(storeId: string): Promise<StoreCustomer[]> {
     return this.storeCustomerRepository.findByStore(storeId);
   }
 
-  async getCustomerStores(customerId: string): Promise<(StoreCustomer & { store: any })[]> {
+  async getCustomerStores(customerId: string): Promise<StoreCustomer[]> {
     return this.storeCustomerRepository.findByCustomer(customerId);
   }
 }

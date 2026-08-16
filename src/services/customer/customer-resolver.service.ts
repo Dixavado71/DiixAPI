@@ -1,8 +1,7 @@
 import { Customer, StoreCustomer } from '@prisma/client';
-import { getCustomerRepository } from '../repositories';
-import { getStoreCustomerRepository } from '../repositories';
-import { normalizePhone } from '../utils/phone';
-import { getLogger } from '../utils/logger';
+import { getCustomerRepository, getStoreCustomerRepository } from '../../repositories';
+import { normalizePhone } from '../../utils/phone';
+import { getLogger } from '../../utils/logger';
 
 const logger = getLogger().child({ module: 'customer-resolver' });
 
