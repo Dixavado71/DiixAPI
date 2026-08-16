@@ -17,3 +17,7 @@ router.use(
 );
 
 export default router;
+
+// Bot routes
+import { botRoutes } from './bot.routes';
+app.use('/api/bot', botRoutes);
