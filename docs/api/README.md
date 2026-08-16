@@ -98,11 +98,23 @@ Authorization: Bearer <token>
 
 ### Orders
 - `POST /orders` - Criar pedido do carrinho
-- `GET /orders` - Listar pedidos
+- `GET /orders` - Listar pedidos (com filtros por loja e status)
 - `GET /orders/:id` - Buscar pedido
 - `PATCH /orders/:id/status` - Atualizar status
 - `POST /orders/:id/cancel` - Cancelar pedido
 - `GET /orders/:id/possible-states` - Estados possíveis
+
+### Promotions
+- `GET /stores/:storeId/promotions` - Listar todas as promoções da loja
+- `POST /stores/:storeId/promotions` - Criar nova promoção
+- `GET /stores/:storeId/promotions/active` - Buscar promoções ativas
+- `GET /stores/:storeId/promotions/:id` - Buscar promoção por ID
+- `PUT /stores/:storeId/promotions/:id` - Atualizar promoção
+- `DELETE /stores/:storeId/promotions/:id` - Remover promoção
+- `POST /stores/:storeId/promotions/:id/rules` - Adicionar regra à promoção
+- `DELETE /stores/:storeId/promotions/:id/rules/:ruleId` - Remover regra da promoção
+- `POST /stores/:storeId/promotions/:id/products` - Adicionar produto à promoção
+- `DELETE /stores/:storeId/promotions/:id/products/:productId` - Remover produto da promoção
 
 ### Webhooks
 - `POST /webhooks/evolution` - Webhook da Evolution API
