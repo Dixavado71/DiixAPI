@@ -1,4 +1,4 @@
-import { Customer, StoreCustomer } from '@prisma/client';
+import { StoreCustomer } from '@prisma/client';
 import { getCustomerRepository, getStoreCustomerRepository } from '../../repositories';
 import { CreateCustomerInput, UpdateCustomerInput } from '../../validators/customer.validator';
 import { normalizePhone } from '../../utils/phone';

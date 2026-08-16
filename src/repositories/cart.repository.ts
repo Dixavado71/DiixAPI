@@ -1,10 +1,27 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Cart, CartItem } from '@prisma/client';
 
 export class CartRepository {
   private prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
+  }
+
+  async findActiveCart(storeId: string, customerId: string): Promise<Cart | null> {
+    return this.prisma.cart.findFirst({
+      where: {
+        storeId,
+        customerId,
+        status: 'ACTIVE',
+      },
+    });
+  }
+
+  async getCartItems(cartId: string): Promise<CartItem[]> {
+    const cartItems = await this.prisma.cartItem.findMany({
+      where: { cartId },
+    });
+    return cartItems;
   }
 
   async getOrCreateCart(storeId: string, customerId: string) {

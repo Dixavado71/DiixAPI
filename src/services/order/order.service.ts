@@ -1,12 +1,12 @@
 import { Order, OrderStatus, PaymentMethod, DeliveryMethod } from '@prisma/client';
-import { prisma } from '../../config/database.js';
-import { OrderRepository } from '../../repositories/order.repository.js';
-import { CartRepository } from '../../repositories/cart.repository.js';
-import { ProductRepository } from '../../repositories/product.repository.js';
-import { StoreSettingsRepository } from '../../repositories/store-settings.repository.js';
-import { CustomerAuthorizationService } from '../customer/customer-authorization.service.js';
-import { OrderStateMachine } from './order-state-machine.js';
-import logger from '../../utils/logger.js';
+import { prisma } from '../../config/database';
+import { OrderRepository } from '../../repositories/order.repository';
+import { CartRepository } from '../../repositories/cart.repository';
+import { ProductRepository } from '../../repositories/product.repository';
+import { StoreSettingsRepository } from '../../repositories/store-settings.repository';
+import { CustomerAuthorizationService } from '../customer/customer-authorization.service';
+import { OrderStateMachine } from './order-state-machine';
+import logger from '../../utils/logger';
 
 interface CreateOrderInput {
   storeId: string;

@@ -18,5 +18,4 @@ scripts/
 .dockerignore
 eslint.config.js
 prettier.config.js
-tsconfig.json
 prisma/migrations
