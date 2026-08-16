@@ -7,45 +7,33 @@ dist/
 build/
 target/
 
-# TypeScript
+# TypeScript/JavaScript
 *.tsbuildinfo
-.next/
-.nuxt/
-.un~*
-.nyc_output/
-
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+*.js.map
+*.ts.map
 
 # Environment variables
 .env
 .env.local
-.env.*
-!.env.example
+*.env.*
 
-# IDE files
+# IDE specific
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
 
-# OS generated files
-.DS_Store
-Thumbs.db
+# Logs
+*.log
+
+# Temp files
+*.tmp
 
 # Coverage
 coverage/
-.nyc_output/
-.html
+htmlcov/
+.coverage
 
 # Prisma
 prisma/migrations/
-
-# Temporary files
-*.tmp
-*.temp
 ```

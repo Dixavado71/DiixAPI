@@ -15,26 +15,26 @@ datasource db {
 
 /// Store represents a tenant in the multi-tenant system
 model Store {
-  id              String          @id @default(cuid())
-  name            String
-  slug            String          @unique
-  description     String?
-  phone           String?
-  status          StoreStatus     @default(ACTIVE)
-  timezone        String          @default("America/Sao_Paulo")
-  currency        String          @default("BRL")
+  id                  String      @id @default(cuid())
+  name                String
+  slug                String      @unique
+  description         String?
+  phone               String?
+  status              StoreStatus @default(ACTIVE)
+  timezone            String      @default("America/Sao_Paulo")
+  currency            String      @default("BRL")
   evolutionInstanceId String?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
 
-  settings        StoreSettings?
-  storeCustomers  StoreCustomer[]
-  products        Product[]
-  categories      ProductCategory[]
-  carts           Cart[]
-  orders          Order[]
-  deliveries      Delivery[]
-  promotions      Promotion[]
+  settings       StoreSettings?
+  storeCustomers StoreCustomer[]
+  products       Product[]
+  categories     ProductCategory[]
+  carts          Cart[]
+  orders         Order[]
+  deliveries     Delivery[]
+  promotions     Promotion[]
 
   @@index([slug])
   @@index([status])
@@ -48,34 +48,34 @@ enum StoreStatus {
 
 /// Store-specific settings
 model StoreSettings {
-  id                      String   @id @default(cuid())
-  storeId                 String   @unique
-  store                   Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  
+  id      String @id @default(cuid())
+  storeId String @unique
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
   // Commerce settings
-  commerceEnabled         Boolean  @default(true)
+  commerceEnabled              Boolean @default(true)
   customerRegistrationRequired Boolean @default(false)
-  customerApprovalRequired Boolean @default(false)
-  
+  customerApprovalRequired     Boolean @default(false)
+
   // Delivery settings
-  deliveryEnabled         Boolean  @default(true)
-  pickupEnabled           Boolean  @default(false)
-  
+  deliveryEnabled Boolean @default(true)
+  pickupEnabled   Boolean @default(false)
+
   // Payment settings
-  pixEnabled              Boolean  @default(true)
-  cashEnabled             Boolean  @default(true)
-  cardEnabled             Boolean  @default(true)
+  pixEnabled               Boolean @default(true)
+  cashEnabled              Boolean @default(true)
+  cardEnabled              Boolean @default(true)
   paymentOnDeliveryEnabled Boolean @default(true)
-  
+
   // Bot settings
-  botEnabled              Boolean  @default(true)
-  supportEnabled          Boolean  @default(true)
-  
+  botEnabled     Boolean @default(true)
+  supportEnabled Boolean @default(true)
+
   // Promotion settings
-  promotionEnabled        Boolean  @default(true)
-  
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
+  promotionEnabled Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([storeId])
 }
@@ -86,13 +86,13 @@ model StoreSettings {
 
 /// Customer is a unique person across all stores
 model Customer {
-  id            String          @id @default(cuid())
-  name          String?
-  phone         String
-  email         String?
-  status        CustomerStatus  @default(ACTIVE)
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id        String         @id @default(cuid())
+  name      String?
+  phone     String
+  email     String?
+  status    CustomerStatus @default(ACTIVE)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
 
   storeCustomers StoreCustomer[]
 
@@ -109,16 +109,16 @@ enum CustomerStatus {
 
 /// Store-specific customer relationship
 model StoreCustomer {
-  id          String              @id @default(cuid())
-  storeId     String
-  store       Store               @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  customerId  String
-  customer    Customer            @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  status      StoreCustomerStatus @default(PENDING)
-  approvedAt  DateTime?
-  blockedAt   DateTime?
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
+  id         String              @id @default(cuid())
+  storeId    String
+  store      Store               @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  customerId String
+  customer   Customer            @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  status     StoreCustomerStatus @default(PENDING)
+  approvedAt DateTime?
+  blockedAt  DateTime?
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
 
   @@unique([storeId, customerId])
   @@index([storeId, status])
@@ -138,19 +138,19 @@ enum StoreCustomerStatus {
 
 /// Product category
 model ProductCategory {
-  id          String    @id @default(cuid())
+  id          String            @id @default(cuid())
   storeId     String
-  store       Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  store       Store             @relation(fields: [storeId], references: [id], onDelete: Cascade)
   name        String
   description String?
   parentId    String?
-  parent      ProductCategory? @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  parent      ProductCategory?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
   children    ProductCategory[] @relation("CategoryHierarchy")
-  active      Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  active      Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
 
-  products    Product[]
+  products Product[]
 
   @@index([storeId])
   @@index([storeId, active])
@@ -158,12 +158,12 @@ model ProductCategory {
 
 /// Product
 model Product {
-  id          String   @id @default(cuid())
-  storeId     String
-  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  categoryId  String?
-  category    ProductCategory? @relation(fields: [categoryId], references: [id])
-  
+  id         String           @id @default(cuid())
+  storeId    String
+  store      Store            @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  categoryId String?
+  category   ProductCategory? @relation(fields: [categoryId], references: [id])
+
   name        String
   description String?
   sku         String?
@@ -172,13 +172,13 @@ model Product {
   stock       Int?
   active      Boolean  @default(true)
   images      String[]
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 
-  variants    ProductVariant[]
-  cartItems   CartItem[]
-  orderItems  OrderItem[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  variants          ProductVariant[]
+  cartItems         CartItem[]
+  orderItems        OrderItem[]
   promotionProducts PromotionProduct[]
 
   @@index([storeId])
@@ -188,11 +188,11 @@ model Product {
 
 /// Product variant (e.g., size, color)
 model ProductVariant {
-  id        String  @id @default(cuid())
+  id        String   @id @default(cuid())
   productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  name      String  // e.g., "Size", "Color"
-  value     String  // e.g., "Large", "Red"
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      String // e.g., "Size", "Color"
+  value     String // e.g., "Large", "Red"
   price     Decimal? @db.Decimal(10, 2)
   stock     Int?
 
@@ -205,15 +205,15 @@ model ProductVariant {
 
 /// Shopping cart
 model Cart {
-  id         String   @id @default(cuid())
+  id         String     @id @default(cuid())
   storeId    String
-  store      Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  store      Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
   customerId String
   status     CartStatus @default(ACTIVE)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 
-  items      CartItem[]
+  items CartItem[]
 
   @@index([storeId, customerId])
   @@index([status])
@@ -227,11 +227,11 @@ enum CartStatus {
 
 /// Cart item
 model CartItem {
-  id        String  @id @default(cuid())
+  id        String   @id @default(cuid())
   cartId    String
-  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
   productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -246,27 +246,27 @@ model CartItem {
 
 /// Order
 model Order {
-  id              String        @id @default(cuid())
+  id              String          @id @default(cuid())
   storeId         String
-  store           Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  store           Store           @relation(fields: [storeId], references: [id], onDelete: Cascade)
   customerId      String
-  orderNumber     String        @unique
-  status          OrderStatus   @default(PENDING)
-  subtotal        Decimal       @db.Decimal(10, 2)
-  discount        Decimal       @default(0) @db.Decimal(10, 2)
-  total           Decimal       @db.Decimal(10, 2)
+  orderNumber     String          @unique
+  status          OrderStatus     @default(PENDING)
+  subtotal        Decimal         @db.Decimal(10, 2)
+  discount        Decimal         @default(0) @db.Decimal(10, 2)
+  total           Decimal         @db.Decimal(10, 2)
   paymentMethod   PaymentMethod?
-  paymentStatus   PaymentStatus @default(PENDING)
+  paymentStatus   PaymentStatus   @default(PENDING)
   deliveryMethod  DeliveryMethod?
   deliveryAddress String?
-  deliveryFee     Decimal       @default(0) @db.Decimal(10, 2)
+  deliveryFee     Decimal         @default(0) @db.Decimal(10, 2)
   notes           String?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 
-  items           OrderItem[]
-  payments        Payment[]
-  delivery        Delivery?
+  items    OrderItem[]
+  payments Payment[]
+  delivery Delivery?
 
   @@index([storeId])
   @@index([customerId])
@@ -312,15 +312,15 @@ enum DeliveryMethod {
 
 /// Order item
 model OrderItem {
-  id        String  @id @default(cuid())
-  orderId   String
-  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  quantity  Int
-  unitPrice Decimal @db.Decimal(10, 2)
-  totalPrice Decimal @db.Decimal(10, 2)
-  createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity   Int
+  unitPrice  Decimal  @db.Decimal(10, 2)
+  totalPrice Decimal  @db.Decimal(10, 2)
+  createdAt  DateTime @default(now())
 
   @@index([orderId])
 }
@@ -352,20 +352,20 @@ model Payment {
 
 /// Delivery record
 model Delivery {
-  id            String         @id @default(cuid())
-  orderId       String         @unique
-  order         Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  storeId       String
-  store         Store          @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  method        DeliveryMethod
-  address       String
-  recipientName String
+  id             String         @id @default(cuid())
+  orderId        String         @unique
+  order          Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  storeId        String
+  store          Store          @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  method         DeliveryMethod
+  address        String
+  recipientName  String
   recipientPhone String
-  status        DeliveryStatus @default(PENDING)
-  trackingInfo  String?
-  deliveredAt   DateTime?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  status         DeliveryStatus @default(PENDING)
+  trackingInfo   String?
+  deliveredAt    DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 
   @@index([orderId])
   @@index([storeId])
@@ -389,22 +389,22 @@ enum DeliveryStatus {
 
 /// Promotion
 model Promotion {
-  id          String   @id @default(cuid())
+  id          String        @id @default(cuid())
   storeId     String
-  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  store       Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
   name        String
   description String?
   type        PromotionType
-  value       Decimal  @db.Decimal(10, 2) // Percentage or fixed amount
-  minAmount   Decimal? @db.Decimal(10, 2)
+  value       Decimal       @db.Decimal(10, 2) // Percentage or fixed amount
+  minAmount   Decimal?      @db.Decimal(10, 2)
   startDate   DateTime
   endDate     DateTime
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  active      Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
-  rules       PromotionRule[]
-  products    PromotionProduct[]
+  rules    PromotionRule[]
+  products PromotionProduct[]
 
   @@index([storeId])
   @@index([storeId, active])
@@ -417,12 +417,12 @@ enum PromotionType {
 
 /// Promotion rule
 model PromotionRule {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   promotionId String
   promotion   Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
   type        RuleType
-  value       String   // e.g., category ID, product ID, day of week
-  createdAt   DateTime @default(now())
+  value       String // e.g., category ID, product ID, day of week
+  createdAt   DateTime  @default(now())
 
   @@index([promotionId])
 }
@@ -437,11 +437,11 @@ enum RuleType {
 
 /// Product-Promotion relationship
 model PromotionProduct {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   promotionId String
   promotion   Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
   productId   String
-  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([promotionId, productId])
 }
@@ -452,15 +452,15 @@ model PromotionProduct {
 
 /// Admin user
 model AdminUser {
-  id        String   @id @default(cuid())
-  email     String   @unique
+  id        String    @id @default(cuid())
+  email     String    @unique
   password  String
   name      String
-  role      Role     @default(OPERATOR)
-  active    Boolean  @default(true)
+  role      Role      @default(OPERATOR)
+  active    Boolean   @default(true)
   lastLogin DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   auditLogs AuditLog[]
 
@@ -477,7 +477,7 @@ enum Role {
 
 /// Audit log
 model AuditLog {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   userId    String?
   user      AdminUser? @relation(fields: [userId], references: [id])
   action    String
@@ -485,7 +485,7 @@ model AuditLog {
   entityId  String?
   ipAddress String?
   metadata  Json?
-  createdAt DateTime @default(now())
+  createdAt DateTime   @default(now())
 
   @@index([action])
   @@index([entity])
@@ -498,15 +498,15 @@ model AuditLog {
 
 /// Evolution API webhook event log
 model WebhookEvent {
-  id           String   @id @default(cuid())
-  eventId      String   @unique // External event ID for idempotency
-  instance     String
-  eventType    String
-  payload      Json
-  processed    Boolean  @default(false)
-  processedAt  DateTime?
-  error        String?
-  createdAt    DateTime @default(now())
+  id          String    @id @default(cuid())
+  eventId     String    @unique // External event ID for idempotency
+  instance    String
+  eventType   String
+  payload     Json
+  processed   Boolean   @default(false)
+  processedAt DateTime?
+  error       String?
+  createdAt   DateTime  @default(now())
 
   @@index([eventId])
   @@index([instance])
