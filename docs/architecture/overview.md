@@ -41,7 +41,7 @@ ECMS6 é uma plataforma comercial multi-loja integrada ao WhatsApp via Evolution
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
 │                    Services Layer (Business Logic)          │
-│  (Store, Customer, Product, Cart, Order, Payment, etc.)     │
+│  (Store, Customer, Product, Cart, Order, Payment, Promotion)│
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -236,9 +236,8 @@ WhatsApp Client ↔ Evolution API ↔ ECMS6 Webhook
 
 1. **Bot Engine**: Motor de conversação determinístico
 2. **AI Integration**: Assistente inteligente opcional
-3. **Promotion Engine**: Sistema completo de promoções
-4. **Analytics**: Relatórios e dashboards
-5. **Admin Panel**: Painel administrativo frontend
+3. **Analytics**: Relatórios e dashboards
+4. **Admin Panel**: Painel administrativo frontend
 
 ## Links Relacionados
 

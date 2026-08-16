@@ -67,7 +67,7 @@
 ## 📋 Próximas Fases
 
 ### Fase 5 - Promoções (✅ CONCLUÍDA)
-- [x] Modelo `Promotion` completo
+- [x] Modelo `Promotion` no schema Prisma
 - [x] Modelo `PromotionRule` para regras flexíveis
 - [x] Modelo `PromotionProduct` para produtos em promoção
 - [x] `PromotionService` para aplicação de promoções
@@ -77,11 +77,12 @@
 - [x] Integração com carrinho
 - [x] Integração com pedidos
 - [x] Testes de promoções sobrepostas
-- [x] PromotionRepository implementado
+- [x] `PromotionRepository` implementado
 - [x] Validators Zod para promoções
-- [x] PromotionController RESTful
-- [x] Rotas de promoção configuradas
+- [x] `PromotionController` RESTful
+- [x] Rotas de promoção configuradas (`/stores/:storeId/promotions`)
 - [x] Testes unitários passando (31 testes)
+- [x] Documentação da API atualizada
 
 ### Fase 6 - Integração Evolution API Completa (PENDENTE)
 - [ ] EvolutionClient com todos os métodos
@@ -195,16 +196,15 @@ Nenhum bug conhecido no momento.
 
 - **Total de Models**: 18
 - **Total de Enums**: 11
-- **Endpoints Implementados**: ~40
-- **Services Implementados**: ~15
+- **Endpoints Implementados**: ~45
+- **Services Implementados**: ~16
 - **Documentação**: 8 arquivos principais
-- **Fases Concluídas**: 4 de 10 (40%)
+- **Fases Concluídas**: 5 de 10 (50%)
 
 ## 🎯 Prioridades Atuais
 
-1. **Alta**: Fase 5 - Promoções (valor comercial direto)
-2. **Alta**: Fase 6 - Integração Evolution (core do produto)
-3. **Média**: Fase 7 - Bot Engine (experiência do usuário)
-4. **Média**: Fase 8 - Admin Auth (necessário para produção)
-5. **Baixa**: Fase 9 - Testes (importante mas pode ser incremental)
-6. **Baixa**: Fase 10 - Deploy (já funcional, precisa de polimento)
+1. **Alta**: Fase 6 - Integração Evolution (core do produto)
+2. **Alta**: Fase 7 - Bot Engine (experiência do usuário)
+3. **Média**: Fase 8 - Admin Auth (necessário para produção)
+4. **Média**: Fase 9 - Testes (importante mas pode ser incremental)
+5. **Baixa**: Fase 10 - Deploy (já funcional, precisa de polimento)

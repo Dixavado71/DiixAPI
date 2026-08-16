@@ -39,7 +39,7 @@ Bem-vindo à documentação do ECMS6, uma plataforma comercial multi-loja integr
 | 2 | ✅ Concluída | Multi-loja + Clientes + Autorização |
 | 3 | ✅ Concluída | Produtos + Categorias + Catálogo + Carrinho |
 | 4 | ✅ Concluída | Pedidos + Checkout + Máquina de Estados |
-| 5 | ⏳ Pendente | Promoções |
+| 5 | ✅ Concluída | Promoções (sistema completo implementado) |
 | 6 | ⏳ Pendente | Integração Evolution API completa |
 | 7 | ⏳ Pendente | Bot Engine + Conversação |
 | 8 | ⏳ Pendente | Admin Auth + RBAC + Audit |

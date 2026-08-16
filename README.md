@@ -235,7 +235,7 @@ npm run test:coverage
 | 2 | ✅ | Multi-loja + Clientes + Autorização |
 | 3 | ✅ | Produtos + Categorias + Catálogo + Carrinho |
 | 4 | ✅ | Pedidos + Checkout + Máquina de Estados |
-| 5 | ⏳ | Promoções |
+| 5 | ✅ | Promoções (sistema completo implementado) |
 | 6 | ⏳ | Integração Evolution API completa |
 | 7 | ⏳ | Bot Engine + Conversação |
 | 8 | ⏳ | Admin Auth + RBAC + Audit |
