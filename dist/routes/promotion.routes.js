@@ -1,0 +1,41 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PromotionRoutes = void 0;
+const express_1 = require("express");
+const promotion_controller_1 = require("../controllers/promotion.controller");
+class PromotionRoutes {
+    router;
+    controller;
+    constructor() {
+        this.router = (0, express_1.Router)();
+        this.controller = new promotion_controller_1.PromotionController();
+        this.initializeRoutes();
+    }
+    initializeRoutes() {
+        // Create promotion
+        this.router.post('/', (req, res, next) => this.controller.createPromotion(req, res, next));
+        // Get all promotions for a store
+        this.router.get('/', (req, res, next) => this.controller.getPromotions(req, res, next));
+        // Get active promotions
+        this.router.get('/active', (req, res, next) => this.controller.getActivePromotions(req, res, next));
+        // Get promotion by ID
+        this.router.get('/:id', (req, res, next) => this.controller.getPromotion(req, res, next));
+        // Update promotion
+        this.router.put('/:id', (req, res, next) => this.controller.updatePromotion(req, res, next));
+        // Delete promotion
+        this.router.delete('/:id', (req, res, next) => this.controller.deletePromotion(req, res, next));
+        // Add rule to promotion
+        this.router.post('/:id/rules', (req, res, next) => this.controller.addRule(req, res, next));
+        // Remove rule from promotion
+        this.router.delete('/:id/rules/:ruleId', (req, res, next) => this.controller.removeRule(req, res, next));
+        // Add product to promotion
+        this.router.post('/:id/products', (req, res, next) => this.controller.addProduct(req, res, next));
+        // Remove product from promotion
+        this.router.delete('/:id/products/:productId', (req, res, next) => this.controller.removeProduct(req, res, next));
+    }
+    getRouter() {
+        return this.router;
+    }
+}
+exports.PromotionRoutes = PromotionRoutes;
+//# sourceMappingURL=promotion.routes.js.map

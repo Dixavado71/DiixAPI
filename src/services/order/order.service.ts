@@ -5,9 +5,11 @@ import { CartRepository } from '../../repositories/cart.repository';
 import { ProductRepository } from '../../repositories/product.repository';
 import { StoreSettingsRepository } from '../../repositories/store-settings.repository';
 import { CustomerAuthorizationService } from '../customer/customer-authorization.service';
-import { PromotionService } from '../promotion/promotion.service';
+import { PromotionService } from '../promotion';
 import { OrderStateMachine } from './order-state-machine';
-import { logger } from '../../utils/logger';
+import { getLogger } from '../../utils/logger';
+
+const logger = getLogger();
 
 interface CreateOrderInput {
   storeId: string;
