@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StoreController = void 0;
-const store_service_js_1 = require("../../services/store/store.service.js");
-const store_validator_js_1 = require("../../validators/store.validator.js");
-const logger_js_1 = require("../../utils/logger.js");
-const logger = (0, logger_js_1.getLogger)().child({ module: 'store-controller' });
-const storeService = new store_service_js_1.StoreService();
+const store_service_1 = require("../services/store/store.service");
+const store_validator_1 = require("../validators/store.validator");
+const logger_1 = require("../utils/logger");
+const logger = logger_1.logger.child({ module: 'store-controller' });
+const storeService = new store_service_1.StoreService();
 class StoreController {
     async findAll(_req, res, next) {
         try {
@@ -43,7 +43,7 @@ class StoreController {
     }
     async create(req, res, next) {
         try {
-            const validatedData = store_validator_js_1.createStoreSchema.parse(req.body);
+            const validatedData = store_validator_1.createStoreSchema.parse(req.body);
             const store = await storeService.create(validatedData);
             logger.info({ storeId: store.id }, 'Store created via API');
             return res.status(201).json({
@@ -77,7 +77,7 @@ class StoreController {
     async update(req, res, next) {
         try {
             const { id } = req.params;
-            const validatedData = store_validator_js_1.updateStoreSchema.parse(req.body);
+            const validatedData = store_validator_1.updateStoreSchema.parse(req.body);
             const store = await storeService.update(id, validatedData);
             logger.info({ storeId: id }, 'Store updated via API');
             return res.json({

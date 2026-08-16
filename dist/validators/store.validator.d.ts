@@ -35,16 +35,16 @@ export declare const updateStoreSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     name?: string | undefined;
     description?: string | undefined;
-    phone?: string | undefined;
     slug?: string | undefined;
+    phone?: string | undefined;
     timezone?: string | undefined;
     currency?: string | undefined;
     evolutionInstanceId?: string | undefined;
 }, {
     name?: string | undefined;
     description?: string | undefined;
-    phone?: string | undefined;
     slug?: string | undefined;
+    phone?: string | undefined;
     timezone?: string | undefined;
     currency?: string | undefined;
     evolutionInstanceId?: string | undefined;

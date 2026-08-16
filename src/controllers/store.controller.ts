@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { StoreService } from '../../services/store/store.service';
-import { createStoreSchema, updateStoreSchema } from '../../validators/store.validator';
-import { getLogger } from '../../utils/logger';
+import { StoreService } from '../services/store/store.service';
+import { createStoreSchema, updateStoreSchema } from '../validators/store.validator';
+import { logger as baseLogger } from '../utils/logger';
 
-const logger = getLogger().child({ module: 'store-controller' });
+const logger = baseLogger.child({ module: 'store-controller' });
 const storeService = new StoreService();
 
 export class StoreController {

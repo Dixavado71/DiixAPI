@@ -13,11 +13,9 @@ export declare class DeliveryRepository {
     }): Promise<{
         order: {
             status: import(".prisma/client").$Enums.OrderStatus;
-            storeId: string;
             id: string;
+            storeId: string;
             customerId: string;
-            createdAt: Date;
-            updatedAt: Date;
             orderNumber: string;
             subtotal: import("@prisma/client/runtime/library").Decimal;
             discount: import("@prisma/client/runtime/library").Decimal;
@@ -28,15 +26,17 @@ export declare class DeliveryRepository {
             deliveryAddress: string | null;
             deliveryFee: import("@prisma/client/runtime/library").Decimal;
             notes: string | null;
+            createdAt: Date;
+            updatedAt: Date;
         };
     } & {
         status: import(".prisma/client").$Enums.DeliveryStatus;
-        storeId: string;
-        orderId: string;
         id: string;
-        method: import(".prisma/client").$Enums.DeliveryMethod;
+        storeId: string;
         createdAt: Date;
         updatedAt: Date;
+        orderId: string;
+        method: import(".prisma/client").$Enums.DeliveryMethod;
         address: string;
         recipientName: string;
         recipientPhone: string;
@@ -46,21 +46,19 @@ export declare class DeliveryRepository {
     findById(id: string): Promise<({
         order: {
             items: {
-                orderId: string;
                 id: string;
                 createdAt: Date;
                 productId: string;
                 quantity: number;
+                orderId: string;
                 unitPrice: import("@prisma/client/runtime/library").Decimal;
                 totalPrice: import("@prisma/client/runtime/library").Decimal;
             }[];
         } & {
             status: import(".prisma/client").$Enums.OrderStatus;
-            storeId: string;
             id: string;
+            storeId: string;
             customerId: string;
-            createdAt: Date;
-            updatedAt: Date;
             orderNumber: string;
             subtotal: import("@prisma/client/runtime/library").Decimal;
             discount: import("@prisma/client/runtime/library").Decimal;
@@ -71,15 +69,17 @@ export declare class DeliveryRepository {
             deliveryAddress: string | null;
             deliveryFee: import("@prisma/client/runtime/library").Decimal;
             notes: string | null;
+            createdAt: Date;
+            updatedAt: Date;
         };
     } & {
         status: import(".prisma/client").$Enums.DeliveryStatus;
-        storeId: string;
-        orderId: string;
         id: string;
-        method: import(".prisma/client").$Enums.DeliveryMethod;
+        storeId: string;
         createdAt: Date;
         updatedAt: Date;
+        orderId: string;
+        method: import(".prisma/client").$Enums.DeliveryMethod;
         address: string;
         recipientName: string;
         recipientPhone: string;
@@ -88,12 +88,12 @@ export declare class DeliveryRepository {
     }) | null>;
     findByOrderId(orderId: string): Promise<{
         status: import(".prisma/client").$Enums.DeliveryStatus;
-        storeId: string;
-        orderId: string;
         id: string;
-        method: import(".prisma/client").$Enums.DeliveryMethod;
+        storeId: string;
         createdAt: Date;
         updatedAt: Date;
+        orderId: string;
+        method: import(".prisma/client").$Enums.DeliveryMethod;
         address: string;
         recipientName: string;
         recipientPhone: string;
@@ -102,12 +102,12 @@ export declare class DeliveryRepository {
     } | null>;
     updateStatus(id: string, status: string, trackingInfo?: string): Promise<{
         status: import(".prisma/client").$Enums.DeliveryStatus;
-        storeId: string;
-        orderId: string;
         id: string;
-        method: import(".prisma/client").$Enums.DeliveryMethod;
+        storeId: string;
         createdAt: Date;
         updatedAt: Date;
+        orderId: string;
+        method: import(".prisma/client").$Enums.DeliveryMethod;
         address: string;
         recipientName: string;
         recipientPhone: string;

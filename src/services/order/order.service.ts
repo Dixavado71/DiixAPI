@@ -6,7 +6,7 @@ import { ProductRepository } from '../../repositories/product.repository';
 import { StoreSettingsRepository } from '../../repositories/store-settings.repository';
 import { CustomerAuthorizationService } from '../customer/customer-authorization.service';
 import { OrderStateMachine } from './order-state-machine';
-import logger from '../../utils/logger';
+import { logger } from '../../utils/logger';
 
 interface CreateOrderInput {
   storeId: string;
@@ -60,7 +60,8 @@ export class OrderService {
     logger.info(logContext, 'Creating order from cart');
 
     // 1. Verify customer authorization
-    const isAllowed = await CustomerAuthorizationService.isCustomerAllowed(storeId, customerId);
+    const auth = new CustomerAuthorizationService();
+    const isAllowed = await auth.isCustomerAllowed(storeId, customerId);
     if (!isAllowed) {
       logger.warn(logContext, 'Customer not authorized for this store');
       throw new Error('CUSTOMER_NOT_AUTHORIZED');

@@ -1,7 +1,6 @@
 import { Store, StoreSettings, Customer, StoreCustomer, StoreCustomerStatus, StoreStatus, CustomerStatus } from '@prisma/client';
 import { getStoreRepository, getCustomerRepository, getStoreCustomerRepository, getStoreSettingsRepository } from '../../repositories';
 import { normalizePhone } from '../../utils/phone';
-import { getLogger } from '../../utils/logger';
 
 export interface AuthorizationResult {
   allowed: boolean;

@@ -39,9 +39,9 @@ export declare const updateOrderStatusSchema: z.ZodObject<{
         CANCELLED: "CANCELLED";
     }>;
 }, "strip", z.ZodTypeAny, {
-    status: "PENDING" | "CONFIRMED" | "PREPARING" | "READY" | "DELIVERED" | "CANCELLED" | "PAYMENT_PENDING" | "PAID" | "OUT_FOR_DELIVERY";
+    status: "PENDING" | "CONFIRMED" | "PAYMENT_PENDING" | "PAID" | "PREPARING" | "READY" | "OUT_FOR_DELIVERY" | "DELIVERED" | "CANCELLED";
 }, {
-    status: "PENDING" | "CONFIRMED" | "PREPARING" | "READY" | "DELIVERED" | "CANCELLED" | "PAYMENT_PENDING" | "PAID" | "OUT_FOR_DELIVERY";
+    status: "PENDING" | "CONFIRMED" | "PAYMENT_PENDING" | "PAID" | "PREPARING" | "READY" | "OUT_FOR_DELIVERY" | "DELIVERED" | "CANCELLED";
 }>;
 export declare const cancelOrderSchema: z.ZodObject<{
     reason: z.ZodOptional<z.ZodString>;
@@ -68,12 +68,12 @@ export declare const orderQuerySchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     limit: number;
     offset: number;
-    status?: "PENDING" | "CONFIRMED" | "PREPARING" | "READY" | "DELIVERED" | "CANCELLED" | "PAYMENT_PENDING" | "PAID" | "OUT_FOR_DELIVERY" | undefined;
+    status?: "PENDING" | "CONFIRMED" | "PAYMENT_PENDING" | "PAID" | "PREPARING" | "READY" | "OUT_FOR_DELIVERY" | "DELIVERED" | "CANCELLED" | undefined;
     customerId?: string | undefined;
 }, {
-    status?: "PENDING" | "CONFIRMED" | "PREPARING" | "READY" | "DELIVERED" | "CANCELLED" | "PAYMENT_PENDING" | "PAID" | "OUT_FOR_DELIVERY" | undefined;
-    limit?: number | undefined;
+    status?: "PENDING" | "CONFIRMED" | "PAYMENT_PENDING" | "PAID" | "PREPARING" | "READY" | "OUT_FOR_DELIVERY" | "DELIVERED" | "CANCELLED" | undefined;
     customerId?: string | undefined;
+    limit?: number | undefined;
     offset?: number | undefined;
 }>;
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;
