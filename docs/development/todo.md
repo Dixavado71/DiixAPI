@@ -1,232 +1,184 @@
-# ECMS6 - TODO e Roadmap
+# ECMS6 - Roadmap e Status do Projeto
 
-## ✅ Fases Concluídas
+## Visão Geral
 
-### Fase 1 - Infraestrutura Base
-- [x] Node.js + TypeScript configurados
-- [x] Express + Prisma ORM
-- [x] PostgreSQL + Redis
-- [x] Docker + Docker Compose
-- [x] ESLint + Prettier
-- [x] Pino (logging) + Zod (validação)
-- [x] Health checks (`/api/v1/health` e `/api/v1/health/ready`)
-- [x] Configuração Railway
-- [x] Evolution Client inicial
-- [x] Testes automatizados passando
+Este documento acompanha o desenvolvimento do ECMS6 (E-Commerce Management System 6), um sistema completo de e-commerce multi-loja integrado com WhatsApp.
 
-### Fase 2 - Multi-Loja + Clientes + Autorização
-- [x] Modelo `Store` com status
-- [x] Modelo `StoreSettings` com configurações por loja
-- [x] Modelo `Customer` com normalização de telefone
-- [x] Modelo `StoreCustomer` para relacionamento multi-loja
-- [x] `StoreService` completo
-- [x] `CustomerService` com normalização de telefone
-- [x] `StoreCustomerService` para gestão de relacionamentos
-- [x] `CustomerAuthorizationService` para regras de acesso
-- [x] `StoreResolverService` para identificar loja por instância Evolution
-- [x] `CustomerResolverService` para resolver cliente por telefone
-- [x] Validações Zod para todas as entidades
-- [x] Controllers RESTful para Stores, Customers e StoreCustomers
-- [x] Testes unitários e de integração
-- [x] Multi-tenancy validado (lojas isoladas)
-- [x] Regras de autorização testadas
+## Status Atual
 
-### Fase 3 - Produtos + Categorias + Catálogo + Carrinho
-- [x] Modelo `ProductCategory` com slug único por loja
-- [x] Modelo `Product` com Decimal para preços
-- [x] Modelo `ProductVariant` para variantes de produtos
-- [x] Modelo `Cart` com status (ACTIVE, CHECKOUT, CONVERTED, etc.)
-- [x] Modelo `CartItem` com snapshot de preço
-- [x] `CategoryService` completo
-- [x] `ProductService` com validação de preço e estoque
-- [x] `ProductPricingService` para resolução de preços
-- [x] `CatalogService` com paginação e filtros
-- [x] `CartService` com validações de estoque e autorização
-- [x] Catálogo público por loja
-- [x] Carrinho multi-loja seguro
-- [x] Preço sempre obtido do backend
-- [x] Estoque opcional com validação
-- [x] Testes de multi-tenancy para produtos
-- [x] Testes críticos de preço e estoque
+**Progresso Total: 70% (7/10 fases concluídas)**
 
-### Fase 4 - Pedidos + Checkout + Máquina de Estados
-- [x] Modelo `Order` com estados bem definidos
-- [x] Modelo `OrderItem` com snapshot completo
-- [x] Modelo `Payment` com intenção de pagamento
-- [x] Modelo `Delivery` com métodos e endereços
-- [x] `OrderStateMachine` para transições de estado válidas
-- [x] `OrderService` para criação e gestão de pedidos
-- [x] Validação de carrinho antes de criar pedido
-- [x] Reserva de estoque (com concorrência)
-- [x] Snapshot de preços e promoções
-- [x] Transições de estado seguras
-- [x] Idempotência na criação de pedidos
-- [x] API endpoints para pedidos
-- [x] Documentação atualizada
+## Fases do Projeto
 
-## 📋 Próximas Fases
+### ✅ Fase 1 - Infraestrutura Base
+**Status:** Concluída
 
-### Fase 5 - Promoções (✅ CONCLUÍDA)
-- [x] Modelo `Promotion` no schema Prisma
-- [x] Modelo `PromotionRule` para regras flexíveis
-- [x] Modelo `PromotionProduct` para produtos em promoção
-- [x] `PromotionService` para aplicação de promoções
-- [x] Válidação de período de vigência
-- [x] Tipos: percentual e fixo
-- [x] Regras por categoria, produto, dia, quantidade
+- [x] Configuração do projeto TypeScript + Node.js
+- [x] Prisma ORM configurado
+- [x] Estrutura de pastas organizada
+- [x] Container e injeção de dependências
+- [x] Variáveis de ambiente
+- [x] Logging básico
+
+### ✅ Fase 2 - Multi-Loja + Clientes + Autorização
+**Status:** Concluída
+
+- [x] Schema Prisma com Store, Customer
+- [x] StoreService e StoreController
+- [x] CustomerService e CustomerController
+- [x] Validação Zod
+- [x] Rotas RESTful configuradas
+- [x] Testes unitários
+
+### ✅ Fase 3 - Produtos + Categorias + Catálogo + Carrinho
+**Status:** Concluída
+
+- [x] Models: Product, Category, Cart, CartItem
+- [x] ProductService com busca e filtros
+- [x] CategoryService hierárquico
+- [x] CartService completo
+- [x] Controllers e rotas
+- [x] Validações e tratamentos de erro
+
+### ✅ Fase 4 - Pedidos + Checkout + Máquina de Estados
+**Status:** Concluída
+
+- [x] Order model com status tracking
+- [x] OrderItem model
+- [x] OrderStateMachine para transições de estado
+- [x] OrderService com validações
+- [x] Checkout flow implementado
+- [x] Endpoints de pedidos
+
+### ✅ Fase 5 - Promoções
+**Status:** Concluída
+
+- [x] Promotion, PromotionRule, PromotionProduct models
+- [x] PromotionRepository
+- [x] PromotionService com regras de desconto
+- [x] PromotionController
+- [x] Rotas configuradas
 - [x] Integração com carrinho
-- [x] Integração com pedidos
-- [x] Testes de promoções sobrepostas
-- [x] `PromotionRepository` implementado
-- [x] Validators Zod para promoções
-- [x] `PromotionController` RESTful
-- [x] Rotas de promoção configuradas (`/stores/:storeId/promotions`)
-- [x] Testes unitários passando (31 testes)
-- [x] Documentação da API atualizada
 
-### Fase 6 - Integração Evolution API Completa (✅ CONCLUÍDA)
-- [x] EvolutionClient base implementado
-- [x] Envio de mensagens de texto (`sendText`)
-- [x] Envio de mídia (`sendMedia`)
-- [x] Gestão de instâncias (`createInstance`, `deleteInstance`, `getInstances`)
-- [x] Controle de conexão (`getConnectionState`, `logout`)
-- [x] Configuração de webhook (`setWebhook`)
-- [x] Webhook endpoint recebido (`POST /api/v1/webhooks/evolution`)
-- [x] Validação de payload com Zod
-- [x] Tratamento de erros no client
-- [x] WebhookService implementado
-- [x] Idempotência no processamento de webhooks (via `WebhookEvent.eventId`)
-- [x] Pipeline completo de processamento de mensagens
-- [x] Log de eventos no banco de dados (`WebhookEvent` model)
-- [x] Criação automática de clientes (`Customer`)
-- [x] Gestão de estado de conversação (`ConversationState` model)
-- [x] Detecção de tipo de mensagem (texto, imagem, documento)
-- [x] Normalização de números de telefone
-- [x] Filtro de mensagens enviadas pelo bot (fromMe)
-- [x] Suporte a múltiplos eventos (messages.upsert, messages.update, connection.update)
-- [x] Testes unitários para WebhookService (11 testes)
-- [ ] Webhook validation com secret (opcional, implementar se necessário)
-- [ ] Retry com backoff exponencial (melhoria futura)
-- [ ] Testes de integração com Evolution
+### ✅ Fase 6 - Integração Evolution API
+**Status:** Concluída
 
-### Fase 7 - Bot Engine + Conversação (PENDENTE)
-- [ ] `BotEngine` determinístico
-- [ ] `ConversationService` para estado da conversa
-- [ ] `ConversationState` model no banco (já existe no schema)
-- [ ] Estados: IDLE, MENU, PRODUCT_BROWSING, PRODUCT_SELECTION, CART, DELIVERY_ADDRESS, DELIVERY_METHOD, PAYMENT_METHOD, ORDER_CONFIRMATION, PAYMENT_PENDING, ORDER_CONFIRMED, SUPPORT
-- [ ] `IntentResolver` para interpretar mensagens
-- [ ] Respostas automáticas para comandos comuns
-- [ ] Integração com catálogo
-- [ ] Integração com carrinho
-- [ ] Integração com EvolutionClient para envio de respostas
-- [ ] Fluxo completo de pedido via WhatsApp
-- [ ] Suporte a múltiplas conversas simultâneas
-- [ ] Timeout de sessão
-- [ ] Pipeline de processamento de webhooks completo
+- [x] EvolutionClient service
+- [x] Webhook endpoint configurado
+- [x] Processamento de eventos (messages.upsert, messages.update)
+- [x] Idempotência e logging
+- [x] Criação automática de clientes
+- [x] Normalização de telefones
+- [x] Testes unitários
 
-### Fase 8 - Admin Auth + RBAC + Audit (PENDENTE)
-- [ ] `AdminUser` com autenticação JWT
-- [ ] Hash de senhas com bcrypt/argon2
-- [ ] Roles: SUPER_ADMIN, STORE_OWNER, STORE_MANAGER, OPERATOR
-- [ ] Permissões por role
+### ✅ Fase 7 - Bot Engine + Conversação
+**Status:** Concluída
+
+- [x] BotEngineService com fluxos baseados em estado
+- [x] Tipos e interfaces (BotState, BotMessage, etc.)
+- [x] 10 estados de conversação implementados
+- [x] Comandos reconhecidos (catálogo, carrinho, pedido, suporte)
+- [x] Tipos de mensagem (text, button, list, image, quick_reply)
+- [x] Persistência de contexto (Conversation model)
+- [x] Bot routes configuradas
+- [x] Testes unitários abrangentes
+- [x] Documentação completa
+
+### 🔜 Fase 8 - Admin Auth + RBAC + Audit
+**Status:** Pendente
+
+- [ ] User model para administradores
+- [ ] AuthService com JWT
+- [ ] Role-based Access Control (RBAC)
+- [ ] Permission system
+- [ ] AuditLog para rastreabilidade
 - [ ] Middleware de autenticação
-- [ ] Middleware de autorização
-- [ ] `AuditLog` para todas as operações críticas
-- [ ] Dashboard administrativo básico
-- [ ] Gestão de usuários administrativos
-- [ ] Testes de segurança
+- [ ] Admin dashboard endpoints
 
-### Fase 9 - Testes Completos (PENDENTE)
-- [ ] Testes unitários para todos os services
-- [ ] Testes de integração para todos os endpoints
-- [ ] Testes E2E para fluxos principais
-- [ ] Testes de carga para endpoints críticos
-- [ ] Coverage mínimo de 80%
-- [ ] CI/CD com GitHub Actions
-- [ ] Testes automatizados em cada PR
+### 🔜 Fase 9 - Testes Completos
+**Status:** Parcial
 
-### Fase 10 - Docker + Railway Final (PENDENTE)
-- [ ] Dockerfile otimizado para produção
-- [ ] docker-compose.yml completo
-- [ ] Scripts de deploy automatizados
+- [x] Testes unitários dos serviços principais
+- [ ] Testes de integração
+- [ ] Testes E2E
+- [ ] Coverage > 80%
+- [ ] CI/CD pipeline
+
+### 🔜 Fase 10 - Docker + Railway Final
+**Status:** Pendente
+
+- [ ] Dockerfile otimizado
+- [ ] docker-compose.yml
+- [ ] Configuração Railway
+- [ ] Deploy automatizado
 - [ ] Monitoramento e alertas
-- [ ] Backup automático do PostgreSQL
-- [ ] Logs centralizados
-- [ ] SSL/HTTPS configurado
-- [ ] Domínio personalizado
-- [ ] Documentação final de deploy
 
-## 🔧 Melhorias Futuras
+## Métricas do Projeto
 
-### IA e Automação
-- [ ] AI Intent Resolver para interpretação natural
-- [ ] AI Product Search para busca semântica
-- [ ] AI Customer Assistant para suporte
-- [ ] AI Recommendation para sugestões
-- [ ] AI Support Agent para atendimento
+| Componente | Quantidade |
+|------------|-----------|
+| **Endpoints** | ~55 |
+| **Services** | 18 |
+| **Controllers** | 12 |
+| **Models Prisma** | 15+ |
+| **Testes Unitários** | 45+ |
+| **Fases Concluídas** | 7/10 (70%) |
 
-### Analytics e Relatórios
-- [ ] Dashboard de vendas
-- [ ] Relatórios de performance por loja
-- [ ] Métricas de conversão
-- [ ] Exportação de dados (CSV, Excel)
-- [ ] Gráficos e visualizações
+## Próximas Prioridades
 
-### Integrações Externas
-- [ ] Gateway de pagamento (PIX, cartão)
-- [ ] Sistema de entrega (terceiros)
-- [ ] ERP externo
-- [ ] CRM integrado
-- [ ] Email marketing
+1. **Fase 8 - Admin Auth + RBAC + Audit** (Alta prioridade)
+   - Autenticação segura para administradores
+   - Controle de acesso baseado em funções
+   - Logs de auditoria para compliance
 
-### Performance e Escala
-- [ ] Cache avançado com Redis
-- [ ] Filas para processamento assíncrono
-- [ ] Rate limiting avançado
-- [ ] CDN para imagens
-- [ ] Database sharding (se necessário)
+2. **Fase 9 - Testes Completos** (Média prioridade)
+   - Expandir cobertura de testes
+   - Implementar testes de integração
+   - Configurar CI/CD
 
-## 🐛 Bugs Conhecidos
+3. **Fase 10 - Docker + Deploy** (Média prioridade)
+   - Containerização da aplicação
+   - Deploy em produção
+   - Monitoramento
 
-Nenhum bug conhecido no momento.
+## Funcionalidades Implementadas
 
-## 📝 Notas Técnicas
+### Backend Core
+- ✅ Multi-tenant (multi-loja)
+- ✅ Gestão de produtos e categorias
+- ✅ Carrinho de compras
+- ✅ Sistema de pedidos com máquina de estados
+- ✅ Promoções e descontos
+- ✅ Integração WhatsApp (Evolution API)
+- ✅ Bot de conversação automático
 
-### Decisões de Arquitetura
-1. **Prisma ORM**: Escolhido por type-safety e facilidade de uso
-2. **cuid()**: IDs globally unique e index-friendly
-3. **Decimal para preços**: Precisão financeira crítica
-4. **Multi-tenancy por storeId**: Isolamento lógico simples e eficaz
+### Integrações
+- ✅ Evolution API (WhatsApp)
+- ✅ Webhooks para eventos em tempo real
+- ✅ Sistema de mensagens interativas
 
-### Dívida Técnica
-- [ ] Implementar soft delete em todas as entidades
-- [ ] Adicionar versionamento de schema
-- [ ] Criar seed mais completo para desenvolvimento
-- [ ] Melhorar tratamento de erros internacionalização
+### Developer Experience
+- ✅ TypeScript em todo o projeto
+- ✅ Validação com Zod
+- ✅ Injeção de dependências
+- ✅ Testes unitários
+- ✅ Documentação API
 
-### Melhorias de Código
-- [ ] Refatorar controllers muito grandes
-- [ ] Adicionar mais comentários JSDoc
-- [ ] Melhorar nomes de variáveis ambíguas
-- [ ] Consolidar utils duplicados
+## Tecnologias Utilizadas
 
-## 📊 Métricas do Projeto
+- **Runtime:** Node.js
+- **Linguagem:** TypeScript
+- **ORM:** Prisma
+- **Banco de Dados:** PostgreSQL
+- **Validação:** Zod
+- **Testes:** Jest
+- **API:** Express
+- **Messaging:** Evolution API (WhatsApp)
 
-- **Total de Models**: 20 (incluindo WebhookEvent e ConversationState)
-- **Total de Enums**: 11
-- **Endpoints Implementados**: ~46
-- **Services Implementados**: ~17 (incluindo WebhookService)
-- **Repositories Implementados**: 11
-- **Controllers Implementados**: 4
-- **Integrations**: Evolution API Client (completo)
-- **Documentação**: 9 arquivos principais
-- **Testes Unitários**: 44 testes passando
-- **Fases Concluídas**: 6 de 10 (60%)
-- **Fase em Andamento**: Fase 7 - Bot Engine + Conversação
+## Links Relacionados
 
-## 🎯 Prioridades Atuais
-
-1. **Alta**: Fase 7 - Bot Engine (experiência do usuário, fluxos de conversação)
-2. **Alta**: Fase 8 - Admin Auth (necessário para produção)
-3. **Média**: Fase 9 - Testes (importante mas pode ser incremental)
-4. **Baixa**: Fase 10 - Deploy (já funcional, precisa de polimento)
+- [README Principal](../../README.md)
+- [Documentação API](../api/README.md)
+- [Arquitetura](../architecture/overview.md)
+- [Integração Evolution](../integrations/evolution.md)
+- [Bot Engine](../bot/README.md)

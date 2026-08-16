@@ -1,285 +1,229 @@
-# ECMS6 - Plataforma Comercial Multi-Loja para WhatsApp
+# ECMS6 - E-Commerce Management System 6
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue)](https://www.typescriptlang.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-20+-green)](https://nodejs.org/)
-[![Prisma](https://img.shields.io/badge/Prisma-5.22-blue)](https://prisma.io/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-blue)](https://www.postgresql.org/)
-[![Redis](https://img.shields.io/badge/Redis-6+-red)](https://redis.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-20-green)](https://nodejs.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-5.0-purple)](https://www.prisma.io/)
+[![Progress](https://img.shields.io/badge/Progress-70%25-yellow)]()
 
-Plataforma comercial multi-loja integrada ao WhatsApp via Evolution API para automação de vendas, atendimento e gestão de pedidos.
+Sistema completo de e-commerce multi-loja integrado com WhatsApp, desenvolvido em TypeScript/Node.js.
 
-## 🎯 Visão Geral
+## 🚀 Status do Projeto
 
-ECMS6 permite que múltiplas lojas operem independentemente através do WhatsApp, com:
+**Progresso: 70% (7/10 fases concluídas)**
 
-- ✅ **Multi-Tenancy**: Cada loja com dados isolados e configurações próprias
-- ✅ **Catálogo de Produtos**: Gestão completa de produtos, categorias e variantes
-- ✅ **Carrinho de Compras**: Carrinho persistente por cliente e loja
-- ✅ **Pedidos**: Fluxo completo com máquina de estados
-- ✅ **Pagamentos**: Suporte a PIX, cartão, dinheiro e pagamento na entrega
-- ✅ **Entregas**: Múltiplos métodos de entrega configuráveis
-- ✅ **Clientes**: Cadastro, aprovação e bloqueio por loja
-- ✅ **WhatsApp Integration**: Atendimento automático via Evolution API
+### ✅ Fases Concluídas
 
-## 📚 Documentação Completa
+| Fase | Descrição | Status |
+|------|-----------|--------|
+| 1 | Infraestrutura Base | ✅ Concluída |
+| 2 | Multi-Loja + Clientes + Autorização | ✅ Concluída |
+| 3 | Produtos + Categorias + Catálogo + Carrinho | ✅ Concluída |
+| 4 | Pedidos + Checkout + Máquina de Estados | ✅ Concluída |
+| 5 | Promoções (sistema completo) | ✅ Concluída |
+| 6 | Integração Evolution API | ✅ Concluída |
+| 7 | Bot Engine + Conversação | ✅ Concluída |
 
-A documentação detalhada está em [`docs/`](./docs/):
+### 🔜 Próximas Fases
 
-| Seção | Descrição |
-|-------|-----------|
-| [📐 Arquitetura](./docs/architecture/overview.md) | Stack, estrutura, princípios de design |
-| [💾 Database](./docs/database/schema.md) | Schema completo, models, enums, índices |
-| [🔌 API Reference](./docs/api/README.md) | Endpoints, autenticação, erros |
-| [🔒 Segurança](./docs/security/guidelines.md) | Validação, autorização, LGPD |
-| [🚀 Deploy Railway](./docs/deployment/railway.md) | Guia completo de deploy |
-| [🔄 Webhooks](./docs/webhooks/evolution.md) | Integração com Evolution API |
-| [🛠️ Multi-Tenancy](./docs/development/multi-tenancy.md) | Isolamento de lojas, validações |
-| [📋 TODO/Roadmap](./docs/development/todo.md) | Fases concluídas e pendentes |
+| Fase | Descrição | Prioridade |
+|------|-----------|------------|
+| 8 | Admin Auth + RBAC + Audit | Alta |
+| 9 | Testes Completos | Média |
+| 10 | Docker + Railway Final | Média |
 
-## 🚀 Quick Start
+## 📋 Funcionalidades
 
-### Pré-requisitos
+### Core E-Commerce
+- ✅ **Multi-tenant**: Suporte a múltiplas lojas independentes
+- ✅ **Catálogo de Produtos**: Gestão completa com categorias
+- ✅ **Carrinho de Compras**: Adição, remoção e atualização de itens
+- ✅ **Checkout**: Fluxo completo de compra
+- ✅ **Pedidos**: Sistema com máquina de estados para tracking
+- ✅ **Promoções**: Regras de desconto flexíveis
 
-- Node.js >= 20
-- Docker + Docker Compose
-- PostgreSQL 14+
-- Redis 6+
+### Integração WhatsApp
+- ✅ **Evolution API**: Conexão com WhatsApp Business
+- ✅ **Webhooks**: Processamento de eventos em tempo real
+- ✅ **Bot Engine**: Conversação automática baseada em estados
+- ✅ **Criação Automática de Clientes**: Onboarding via WhatsApp
 
-### Instalação Local
-
-```bash
-# 1. Clonar repositório
-git clone <repository-url>
-cd ecms6
-
-# 2. Instalar dependências
-npm install
-
-# 3. Configurar variáveis de ambiente
-cp .env.example .env
-# Editar .env com suas credenciais
-
-# 4. Subir banco de dados e Redis
-docker compose up -d
-
-# 5. Rodar migrations
-npx prisma migrate dev
-
-# 6. Gerar Prisma Client
-npx prisma generate
-
-# 7. Iniciar servidor em desenvolvimento
-npm run dev
-```
-
-A API estará disponível em `http://localhost:3000`.
-
-### Health Checks
-
-```bash
-# Status do serviço
-curl http://localhost:3000/api/v1/health
-
-# Verifica PostgreSQL e Redis
-curl http://localhost:3000/api/v1/health/ready
-```
+### Bot Engine
+- ✅ **10 Estados de Conversação**: Do catálogo ao suporte
+- ✅ **Mensagens Interativas**: Botões, listas, imagens
+- ✅ **Contexto Persistente**: Continuidade nas conversas
+- ✅ **Comandos Inteligentes**: Reconhecimento natural
 
 ## 🏗️ Arquitetura
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    HTTP Layer (Express)                     │
-│         (Routes, Middleware, CORS, Rate Limiting)           │
+│                      API Layer                               │
+│  Express Router + Middleware + Validation (Zod)             │
 └─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│                 Controllers (Request/Response)              │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│              Services (Business Logic Core)                 │
-│     (Store, Customer, Product, Cart, Order, Payment)        │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│            Repositories (Data Access with Prisma)           │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│                PostgreSQL + Redis Cache                     │
-└─────────────────────────────────────────────────────────────┘
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+        ▼                     ▼                     ▼
+┌───────────────┐   ┌─────────────────┐   ┌───────────────┐
+│  Controllers  │   │    Services     │   │   Webhook     │
+│  (REST API)   │   │  (Business Log) │   │   Handler     │
+└───────────────┘   └─────────────────┘   └───────────────┘
+                              │
+                    ┌─────────▼─────────┐
+                    │   Repositories    │
+                    │   (Prisma ORM)    │
+                    └─────────┬─────────┘
+                              │
+                    ┌─────────▼─────────┐
+                    │   PostgreSQL DB   │
+                    └───────────────────┘
 ```
 
-## 📁 Estrutura do Projeto
+## 🛠️ Tecnologias
 
-```
-ecms6/
-├── src/
-│   ├── app.ts                 # Configuração Express
-│   ├── server.ts              # Entry point
-│   ├── config/                # Configurações (env, database, redis)
-│   ├── routes/                # Rotas da API
-│   ├── controllers/           # Controladores HTTP
-│   ├── services/              # Regras de negócio
-│   ├── repositories/          # Acesso a dados
-│   ├── validators/            # Schemas Zod
-│   ├── middleware/            # Middleware Express
-│   ├── integrations/          # Evolution API client
-│   ├── types/                 # Tipos TypeScript
-│   └── utils/                 # Utilitários
-├── prisma/
-│   ├── schema.prisma          # Schema do banco
-│   └── migrations/            # Migrations
-├── tests/
-│   ├── unit/                  # Testes unitários
-│   └── integration/           # Testes de integração
-├── docs/                      # Documentação completa
-├── docker/                    # Configurações Docker
-├── Dockerfile
-├── docker-compose.yml
-├── railway.toml
-└── package.json
-```
+- **Runtime:** Node.js 20+
+- **Linguagem:** TypeScript 5+
+- **Framework:** Express.js
+- **ORM:** Prisma 5+
+- **Banco de Dados:** PostgreSQL
+- **Validação:** Zod
+- **Testes:** Jest
+- **Messaging:** Evolution API (WhatsApp)
 
-## 🔧 Scripts Disponíveis
+## 📦 Instalação
 
 ```bash
-# Desenvolvimento
-npm run dev              # Iniciar em modo desenvolvimento
-npm run build            # Compilar TypeScript
-npm run start            # Iniciar em produção
+# Clonar repositório
+git clone https://github.com/seu-usuario/ecms6.git
+cd ecms6
 
-# Qualidade de código
-npm run lint             # Executar ESLint
-npm run lint:fix         # Corrigir problemas ESLint
-npm run format           # Formatrar com Prettier
-npm run format:check     # Verificar formatação
+# Instalar dependências
+npm install
 
-# Banco de dados
-npm run prisma:generate  # Gerar Prisma Client
-npm run prisma:migrate   # Criar/executar migrations
-npm run prisma:studio    # Abrir Prisma Studio
+# Configurar variáveis de ambiente
+cp .env.example .env
 
-# Testes
-npm test                 # Executar testes
-npm run test:watch       # Testes em watch mode
-npm run test:coverage    # Testes com coverage
+# Gerar Prisma Client
+npx prisma generate
 
-# Docker
-npm run docker:up        # Subir containers
-npm run docker:down      # Derrubar containers
-npm run docker:logs      # Ver logs dos containers
+# Rodar migrações
+npx prisma migrate dev
+
+# Iniciar servidor
+npm run dev
 ```
 
-## 🌍 Variáveis de Ambiente
+## 📖 Documentação
 
-Copie `.env.example` para `.env` e configure:
+| Documento | Descrição |
+|-----------|-----------|
+| [API Reference](docs/api/README.md) | Documentação completa da API REST |
+| [Arquitetura](docs/architecture/overview.md) | Visão geral da arquitetura |
+| [Bot Engine](docs/bot/README.md) | Sistema de conversação |
+| [Evolution API](docs/integrations/evolution.md) | Integração WhatsApp |
+| [Roadmap](docs/development/todo.md) | Status e próximas fases |
 
-```bash
-# Servidor
-NODE_ENV=development
-PORT=3000
+## 🔌 Endpoints Principais
 
-# Banco de Dados
-DATABASE_URL=postgresql://user:password@localhost:5432/ecms6
-
-# Redis
-REDIS_URL=redis://localhost:6379
-
-# Evolution API
-EVOLUTION_API_URL=https://evolution-api-production-8490.up.railway.app
-EVOLUTION_API_KEY=sua_chave_aqui
-EVOLUTION_WEBHOOK_SECRET=seu_secret_aqui
-
-# Segurança
-JWT_SECRET=gerar_aleatorio_seguro
-
-# Logs
-LOG_LEVEL=info
-
-# CORS
-CORS_ORIGIN=http://localhost:3000
-
-# Rate Limiting
-RATE_LIMIT_WINDOW_MS=60000
-RATE_LIMIT_MAX=100
+### Stores
+```
+GET    /api/stores              # Listar lojas
+POST   /api/stores              # Criar loja
+GET    /api/stores/:id          # Obter loja
+PUT    /api/stores/:id          # Atualizar loja
+DELETE /api/stores/:id          # Deletar loja
 ```
 
-## 🚢 Deploy no Railway
+### Products
+```
+GET    /api/stores/:storeId/products     # Listar produtos
+POST   /api/stores/:storeId/products     # Criar produto
+GET    /api/products/:id                 # Obter produto
+PUT    /api/products/:id                 # Atualizar produto
+DELETE /api/products/:id                 # Deletar produto
+```
 
-1. Conecte seu repositório GitHub ao Railway
-2. Adicione serviços: PostgreSQL + Redis
-3. Configure variáveis de ambiente
-4. Deploy automático em cada push
+### Orders
+```
+GET    /api/stores/:storeId/orders       # Listar pedidos
+POST   /api/orders                       # Criar pedido
+GET    /api/orders/:id                   # Obter pedido
+PUT    /api/orders/:id/status            # Atualizar status
+```
 
-Veja o guia completo em [docs/deployment/railway.md](./docs/deployment/railway.md)
+### Bot
+```
+POST   /api/bot/:customerId/:storeId/message  # Enviar mensagem
+POST   /api/bot/:customerId/:storeId/reset    # Resetar contexto
+POST   /api/bot/:customerId/:storeId/end      # Finalizar conversa
+GET    /api/bot/:customerId/:storeId/context  # Obter contexto
+```
+
+### Webhook
+```
+POST   /api/webhook/evolution      # Receber eventos WhatsApp
+GET    /api/webhook/health         # Health check
+```
 
 ## 🧪 Testes
 
 ```bash
-# Executar todos os testes
+# Executar testes unitários
 npm test
 
-# Testes específicos
-npx vitest tests/unit/services/store.service.test.ts
-
-# Coverage
+# Executar com coverage
 npm run test:coverage
+
+# Executar testes específicos
+npm test -- bot-engine
 ```
 
-## 📊 Status das Fases
+## 📊 Métricas do Projeto
 
-| Fase | Status | Descrição |
-|------|--------|-----------|
-| 1 | ✅ | Infraestrutura base (Node, TS, Express, Prisma, Docker) |
-| 2 | ✅ | Multi-loja + Clientes + Autorização |
-| 3 | ✅ | Produtos + Categorias + Catálogo + Carrinho |
-| 4 | ✅ | Pedidos + Checkout + Máquina de Estados |
-| 5 | ✅ | Promoções (sistema completo implementado) |
-| 6 | ⏳ | Integração Evolution API completa |
-| 7 | ⏳ | Bot Engine + Conversação |
-| 8 | ⏳ | Admin Auth + RBAC + Audit |
-| 9 | ⏳ | Testes completos |
-| 10 | ⏳ | Docker + Railway final |
+| Componente | Quantidade |
+|------------|-----------|
+| Endpoints | ~55 |
+| Services | 18 |
+| Controllers | 12 |
+| Models Prisma | 15+ |
+| Testes Unitários | 45+ |
 
-## 🔐 Segurança
+## 🔐 Variáveis de Ambiente
 
-- Validação de todas as entradas com Zod
-- Headers de segurança com Helmet
-- Rate limiting configurável
-- Logs sem dados sensíveis
-- Multi-tenancy enforced em todas as queries
-- Idempotência em webhooks e operações críticas
+```env
+# Server
+PORT=3000
+NODE_ENV=development
 
-Veja mais em [docs/security/guidelines.md](./docs/security/guidelines.md)
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/ecms6"
 
-## 🤝 Contribuição
+# Evolution API
+EVOLUTION_API_URL="http://localhost:8080"
+EVOLUTION_API_KEY="your-api-key"
+
+# JWT
+JWT_SECRET="your-secret-key"
+```
+
+## 🤝 Contribuindo
 
 1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
+2. Crie uma branch (`git checkout -b feature/nova-feature`)
+3. Commit suas mudanças (`git commit -m 'Add nova feature'`)
+4. Push (`git push origin feature/nova-feature`)
 5. Abra um Pull Request
 
-## 📄 Licença
+## 📝 Licença
 
-MIT License - veja o arquivo LICENSE para detalhes.
+MIT License - veja [LICENSE](LICENSE) para detalhes.
 
 ## 📞 Suporte
 
-Para dúvidas ou problemas:
-
-1. Consulte a [documentação](./docs/)
-2. Verifique os logs da aplicação
-3. Execute os testes para identificar problemas
-
-## 🙏 Agradecimentos
-
-- [Prisma](https://prisma.io/) - ORM type-safe
-- [Evolution API](https://github.com/EvolutionAPI) - Integração WhatsApp
-- [Express](https://expressjs.com/) - Framework web
-- [Zod](https://zod.dev/) - Validação de schemas
+- **Issues:** GitHub Issues
+- **Email:** suporte@ecms6.com
+- **Documentação:** [docs/](docs/)
 
 ---
 
-**ECMS6** - Plataforma comercial multi-loja para WhatsApp 🚀
+**ECMS6** - Construindo o futuro do e-commerce com WhatsApp 🚀
