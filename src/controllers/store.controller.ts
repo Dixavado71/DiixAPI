@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { StoreService } from '../../services/store/store.service.js';
-import { createStoreSchema, updateStoreSchema } from '../../validators/store.validator.js';
-import { getLogger } from '../../utils/logger.js';
+import { StoreService } from '../../services/store/store.service';
+import { createStoreSchema, updateStoreSchema } from '../../validators/store.validator';
+import { getLogger } from '../../utils/logger';
 
 const logger = getLogger().child({ module: 'store-controller' });
 const storeService = new StoreService();

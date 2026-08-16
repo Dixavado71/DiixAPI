@@ -1,32 +1,22 @@
 import pino, { Logger } from 'pino';
 
-let logger: Logger;
+const logger = pino({
+  level: process.env.LOG_LEVEL || 'info',
+  timestamp: pino.stdTimeFunctions.isoTime,
+  formatters: {
+    level: (label) => ({ level: label }),
+  },
+  base: {
+    service: 'ecms6',
+  },
+});
 
 export function getLogger(): Logger {
-  if (!logger) {
-    const logLevel = process.env.LOG_LEVEL || 'info';
-
-    logger = pino({
-      level: logLevel,
-      timestamp: pino.stdTimeFunctions.isoTime,
-      formatters: {
-        level: (label) => ({ level: label }),
-      },
-      base: {
-        service: 'ecms6',
-      },
-    });
-  }
-
   return logger;
 }
 
 export function createChildLogger(name: string): Logger {
-  return getLogger().child({ module: name });
+  return logger.child({ module: name });
 }
 
-// Export logger instance for direct use
-export { logger as default };
-
-// Initialize logger on module load
-logger = getLogger();
+export { logger };

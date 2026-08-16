@@ -3,8 +3,6 @@ import { getStoreRepository, getCustomerRepository, getStoreCustomerRepository, 
 import { normalizePhone } from '../../utils/phone';
 import { getLogger } from '../../utils/logger';
 
-const logger = getLogger().child({ module: 'customer-authorization' });
-
 export interface AuthorizationResult {
   allowed: boolean;
   reason: string;

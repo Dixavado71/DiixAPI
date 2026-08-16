@@ -1,11 +1,11 @@
-import { OrderStatus, PaymentMethod, DeliveryMethod } from '@prisma/client';
+import { OrderStatus } from '@prisma/client';
 
 // Define valid state transitions
 const ORDER_STATE_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   PENDING: ['CONFIRMED', 'CANCELLED'],
   CONFIRMED: ['PAYMENT_PENDING', 'PAID', 'PREPARING', 'CANCELLED'],
   PAYMENT_PENDING: ['PAID', 'PREPARING', 'CANCELLED'],
-  PAID: ['PREPARING', 'CANCELLED'],
+  PAID: ['PREPARING', 'READY', 'CANCELLED'],
   PREPARING: ['READY', 'CANCELLED'],
   READY: ['OUT_FOR_DELIVERY', 'CANCELLED'],
   OUT_FOR_DELIVERY: ['DELIVERED', 'CANCELLED'],

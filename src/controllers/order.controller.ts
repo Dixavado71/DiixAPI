@@ -1,14 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
-import { OrderService } from '../../services/order/order.service.js';
-import { OrderStateMachine } from '../../services/order/order-state-machine.js';
+import { OrderService } from '../../services/order/order.service';
+import { OrderStateMachine } from '../../services/order/order-state-machine';
 import {
   createOrderSchema,
   updateOrderStatusSchema,
   cancelOrderSchema,
   orderQuerySchema,
-} from '../../validators/order.validator.js';
-import { OrderStatus } from '@prisma/client';
-import { logger } from '../../utils/logger.js';
+} from '../../validators/order.validator';
+import { logger } from '../../utils/logger';
 
 export class OrderController {
   private orderService: OrderService;
