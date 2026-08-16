@@ -7,10 +7,10 @@ const logger = baseLogger.child({ module: 'store-controller' });
 const storeService = new StoreService();
 
 export class StoreController {
-  async findAll(_req: Request, res: Response, next: NextFunction) {
+  async findAll(_req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const stores = await storeService.findAll();
-      return res.json({
+      res.json({
         success: true,
         data: stores,
       });
@@ -18,23 +18,34 @@ export class StoreController {
       next(error);
     }
   }
-
-  async findById(req: Request, res: Response, next: NextFunction) {
+  
+  async findById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
+      if (!id || Array.isArray(id)) {
+        res.status(400).json({
+          success: false,
+          error: {
+            code: 'INVALID_ID',
+            message: 'Invalid store ID',
+          },
+        });
+        return;
+      }
       const store = await storeService.findById(id);
 
       if (!store) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: {
             code: 'STORE_NOT_FOUND',
             message: 'Store not found',
           },
         });
+        return;
       }
 
-      return res.json({
+      res.json({
         success: true,
         data: store,
       });
@@ -42,181 +53,240 @@ export class StoreController {
       next(error);
     }
   }
-
-  async create(req: Request, res: Response, next: NextFunction) {
+  
+  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const validatedData = createStoreSchema.parse(req.body);
       const store = await storeService.create(validatedData);
 
       logger.info({ storeId: store.id }, 'Store created via API');
       
-      return res.status(201).json({
+      res.status(201).json({
         success: true,
         data: store,
       });
     } catch (error: unknown) {
       const err = error as { message?: string };
       if (err.message === 'STORE_ALREADY_EXISTS') {
-        return res.status(409).json({
+        res.status(409).json({
           success: false,
           error: {
             code: 'STORE_ALREADY_EXISTS',
             message: 'A store with this slug already exists',
           },
         });
+        return;
       }
       if (err.message === 'EVOLUTION_INSTANCE_ALREADY_EXISTS') {
-        return res.status(409).json({
+        res.status(409).json({
           success: false,
           error: {
             code: 'EVOLUTION_INSTANCE_ALREADY_EXISTS',
             message: 'A store with this Evolution instance already exists',
           },
         });
+        return;
       }
       next(error);
     }
   }
-
-  async update(req: Request, res: Response, next: NextFunction) {
+  
+  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
+      if (!id || Array.isArray(id)) {
+        res.status(400).json({
+          success: false,
+          error: {
+            code: 'INVALID_ID',
+            message: 'Invalid store ID',
+          },
+        });
+        return;
+      }
       const validatedData = updateStoreSchema.parse(req.body);
       const store = await storeService.update(id, validatedData);
 
       logger.info({ storeId: id }, 'Store updated via API');
       
-      return res.json({
+      res.json({
         success: true,
         data: store,
       });
     } catch (error: unknown) {
       const err = error as { message?: string };
       if (err.message === 'STORE_NOT_FOUND') {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: {
             code: 'STORE_NOT_FOUND',
             message: 'Store not found',
           },
         });
+        return;
       }
       if (err.message === 'STORE_ALREADY_EXISTS') {
-        return res.status(409).json({
+        res.status(409).json({
           success: false,
           error: {
             code: 'STORE_ALREADY_EXISTS',
             message: 'A store with this slug already exists',
           },
         });
+        return;
       }
       if (err.message === 'EVOLUTION_INSTANCE_ALREADY_EXISTS') {
-        return res.status(409).json({
+        res.status(409).json({
           success: false,
           error: {
             code: 'EVOLUTION_INSTANCE_ALREADY_EXISTS',
             message: 'A store with this Evolution instance already exists',
           },
         });
+        return;
       }
       next(error);
     }
   }
-
-  async activate(req: Request, res: Response, next: NextFunction) {
+  
+  async activate(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
+      if (!id || Array.isArray(id)) {
+        res.status(400).json({
+          success: false,
+          error: {
+            code: 'INVALID_ID',
+            message: 'Invalid store ID',
+          },
+        });
+        return;
+      }
       const store = await storeService.activate(id);
 
-      return res.json({
+      res.json({
         success: true,
         data: store,
       });
     } catch (error: unknown) {
       const err = error as { message?: string };
       if (err.message === 'STORE_NOT_FOUND') {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: {
             code: 'STORE_NOT_FOUND',
             message: 'Store not found',
           },
         });
+        return;
       }
       next(error);
     }
   }
-
-  async deactivate(req: Request, res: Response, next: NextFunction) {
+  
+  async deactivate(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
+      if (!id || Array.isArray(id)) {
+        res.status(400).json({
+          success: false,
+          error: {
+            code: 'INVALID_ID',
+            message: 'Invalid store ID',
+          },
+        });
+        return;
+      }
       const store = await storeService.deactivate(id);
 
-      return res.json({
+      res.json({
         success: true,
         data: store,
       });
     } catch (error: unknown) {
       const err = error as { message?: string };
       if (err.message === 'STORE_NOT_FOUND') {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: {
             code: 'STORE_NOT_FOUND',
             message: 'Store not found',
           },
         });
+        return;
       }
       next(error);
     }
   }
-
-  async getSettings(req: Request, res: Response, next: NextFunction) {
+  
+  async getSettings(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
+      if (!id || Array.isArray(id)) {
+        res.status(400).json({
+          success: false,
+          error: {
+            code: 'INVALID_ID',
+            message: 'Invalid store ID',
+          },
+        });
+        return;
+      }
       const settings = await storeService.getSettings(id);
 
-      return res.json({
+      res.json({
         success: true,
         data: settings,
       });
     } catch (error: unknown) {
       const err = error as { message?: string };
       if (err.message === 'STORE_NOT_FOUND') {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: {
             code: 'STORE_NOT_FOUND',
             message: 'Store not found',
           },
         });
+        return;
       }
       next(error);
     }
   }
-
-  async updateSettings(req: Request, res: Response, next: NextFunction) {
+  
+  async updateSettings(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
+      if (!id || Array.isArray(id)) {
+        res.status(400).json({
+          success: false,
+          error: {
+            code: 'INVALID_ID',
+            message: 'Invalid store ID',
+          },
+        });
+        return;
+      }
       const validatedData = req.body;
       const settings = await storeService.updateSettings(id, validatedData);
 
       logger.info({ storeId: id }, 'Store settings updated via API');
       
-      return res.json({
+      res.json({
         success: true,
         data: settings,
       });
     } catch (error: unknown) {
       const err = error as { message?: string };
       if (err.message === 'STORE_NOT_FOUND') {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: {
             code: 'STORE_NOT_FOUND',
             message: 'Store not found',
           },
         });
+        return;
       }
       next(error);
     }
