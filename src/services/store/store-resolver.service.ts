@@ -1,6 +1,6 @@
 import { Store } from '@prisma/client';
-import { getStoreRepository } from '../repositories';
-import { getLogger } from '../utils/logger';
+import { getStoreRepository } from '../../repositories';
+import { getLogger } from '../../utils/logger';
 
 const logger = getLogger().child({ module: 'store-resolver' });
 

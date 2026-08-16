@@ -1,9 +1,8 @@
-import { Store, StoreSettings } from '@prisma/client';
-import { getStoreRepository } from '../repositories';
-import { getStoreSettingsRepository } from '../repositories';
-import { CreateStoreInput, UpdateStoreInput } from '../validators/store.validator';
-import { UpdateStoreSettingsInput } from '../validators/store-settings.validator';
-import { getLogger } from '../utils/logger';
+import { StoreSettings } from '@prisma/client';
+import { getStoreRepository, getStoreSettingsRepository } from '../../repositories';
+import { CreateStoreInput, UpdateStoreInput } from '../../validators/store.validator';
+import { UpdateStoreSettingsInput } from '../../validators/store-settings.validator';
+import { getLogger } from '../../utils/logger';
 
 const logger = getLogger().child({ module: 'store-service' });
 

@@ -5,6 +5,14 @@ const logger = pino({ name: 'database' });
 
 let prismaInstance: PrismaClient | null = null;
 
+export const prisma = new PrismaClient({
+  log: [
+    { level: 'error', emit: 'stdout' },
+    { level: 'info', emit: 'stdout' },
+    { level: 'warn', emit: 'stdout' },
+  ],
+});
+
 export function getPrismaClient(): PrismaClient {
   if (!prismaInstance) {
     prismaInstance = new PrismaClient({

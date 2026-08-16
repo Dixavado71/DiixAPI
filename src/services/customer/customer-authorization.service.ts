@@ -1,10 +1,7 @@
-import { Store, StoreSettings, Customer, StoreCustomer, StoreCustomerStatus } from '@prisma/client';
-import { getStoreRepository } from '../repositories';
-import { getCustomerRepository } from '../repositories';
-import { getStoreCustomerRepository } from '../repositories';
-import { getStoreSettingsRepository } from '../repositories';
-import { normalizePhone } from '../utils/phone';
-import { getLogger } from '../utils/logger';
+import { Store, StoreSettings, Customer, StoreCustomer, StoreCustomerStatus, StoreStatus, CustomerStatus } from '@prisma/client';
+import { getStoreRepository, getCustomerRepository, getStoreCustomerRepository, getStoreSettingsRepository } from '../../repositories';
+import { normalizePhone } from '../../utils/phone';
+import { getLogger } from '../../utils/logger';
 
 const logger = getLogger().child({ module: 'customer-authorization' });
 

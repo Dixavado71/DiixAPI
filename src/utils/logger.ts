@@ -24,3 +24,9 @@ export function getLogger(): Logger {
 export function createChildLogger(name: string): Logger {
   return getLogger().child({ module: name });
 }
+
+// Export logger instance for direct use
+export { logger as default };
+
+// Initialize logger on module load
+logger = getLogger();
