@@ -7,6 +7,8 @@ __pycache__/
 dist/
 build/
 *.d.ts
+*.d.ts.map
+*.js
 *.js.map
 
 # Dependencies
@@ -27,14 +29,7 @@ venv/
 .vscode/
 .idea/
 
-# Coverage
-coverage/
-htmlcov/
-.coverage
-
-# Distribution / packaging
-*.tar.gz
-*.whl
-*.egg
-*.egg-info/
+# OS generated files
+.DS_Store
+Thumbs.db
 ```

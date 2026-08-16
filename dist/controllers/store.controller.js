@@ -10,7 +10,7 @@ class StoreController {
     async findAll(_req, res, next) {
         try {
             const stores = await storeService.findAll();
-            return res.json({
+            res.json({
                 success: true,
                 data: stores,
             });
@@ -22,17 +22,28 @@ class StoreController {
     async findById(req, res, next) {
         try {
             const { id } = req.params;
+            if (!id || Array.isArray(id)) {
+                res.status(400).json({
+                    success: false,
+                    error: {
+                        code: 'INVALID_ID',
+                        message: 'Invalid store ID',
+                    },
+                });
+                return;
+            }
             const store = await storeService.findById(id);
             if (!store) {
-                return res.status(404).json({
+                res.status(404).json({
                     success: false,
                     error: {
                         code: 'STORE_NOT_FOUND',
                         message: 'Store not found',
                     },
                 });
+                return;
             }
-            return res.json({
+            res.json({
                 success: true,
                 data: store,
             });
@@ -46,7 +57,7 @@ class StoreController {
             const validatedData = store_validator_1.createStoreSchema.parse(req.body);
             const store = await storeService.create(validatedData);
             logger.info({ storeId: store.id }, 'Store created via API');
-            return res.status(201).json({
+            res.status(201).json({
                 success: true,
                 data: store,
             });
@@ -54,22 +65,24 @@ class StoreController {
         catch (error) {
             const err = error;
             if (err.message === 'STORE_ALREADY_EXISTS') {
-                return res.status(409).json({
+                res.status(409).json({
                     success: false,
                     error: {
                         code: 'STORE_ALREADY_EXISTS',
                         message: 'A store with this slug already exists',
                     },
                 });
+                return;
             }
             if (err.message === 'EVOLUTION_INSTANCE_ALREADY_EXISTS') {
-                return res.status(409).json({
+                res.status(409).json({
                     success: false,
                     error: {
                         code: 'EVOLUTION_INSTANCE_ALREADY_EXISTS',
                         message: 'A store with this Evolution instance already exists',
                     },
                 });
+                return;
             }
             next(error);
         }
@@ -77,10 +90,20 @@ class StoreController {
     async update(req, res, next) {
         try {
             const { id } = req.params;
+            if (!id || Array.isArray(id)) {
+                res.status(400).json({
+                    success: false,
+                    error: {
+                        code: 'INVALID_ID',
+                        message: 'Invalid store ID',
+                    },
+                });
+                return;
+            }
             const validatedData = store_validator_1.updateStoreSchema.parse(req.body);
             const store = await storeService.update(id, validatedData);
             logger.info({ storeId: id }, 'Store updated via API');
-            return res.json({
+            res.json({
                 success: true,
                 data: store,
             });
@@ -88,31 +111,34 @@ class StoreController {
         catch (error) {
             const err = error;
             if (err.message === 'STORE_NOT_FOUND') {
-                return res.status(404).json({
+                res.status(404).json({
                     success: false,
                     error: {
                         code: 'STORE_NOT_FOUND',
                         message: 'Store not found',
                     },
                 });
+                return;
             }
             if (err.message === 'STORE_ALREADY_EXISTS') {
-                return res.status(409).json({
+                res.status(409).json({
                     success: false,
                     error: {
                         code: 'STORE_ALREADY_EXISTS',
                         message: 'A store with this slug already exists',
                     },
                 });
+                return;
             }
             if (err.message === 'EVOLUTION_INSTANCE_ALREADY_EXISTS') {
-                return res.status(409).json({
+                res.status(409).json({
                     success: false,
                     error: {
                         code: 'EVOLUTION_INSTANCE_ALREADY_EXISTS',
                         message: 'A store with this Evolution instance already exists',
                     },
                 });
+                return;
             }
             next(error);
         }
@@ -120,8 +146,18 @@ class StoreController {
     async activate(req, res, next) {
         try {
             const { id } = req.params;
+            if (!id || Array.isArray(id)) {
+                res.status(400).json({
+                    success: false,
+                    error: {
+                        code: 'INVALID_ID',
+                        message: 'Invalid store ID',
+                    },
+                });
+                return;
+            }
             const store = await storeService.activate(id);
-            return res.json({
+            res.json({
                 success: true,
                 data: store,
             });
@@ -129,13 +165,14 @@ class StoreController {
         catch (error) {
             const err = error;
             if (err.message === 'STORE_NOT_FOUND') {
-                return res.status(404).json({
+                res.status(404).json({
                     success: false,
                     error: {
                         code: 'STORE_NOT_FOUND',
                         message: 'Store not found',
                     },
                 });
+                return;
             }
             next(error);
         }
@@ -143,8 +180,18 @@ class StoreController {
     async deactivate(req, res, next) {
         try {
             const { id } = req.params;
+            if (!id || Array.isArray(id)) {
+                res.status(400).json({
+                    success: false,
+                    error: {
+                        code: 'INVALID_ID',
+                        message: 'Invalid store ID',
+                    },
+                });
+                return;
+            }
             const store = await storeService.deactivate(id);
-            return res.json({
+            res.json({
                 success: true,
                 data: store,
             });
@@ -152,13 +199,14 @@ class StoreController {
         catch (error) {
             const err = error;
             if (err.message === 'STORE_NOT_FOUND') {
-                return res.status(404).json({
+                res.status(404).json({
                     success: false,
                     error: {
                         code: 'STORE_NOT_FOUND',
                         message: 'Store not found',
                     },
                 });
+                return;
             }
             next(error);
         }
@@ -166,8 +214,18 @@ class StoreController {
     async getSettings(req, res, next) {
         try {
             const { id } = req.params;
+            if (!id || Array.isArray(id)) {
+                res.status(400).json({
+                    success: false,
+                    error: {
+                        code: 'INVALID_ID',
+                        message: 'Invalid store ID',
+                    },
+                });
+                return;
+            }
             const settings = await storeService.getSettings(id);
-            return res.json({
+            res.json({
                 success: true,
                 data: settings,
             });
@@ -175,13 +233,14 @@ class StoreController {
         catch (error) {
             const err = error;
             if (err.message === 'STORE_NOT_FOUND') {
-                return res.status(404).json({
+                res.status(404).json({
                     success: false,
                     error: {
                         code: 'STORE_NOT_FOUND',
                         message: 'Store not found',
                     },
                 });
+                return;
             }
             next(error);
         }
@@ -189,10 +248,20 @@ class StoreController {
     async updateSettings(req, res, next) {
         try {
             const { id } = req.params;
+            if (!id || Array.isArray(id)) {
+                res.status(400).json({
+                    success: false,
+                    error: {
+                        code: 'INVALID_ID',
+                        message: 'Invalid store ID',
+                    },
+                });
+                return;
+            }
             const validatedData = req.body;
             const settings = await storeService.updateSettings(id, validatedData);
             logger.info({ storeId: id }, 'Store settings updated via API');
-            return res.json({
+            res.json({
                 success: true,
                 data: settings,
             });
@@ -200,13 +269,14 @@ class StoreController {
         catch (error) {
             const err = error;
             if (err.message === 'STORE_NOT_FOUND') {
-                return res.status(404).json({
+                res.status(404).json({
                     success: false,
                     error: {
                         code: 'STORE_NOT_FOUND',
                         message: 'Store not found',
                     },
                 });
+                return;
             }
             next(error);
         }
