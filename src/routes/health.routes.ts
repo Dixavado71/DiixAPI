@@ -1,6 +1,5 @@
 import { Router, Request, Response } from 'express';
 import { checkDatabaseHealth } from '../config/database';
-import { checkRedisHealth } from '../config/redis';
 import { getLogger } from '../utils/logger';
 
 const router = Router();
@@ -21,19 +20,16 @@ router.get('/' as const, (_req: Request, res: Response) => {
 
 /**
  * GET /api/v1/health/ready
- * Readiness check - verifies database and Redis connectivity
+ * Readiness check - verifies database connectivity
  */
 router.get('/ready' as const, async (_req: Request, res: Response) => {
   try {
-    const [databaseHealthy, redisHealthy] = await Promise.all([
-      checkDatabaseHealth(),
-      checkRedisHealth(),
-    ]);
+    const databaseHealthy = await checkDatabaseHealth();
 
-    const isReady = databaseHealthy && redisHealthy;
+    const isReady = databaseHealthy;
 
     if (!isReady) {
-      logger.warn({ database: databaseHealthy, redis: redisHealthy }, 'Service not ready');
+      logger.warn({ database: databaseHealthy }, 'Service not ready');
       res.status(503).json({
         status: 'not_ready',
         service: 'ecms6',
@@ -41,7 +37,6 @@ router.get('/ready' as const, async (_req: Request, res: Response) => {
         timestamp: new Date().toISOString(),
         checks: {
           database: databaseHealthy,
-          redis: redisHealthy,
         },
       });
       return;
@@ -55,7 +50,6 @@ router.get('/ready' as const, async (_req: Request, res: Response) => {
       timestamp: new Date().toISOString(),
       checks: {
         database: databaseHealthy,
-        redis: redisHealthy,
       },
     });
   } catch (error) {

@@ -4,9 +4,6 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   PORT: z.string().transform((val) => Number(val)).pipe(z.number().min(1).max(65535)),
   DATABASE_URL: z.string().url().startsWith('postgresql://'),
-  REDIS_URL: z.string().url().refine((url) => url.startsWith('redis://') || url.startsWith('rediss://'), {
-    message: 'REDIS_URL must start with redis:// or rediss://',
-  }),
   EVOLUTION_API_URL: z.string().url(),
   EVOLUTION_API_KEY: z.string().min(1),
   EVOLUTION_WEBHOOK_SECRET: z.string().min(1),

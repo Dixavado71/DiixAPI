@@ -3,7 +3,6 @@ declare const envSchema: z.ZodObject<{
     NODE_ENV: z.ZodDefault<z.ZodEnum<["development", "production", "test"]>>;
     PORT: z.ZodPipeline<z.ZodEffects<z.ZodString, number, string>, z.ZodNumber>;
     DATABASE_URL: z.ZodString;
-    REDIS_URL: z.ZodEffects<z.ZodString, string, string>;
     EVOLUTION_API_URL: z.ZodString;
     EVOLUTION_API_KEY: z.ZodString;
     EVOLUTION_WEBHOOK_SECRET: z.ZodString;
@@ -14,7 +13,6 @@ declare const envSchema: z.ZodObject<{
     RATE_LIMIT_MAX: z.ZodPipeline<z.ZodEffects<z.ZodString, number, string>, z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
     LOG_LEVEL: "info" | "fatal" | "error" | "warn" | "debug" | "trace";
-    REDIS_URL: string;
     CORS_ORIGIN: string;
     RATE_LIMIT_WINDOW_MS: number;
     RATE_LIMIT_MAX: number;
@@ -26,7 +24,6 @@ declare const envSchema: z.ZodObject<{
     EVOLUTION_WEBHOOK_SECRET: string;
     JWT_SECRET: string;
 }, {
-    REDIS_URL: string;
     CORS_ORIGIN: string;
     RATE_LIMIT_WINDOW_MS: string;
     RATE_LIMIT_MAX: string;

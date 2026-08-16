@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = require("./app");
 const env_1 = require("./config/env");
 const database_1 = require("./config/database");
-const redis_1 = require("./config/redis");
 const logger_1 = require("./utils/logger");
 const logger = (0, logger_1.getLogger)();
 async function bootstrap() {
@@ -26,7 +25,6 @@ async function bootstrap() {
             logger.info('HTTP server closed');
             try {
                 await (0, database_1.disconnectDatabase)();
-                await (0, redis_1.disconnectRedis)();
                 logger.info('All connections closed');
                 process.exit(0);
             }

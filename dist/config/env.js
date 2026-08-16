@@ -6,9 +6,6 @@ const envSchema = zod_1.z.object({
     NODE_ENV: zod_1.z.enum(['development', 'production', 'test']).default('development'),
     PORT: zod_1.z.string().transform((val) => Number(val)).pipe(zod_1.z.number().min(1).max(65535)),
     DATABASE_URL: zod_1.z.string().url().startsWith('postgresql://'),
-    REDIS_URL: zod_1.z.string().url().refine((url) => url.startsWith('redis://') || url.startsWith('rediss://'), {
-        message: 'REDIS_URL must start with redis:// or rediss://',
-    }),
     EVOLUTION_API_URL: zod_1.z.string().url(),
     EVOLUTION_API_KEY: zod_1.z.string().min(1),
     EVOLUTION_WEBHOOK_SECRET: zod_1.z.string().min(1),

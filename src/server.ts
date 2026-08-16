@@ -1,7 +1,6 @@
 import { createApp } from './app';
 import { validateEnv } from './config/env';
 import { connectDatabase, disconnectDatabase } from './config/database';
-import { disconnectRedis } from './config/redis';
 import { getLogger } from './utils/logger';
 
 const logger = getLogger();
@@ -33,7 +32,6 @@ async function bootstrap(): Promise<void> {
       
       try {
         await disconnectDatabase();
-        await disconnectRedis();
         logger.info('All connections closed');
         process.exit(0);
       } catch (error) {

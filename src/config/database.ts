@@ -34,7 +34,8 @@ export async function connectDatabase(): Promise<void> {
     logger.info('Database connected successfully');
   } catch (error) {
     logger.error({ error }, 'Failed to connect to database');
-    throw error;
+    // Don't throw - allow app to start for health check to report status
+    process.exitCode = 1;
   }
 }
 
