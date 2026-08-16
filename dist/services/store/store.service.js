@@ -1,0 +1,140 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StoreService = void 0;
+const repositories_1 = require("../../repositories");
+const logger_1 = require("../../utils/logger");
+const logger = (0, logger_1.getLogger)().child({ module: 'store-service' });
+class StoreService {
+    storeRepository = (0, repositories_1.getStoreRepository)();
+    settingsRepository = (0, repositories_1.getStoreSettingsRepository)();
+    async findAll() {
+        return this.storeRepository.findAll();
+    }
+    async findById(id) {
+        return this.storeRepository.findById(id);
+    }
+    async findBySlug(slug) {
+        return this.storeRepository.findBySlug(slug);
+    }
+    async findByEvolutionInstance(instanceName) {
+        return this.storeRepository.findByEvolutionInstance(instanceName);
+    }
+    async create(data) {
+        // Check for slug uniqueness
+        const slugExists = await this.storeRepository.existsBySlug(data.slug);
+        if (slugExists) {
+            throw new Error('STORE_ALREADY_EXISTS');
+        }
+        // Check for evolution instance uniqueness if provided
+        if (data.evolutionInstanceId) {
+            const instanceExists = await this.storeRepository.existsByEvolutionInstance(data.evolutionInstanceId);
+            if (instanceExists) {
+                throw new Error('EVOLUTION_INSTANCE_ALREADY_EXISTS');
+            }
+        }
+        const store = await this.storeRepository.create(data);
+        // Create default settings for the store
+        await this.settingsRepository.create(store.id, {
+            commerceEnabled: true,
+            customerRegistrationRequired: false,
+            customerApprovalRequired: false,
+            deliveryEnabled: true,
+            pickupEnabled: false,
+            pixEnabled: true,
+            cashEnabled: true,
+            cardEnabled: true,
+            paymentOnDeliveryEnabled: true,
+            botEnabled: true,
+            supportEnabled: true,
+            promotionEnabled: true,
+        });
+        logger.info({ storeId: store.id, slug: store.slug }, 'Store created');
+        return store;
+    }
+    async update(id, data) {
+        const store = await this.storeRepository.findById(id);
+        if (!store) {
+            throw new Error('STORE_NOT_FOUND');
+        }
+        // Check for slug uniqueness if slug is being updated
+        if (data.slug && data.slug !== store.slug) {
+            const slugExists = await this.storeRepository.existsBySlug(data.slug, id);
+            if (slugExists) {
+                throw new Error('STORE_ALREADY_EXISTS');
+            }
+        }
+        // Check for evolution instance uniqueness if being updated
+        if (data.evolutionInstanceId && data.evolutionInstanceId !== store.evolutionInstanceId) {
+            const instanceExists = await this.storeRepository.existsByEvolutionInstance(data.evolutionInstanceId, id);
+            if (instanceExists) {
+                throw new Error('EVOLUTION_INSTANCE_ALREADY_EXISTS');
+            }
+        }
+        const updatedStore = await this.storeRepository.update(id, data);
+        logger.info({ storeId: id }, 'Store updated');
+        return updatedStore;
+    }
+    async activate(id) {
+        const store = await this.storeRepository.findById(id);
+        if (!store) {
+            throw new Error('STORE_NOT_FOUND');
+        }
+        const updatedStore = await this.storeRepository.activate(id);
+        logger.info({ storeId: id }, 'Store activated');
+        return updatedStore;
+    }
+    async deactivate(id) {
+        const store = await this.storeRepository.findById(id);
+        if (!store) {
+            throw new Error('STORE_NOT_FOUND');
+        }
+        const updatedStore = await this.storeRepository.deactivate(id);
+        logger.info({ storeId: id }, 'Store deactivated');
+        return updatedStore;
+    }
+    async suspend(id) {
+        const store = await this.storeRepository.findById(id);
+        if (!store) {
+            throw new Error('STORE_NOT_FOUND');
+        }
+        const updatedStore = await this.storeRepository.suspend(id);
+        logger.info({ storeId: id }, 'Store suspended');
+        return updatedStore;
+    }
+    async getSettings(storeId) {
+        const store = await this.storeRepository.findById(storeId);
+        if (!store) {
+            throw new Error('STORE_NOT_FOUND');
+        }
+        let settings = await this.settingsRepository.findByStoreId(storeId);
+        // Create default settings if they don't exist
+        if (!settings) {
+            settings = await this.settingsRepository.create(storeId, {
+                commerceEnabled: true,
+                customerRegistrationRequired: false,
+                customerApprovalRequired: false,
+                deliveryEnabled: true,
+                pickupEnabled: false,
+                pixEnabled: true,
+                cashEnabled: true,
+                cardEnabled: true,
+                paymentOnDeliveryEnabled: true,
+                botEnabled: true,
+                supportEnabled: true,
+                promotionEnabled: true,
+            });
+        }
+        return settings;
+    }
+    async updateSettings(storeId, data) {
+        const store = await this.storeRepository.findById(storeId);
+        if (!store) {
+            throw new Error('STORE_NOT_FOUND');
+        }
+        const settings = await this.settingsRepository.upsert(storeId, data);
+        logger.info({ storeId, settings }, 'Store settings updated');
+        return settings;
+    }
+}
+exports.StoreService = StoreService;
+//# sourceMappingURL=store.service.js.map

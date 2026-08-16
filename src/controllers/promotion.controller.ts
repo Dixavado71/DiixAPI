@@ -8,7 +8,9 @@ import {
   listPromotionsQuerySchema,
   promotionIdParamsSchema,
 } from '../validators/promotion';
-import { logger } from '../../utils/logger';
+import { getLogger } from '../../utils/logger';
+
+const logger = getLogger();
 
 export class PromotionController {
   private promotionService: PromotionService;
@@ -23,7 +25,7 @@ export class PromotionController {
    */
   async createPromotion(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const storeId = req.params.storeId;
+      const storeId = req.params.storeId as string;
       const body = req.body;
 
       // Parse and validate input
@@ -78,7 +80,7 @@ export class PromotionController {
    */
   async getPromotions(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const storeId = req.params.storeId;
+      const storeId = req.params.storeId as string;
       const query = listPromotionsQuerySchema.parse(req.query);
 
       const promotions = await this.promotionService.getPromotionsByStore(storeId, {
@@ -100,7 +102,7 @@ export class PromotionController {
    */
   async getActivePromotions(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const storeId = req.params.storeId;
+      const storeId = req.params.storeId as string;
 
       const promotions = await this.promotionService.getActivePromotions(storeId);
 
@@ -214,7 +216,7 @@ export class PromotionController {
     try {
       const { ruleId } = req.params;
 
-      await this.promotionService.removeRuleFromPromotion(ruleId);
+      await this.promotionService.removeRuleFromPromotion(ruleId as string);
 
       logger.info({ ruleId }, 'Rule removed from promotion');
       res.status(204).send();
@@ -260,7 +262,7 @@ export class PromotionController {
     try {
       const { id, productId } = req.params;
 
-      await this.promotionService.removeProductFromPromotion(id, productId);
+      await this.promotionService.removeProductFromPromotion(id as string, productId as string);
 
       logger.info({ promotionId: id, productId }, 'Product removed from promotion');
       res.status(204).send();
