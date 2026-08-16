@@ -1,12 +1,13 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { PromotionService } from '../../src/services/promotion';
 import { PromotionRepository } from '../../src/repositories/promotion.repository';
 import { ProductRepository } from '../../src/repositories/product.repository';
 import { prisma } from '../../src/config/database';
 
 // Mock repositories
-jest.mock('../../src/repositories/promotion.repository');
-jest.mock('../../src/repositories/product.repository');
-jest.mock('../../src/config/database');
+vi.mock('../../src/repositories/promotion.repository');
+vi.mock('../../src/repositories/product.repository');
+vi.mock('../../src/config/database');
 
 describe('PromotionService', () => {
   let promotionService: PromotionService;
@@ -14,7 +15,7 @@ describe('PromotionService', () => {
   let mockProductRepository: jest.Mocked<ProductRepository>;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     promotionService = new PromotionService();
     mockPromotionRepository = promotionService['promotionRepository'] as any;
     mockProductRepository = promotionService['productRepository'] as any;
@@ -211,11 +212,15 @@ describe('PromotionService', () => {
     });
 
     it('should return true when promotion applies', async () => {
+      const now = new Date();
+      const startDate = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+      const endDate = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
+      
       mockPromotionRepository.findById.mockResolvedValue({
         id: 'promo-1',
         active: true,
-        startDate: new Date('2024-01-01'),
-        endDate: new Date('2024-12-31'),
+        startDate,
+        endDate,
       } as any);
       mockPromotionRepository.getRules.mockResolvedValue([]);
       mockPromotionRepository.getProducts.mockResolvedValue([]);

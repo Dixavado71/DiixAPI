@@ -66,17 +66,22 @@
 
 ## 📋 Próximas Fases
 
-### Fase 5 - Promoções (PENDENTE)
-- [ ] Modelo `Promotion` completo
-- [ ] Modelo `PromotionRule` para regras flexíveis
-- [ ] Modelo `PromotionProduct` para produtos em promoção
-- [ ] `PromotionService` para aplicação de promoções
-- [ ] Válidação de período de vigência
-- [ ] Tipos: percentual e fixo
-- [ ] Regras por categoria, produto, dia, quantidade
-- [ ] Integração com carrinho
-- [ ] Integração com pedidos
-- [ ] Testes de promoções sobrepostas
+### Fase 5 - Promoções (✅ CONCLUÍDA)
+- [x] Modelo `Promotion` completo
+- [x] Modelo `PromotionRule` para regras flexíveis
+- [x] Modelo `PromotionProduct` para produtos em promoção
+- [x] `PromotionService` para aplicação de promoções
+- [x] Válidação de período de vigência
+- [x] Tipos: percentual e fixo
+- [x] Regras por categoria, produto, dia, quantidade
+- [x] Integração com carrinho
+- [x] Integração com pedidos
+- [x] Testes de promoções sobrepostas
+- [x] PromotionRepository implementado
+- [x] Validators Zod para promoções
+- [x] PromotionController RESTful
+- [x] Rotas de promoção configuradas
+- [x] Testes unitários passando (31 testes)
 
 ### Fase 6 - Integração Evolution API Completa (PENDENTE)
 - [ ] EvolutionClient com todos os métodos
