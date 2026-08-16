@@ -1,10 +1,20 @@
 ```
-# Build artifacts
+# Compiled and build artifacts
+*.ts
+*.js
+*.d.ts
+*.d.ts.map
+*.js.map
 dist/
 build/
 
 # Dependencies
 node_modules/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
 
 # Environment
 .env
@@ -15,32 +25,18 @@ node_modules/
 .vscode/
 .idea/
 
-# Logs
-*.log
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
 
-# Python artifacts (if any Python files exist in project)
+# Python cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Temporary files
-*.tmp
-*.swp
-*.swo
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Coverage reports
-coverage/
-htmlcov/
-*.coverage
-
-# IDE specific
-.gradle/
-.target/
-.mypy_cache/
-.pytest_cache/
+# Virtual environments
+venv/
+.venv/
 ```

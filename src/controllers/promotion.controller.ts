@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { PromotionService } from '../../services/promotion/promotion.service';
+import { PromotionService } from '../services/promotion';
 import {
   createPromotionSchema,
   updatePromotionSchema,
@@ -7,7 +7,7 @@ import {
   addPromotionProductSchema,
   listPromotionsQuerySchema,
   promotionIdParamsSchema,
-} from '../../validators/promotion.validator';
+} from '../validators/promotion';
 import { logger } from '../../utils/logger';
 
 export class PromotionController {
