@@ -12,14 +12,14 @@ export declare const createStoreSchema: z.ZodObject<{
     slug: string;
     timezone: string;
     currency: string;
-    description?: string | undefined;
     phone?: string | undefined;
+    description?: string | undefined;
     evolutionInstanceId?: string | undefined;
 }, {
     name: string;
     slug: string;
-    description?: string | undefined;
     phone?: string | undefined;
+    description?: string | undefined;
     timezone?: string | undefined;
     currency?: string | undefined;
     evolutionInstanceId?: string | undefined;
@@ -34,17 +34,17 @@ export declare const updateStoreSchema: z.ZodObject<{
     evolutionInstanceId: z.ZodOptional<z.ZodOptional<z.ZodString>>;
 }, "strip", z.ZodTypeAny, {
     name?: string | undefined;
+    phone?: string | undefined;
     description?: string | undefined;
     slug?: string | undefined;
-    phone?: string | undefined;
     timezone?: string | undefined;
     currency?: string | undefined;
     evolutionInstanceId?: string | undefined;
 }, {
     name?: string | undefined;
+    phone?: string | undefined;
     description?: string | undefined;
     slug?: string | undefined;
-    phone?: string | undefined;
     timezone?: string | undefined;
     currency?: string | undefined;
     evolutionInstanceId?: string | undefined;

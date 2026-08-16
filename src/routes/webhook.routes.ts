@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
 import { getLogger } from '../utils/logger';
+import { webhookService, WebhookPayload } from '../services/webhook/webhook.service';
 
 const router = Router();
 const logger = getLogger().child({ module: 'webhook' });
@@ -19,9 +20,9 @@ const webhookPayloadSchema = z.object({
  * POST /api/v1/webhooks/evolution
  * Receives webhooks from Evolution API
  */
-router.post('/evolution' as const, async (_req: Request, res: Response) => {
+router.post('/evolution' as const, async (req: Request, res: Response) => {
   try {
-    const payload = _req.body;
+    const payload = req.body as WebhookPayload;
 
     // Validate basic payload structure
     const validationResult = webhookPayloadSchema.safeParse(payload);
@@ -46,18 +47,13 @@ router.post('/evolution' as const, async (_req: Request, res: Response) => {
       'Webhook received from Evolution API'
     );
 
-    // TODO: Implement full webhook processing pipeline
-    // - Validate webhook secret
-    // - Check idempotency (prevent duplicate processing)
-    // - Parse event type
-    // - Resolve store and customer
-    // - Process conversation state
-    // - Trigger bot engine
+    // Process webhook through service
+    const result = await webhookService.processWebhook(payload);
 
-    // For now, acknowledge receipt
+    // Acknowledge receipt
     res.status(200).json({
-      status: 'received',
-      eventId: crypto.randomUUID(),
+      status: 'processed',
+      eventId: result.eventId,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

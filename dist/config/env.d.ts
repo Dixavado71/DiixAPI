@@ -13,24 +13,24 @@ declare const envSchema: z.ZodObject<{
     RATE_LIMIT_MAX: z.ZodPipeline<z.ZodEffects<z.ZodString, number, string>, z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
     LOG_LEVEL: "info" | "fatal" | "error" | "warn" | "debug" | "trace";
+    EVOLUTION_API_URL: string;
+    EVOLUTION_API_KEY: string;
     CORS_ORIGIN: string;
     RATE_LIMIT_WINDOW_MS: number;
     RATE_LIMIT_MAX: number;
     NODE_ENV: "production" | "development" | "test";
     PORT: number;
     DATABASE_URL: string;
-    EVOLUTION_API_URL: string;
-    EVOLUTION_API_KEY: string;
     EVOLUTION_WEBHOOK_SECRET: string;
     JWT_SECRET: string;
 }, {
+    EVOLUTION_API_URL: string;
+    EVOLUTION_API_KEY: string;
     CORS_ORIGIN: string;
     RATE_LIMIT_WINDOW_MS: string;
     RATE_LIMIT_MAX: string;
     PORT: string;
     DATABASE_URL: string;
-    EVOLUTION_API_URL: string;
-    EVOLUTION_API_KEY: string;
     EVOLUTION_WEBHOOK_SECRET: string;
     JWT_SECRET: string;
     LOG_LEVEL?: "info" | "fatal" | "error" | "warn" | "debug" | "trace" | undefined;

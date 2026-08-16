@@ -14,6 +14,8 @@ export declare class DeliveryRepository {
         order: {
             status: import(".prisma/client").$Enums.OrderStatus;
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
             storeId: string;
             customerId: string;
             orderNumber: string;
@@ -26,17 +28,15 @@ export declare class DeliveryRepository {
             deliveryAddress: string | null;
             deliveryFee: import("@prisma/client/runtime/library").Decimal;
             notes: string | null;
-            createdAt: Date;
-            updatedAt: Date;
         };
     } & {
+        method: import(".prisma/client").$Enums.DeliveryMethod;
         status: import(".prisma/client").$Enums.DeliveryStatus;
         id: string;
-        storeId: string;
         createdAt: Date;
         updatedAt: Date;
+        storeId: string;
         orderId: string;
-        method: import(".prisma/client").$Enums.DeliveryMethod;
         address: string;
         recipientName: string;
         recipientPhone: string;
@@ -57,6 +57,8 @@ export declare class DeliveryRepository {
         } & {
             status: import(".prisma/client").$Enums.OrderStatus;
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
             storeId: string;
             customerId: string;
             orderNumber: string;
@@ -69,17 +71,15 @@ export declare class DeliveryRepository {
             deliveryAddress: string | null;
             deliveryFee: import("@prisma/client/runtime/library").Decimal;
             notes: string | null;
-            createdAt: Date;
-            updatedAt: Date;
         };
     } & {
+        method: import(".prisma/client").$Enums.DeliveryMethod;
         status: import(".prisma/client").$Enums.DeliveryStatus;
         id: string;
-        storeId: string;
         createdAt: Date;
         updatedAt: Date;
+        storeId: string;
         orderId: string;
-        method: import(".prisma/client").$Enums.DeliveryMethod;
         address: string;
         recipientName: string;
         recipientPhone: string;
@@ -87,13 +87,13 @@ export declare class DeliveryRepository {
         deliveredAt: Date | null;
     }) | null>;
     findByOrderId(orderId: string): Promise<{
+        method: import(".prisma/client").$Enums.DeliveryMethod;
         status: import(".prisma/client").$Enums.DeliveryStatus;
         id: string;
-        storeId: string;
         createdAt: Date;
         updatedAt: Date;
+        storeId: string;
         orderId: string;
-        method: import(".prisma/client").$Enums.DeliveryMethod;
         address: string;
         recipientName: string;
         recipientPhone: string;
@@ -101,13 +101,13 @@ export declare class DeliveryRepository {
         deliveredAt: Date | null;
     } | null>;
     updateStatus(id: string, status: string, trackingInfo?: string): Promise<{
+        method: import(".prisma/client").$Enums.DeliveryMethod;
         status: import(".prisma/client").$Enums.DeliveryStatus;
         id: string;
-        storeId: string;
         createdAt: Date;
         updatedAt: Date;
+        storeId: string;
         orderId: string;
-        method: import(".prisma/client").$Enums.DeliveryMethod;
         address: string;
         recipientName: string;
         recipientPhone: string;

@@ -8,81 +8,81 @@ export declare class CustomerService {
         status: import(".prisma/client").$Enums.CustomerStatus;
         id: string;
         createdAt: Date;
-        updatedAt: Date;
         phone: string;
         email: string | null;
+        updatedAt: Date;
     }[]>;
     findById(id: string): Promise<{
         name: string | null;
         status: import(".prisma/client").$Enums.CustomerStatus;
         id: string;
         createdAt: Date;
-        updatedAt: Date;
         phone: string;
         email: string | null;
+        updatedAt: Date;
     } | null>;
     findByPhone(phone: string): Promise<{
         name: string | null;
         status: import(".prisma/client").$Enums.CustomerStatus;
         id: string;
         createdAt: Date;
-        updatedAt: Date;
         phone: string;
         email: string | null;
+        updatedAt: Date;
     } | null>;
     create(data: CreateCustomerInput): Promise<{
         name: string | null;
         status: import(".prisma/client").$Enums.CustomerStatus;
         id: string;
         createdAt: Date;
-        updatedAt: Date;
         phone: string;
         email: string | null;
+        updatedAt: Date;
     }>;
     update(id: string, data: UpdateCustomerInput): Promise<{
         name: string | null;
         status: import(".prisma/client").$Enums.CustomerStatus;
         id: string;
         createdAt: Date;
-        updatedAt: Date;
         phone: string;
         email: string | null;
+        updatedAt: Date;
     }>;
     activate(id: string): Promise<{
         name: string | null;
         status: import(".prisma/client").$Enums.CustomerStatus;
         id: string;
         createdAt: Date;
-        updatedAt: Date;
         phone: string;
         email: string | null;
+        updatedAt: Date;
     }>;
     deactivate(id: string): Promise<{
         name: string | null;
         status: import(".prisma/client").$Enums.CustomerStatus;
         id: string;
         createdAt: Date;
-        updatedAt: Date;
         phone: string;
         email: string | null;
+        updatedAt: Date;
     }>;
     block(id: string): Promise<{
         name: string | null;
         status: import(".prisma/client").$Enums.CustomerStatus;
         id: string;
         createdAt: Date;
-        updatedAt: Date;
         phone: string;
         email: string | null;
+        updatedAt: Date;
     }>;
     unblock(id: string): Promise<{
         name: string | null;
         status: import(".prisma/client").$Enums.CustomerStatus;
         id: string;
         createdAt: Date;
-        updatedAt: Date;
         phone: string;
         email: string | null;
+        updatedAt: Date;
     }>;
     registerInStore(storeId: string, customerId: string): Promise<StoreCustomer>;
     approveInStore(storeId: string, customerId: string): Promise<StoreCustomer>;
