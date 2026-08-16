@@ -5,6 +5,7 @@ import { CartRepository } from '../../repositories/cart.repository';
 import { ProductRepository } from '../../repositories/product.repository';
 import { StoreSettingsRepository } from '../../repositories/store-settings.repository';
 import { CustomerAuthorizationService } from '../customer/customer-authorization.service';
+import { PromotionService } from '../promotion/promotion.service';
 import { OrderStateMachine } from './order-state-machine';
 import { logger } from '../../utils/logger';
 
@@ -27,12 +28,14 @@ export class OrderService {
   private cartRepository: CartRepository;
   private productRepository: ProductRepository;
   private storeSettingsRepository: StoreSettingsRepository;
+  private promotionService: PromotionService;
 
   constructor() {
     this.orderRepository = new OrderRepository(prisma);
     this.cartRepository = new CartRepository(prisma);
     this.productRepository = new ProductRepository(prisma);
     this.storeSettingsRepository = new StoreSettingsRepository(prisma);
+    this.promotionService = new PromotionService();
   }
 
   /**
@@ -113,13 +116,22 @@ export class OrderService {
       throw new Error('CART_EMPTY');
     }
 
-    // 7. Validate products and calculate totals
+    // 7. Validate products and calculate totals with promotions
     let subtotal = 0;
+    let discount = 0;
     const orderItems: Array<{
       productId: string;
       quantity: number;
       unitPrice: number;
       totalPrice: number;
+    }> = [];
+
+    // Prepare items for promotion calculation
+    const itemsForPromotion: Array<{
+      productId: string;
+      quantity: number;
+      unitPrice: number;
+      categoryId?: string;
     }> = [];
 
     for (const cartItem of cartItems) {
@@ -149,19 +161,31 @@ export class OrderService {
         }
       }
 
-      const totalPrice = unitPrice * cartItem.quantity;
-      subtotal += totalPrice;
+      const itemTotal = unitPrice * cartItem.quantity;
+      subtotal += itemTotal;
+
+      // Add to items for promotion calculation
+      itemsForPromotion.push({
+        productId: product.id,
+        quantity: cartItem.quantity,
+        unitPrice,
+        categoryId: product.categoryId || undefined,
+      });
 
       orderItems.push({
         productId: product.id,
         quantity: cartItem.quantity,
         unitPrice,
-        totalPrice,
+        totalPrice: itemTotal,
       });
     }
 
-    // 8. Calculate discount (future: apply promotions)
-    const discount = 0;
+    // 8. Apply promotions to calculate discount
+    const promotionResult = await this.promotionService.applyPromotionsToCart(
+      storeId,
+      itemsForPromotion
+    );
+    discount = promotionResult.discount;
 
     // 9. Calculate delivery fee (future: based on delivery method and address)
     const deliveryFee = 0;
