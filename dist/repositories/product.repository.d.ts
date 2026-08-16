@@ -6,17 +6,17 @@ export declare class ProductRepository {
         category: {
             name: string;
             id: string;
-            storeId: string;
             createdAt: Date;
             updatedAt: Date;
+            storeId: string;
             description: string | null;
             active: boolean;
             parentId: string | null;
         } | null;
         variants: {
             name: string;
-            value: string;
             id: string;
+            value: string;
             productId: string;
             price: import("@prisma/client/runtime/library").Decimal | null;
             stock: number | null;
@@ -24,9 +24,9 @@ export declare class ProductRepository {
     } & {
         name: string;
         id: string;
-        storeId: string;
         createdAt: Date;
         updatedAt: Date;
+        storeId: string;
         categoryId: string | null;
         description: string | null;
         sku: string | null;
@@ -46,17 +46,17 @@ export declare class ProductRepository {
             category: {
                 name: string;
                 id: string;
-                storeId: string;
                 createdAt: Date;
                 updatedAt: Date;
+                storeId: string;
                 description: string | null;
                 active: boolean;
                 parentId: string | null;
             } | null;
             variants: {
                 name: string;
-                value: string;
                 id: string;
+                value: string;
                 productId: string;
                 price: import("@prisma/client/runtime/library").Decimal | null;
                 stock: number | null;
@@ -64,9 +64,9 @@ export declare class ProductRepository {
         } & {
             name: string;
             id: string;
-            storeId: string;
             createdAt: Date;
             updatedAt: Date;
+            storeId: string;
             categoryId: string | null;
             description: string | null;
             sku: string | null;
@@ -95,9 +95,9 @@ export declare class ProductRepository {
         category: {
             name: string;
             id: string;
-            storeId: string;
             createdAt: Date;
             updatedAt: Date;
+            storeId: string;
             description: string | null;
             active: boolean;
             parentId: string | null;
@@ -105,9 +105,9 @@ export declare class ProductRepository {
     } & {
         name: string;
         id: string;
-        storeId: string;
         createdAt: Date;
         updatedAt: Date;
+        storeId: string;
         categoryId: string | null;
         description: string | null;
         sku: string | null;
@@ -130,9 +130,9 @@ export declare class ProductRepository {
     }>): Promise<{
         name: string;
         id: string;
-        storeId: string;
         createdAt: Date;
         updatedAt: Date;
+        storeId: string;
         categoryId: string | null;
         description: string | null;
         sku: string | null;
@@ -145,9 +145,9 @@ export declare class ProductRepository {
     activate(id: string): Promise<{
         name: string;
         id: string;
-        storeId: string;
         createdAt: Date;
         updatedAt: Date;
+        storeId: string;
         categoryId: string | null;
         description: string | null;
         sku: string | null;
@@ -160,9 +160,9 @@ export declare class ProductRepository {
     deactivate(id: string): Promise<{
         name: string;
         id: string;
-        storeId: string;
         createdAt: Date;
         updatedAt: Date;
+        storeId: string;
         categoryId: string | null;
         description: string | null;
         sku: string | null;

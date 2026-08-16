@@ -9,9 +9,9 @@ export declare class CartRepository {
             product: {
                 name: string;
                 id: string;
-                storeId: string;
                 createdAt: Date;
                 updatedAt: Date;
+                storeId: string;
                 categoryId: string | null;
                 description: string | null;
                 sku: string | null;
@@ -32,10 +32,10 @@ export declare class CartRepository {
     } & {
         status: import(".prisma/client").$Enums.CartStatus;
         id: string;
-        storeId: string;
-        customerId: string;
         createdAt: Date;
         updatedAt: Date;
+        storeId: string;
+        customerId: string;
     }>;
     findById(id: string): Promise<({
         store: {
@@ -43,10 +43,10 @@ export declare class CartRepository {
             status: import(".prisma/client").$Enums.StoreStatus;
             id: string;
             createdAt: Date;
+            phone: string | null;
             updatedAt: Date;
             description: string | null;
             slug: string;
-            phone: string | null;
             timezone: string;
             currency: string;
             evolutionInstanceId: string | null;
@@ -55,9 +55,9 @@ export declare class CartRepository {
             product: {
                 name: string;
                 id: string;
-                storeId: string;
                 createdAt: Date;
                 updatedAt: Date;
+                storeId: string;
                 categoryId: string | null;
                 description: string | null;
                 sku: string | null;
@@ -78,18 +78,18 @@ export declare class CartRepository {
     } & {
         status: import(".prisma/client").$Enums.CartStatus;
         id: string;
-        storeId: string;
-        customerId: string;
         createdAt: Date;
         updatedAt: Date;
+        storeId: string;
+        customerId: string;
     }) | null>;
     addItem(cartId: string, productId: string, quantity: number): Promise<{
         product: {
             name: string;
             id: string;
-            storeId: string;
             createdAt: Date;
             updatedAt: Date;
+            storeId: string;
             categoryId: string | null;
             description: string | null;
             sku: string | null;
@@ -127,10 +127,10 @@ export declare class CartRepository {
     updateStatus(cartId: string, status: string): Promise<{
         status: import(".prisma/client").$Enums.CartStatus;
         id: string;
-        storeId: string;
-        customerId: string;
         createdAt: Date;
         updatedAt: Date;
+        storeId: string;
+        customerId: string;
     }>;
 }
 //# sourceMappingURL=cart.repository.d.ts.map

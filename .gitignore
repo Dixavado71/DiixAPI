@@ -1,2 +1,27 @@
-# Documentation files only - no build artifacts, dependencies, or temp files detected
-# No .gitignore rules needed for this project state
+```
+# Compiled and build artifacts
+*.js
+*.map
+*.d.ts
+dist/
+build/
+# Dependencies
+node_modules/
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+# Environment
+.env
+.env.local
+.env.*
+# Editors
+.vscode/
+.idea/
+# Test coverage
+coverage/
+htmlcov/
+.coverage
+# Vite/Vitest cache
+node_modules/.vite/
+```

@@ -12,6 +12,8 @@ export declare class PaymentRepository {
         order: {
             status: import(".prisma/client").$Enums.OrderStatus;
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
             storeId: string;
             customerId: string;
             orderNumber: string;
@@ -24,16 +26,14 @@ export declare class PaymentRepository {
             deliveryAddress: string | null;
             deliveryFee: import("@prisma/client/runtime/library").Decimal;
             notes: string | null;
-            createdAt: Date;
-            updatedAt: Date;
         };
     } & {
+        method: import(".prisma/client").$Enums.PaymentMethod;
         status: import(".prisma/client").$Enums.PaymentStatus;
         id: string;
         createdAt: Date;
         updatedAt: Date;
         orderId: string;
-        method: import(".prisma/client").$Enums.PaymentMethod;
         amount: import("@prisma/client/runtime/library").Decimal;
         transactionId: string | null;
         metadata: import("@prisma/client/runtime/library").JsonValue | null;
@@ -52,6 +52,8 @@ export declare class PaymentRepository {
         } & {
             status: import(".prisma/client").$Enums.OrderStatus;
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
             storeId: string;
             customerId: string;
             orderNumber: string;
@@ -64,38 +66,36 @@ export declare class PaymentRepository {
             deliveryAddress: string | null;
             deliveryFee: import("@prisma/client/runtime/library").Decimal;
             notes: string | null;
-            createdAt: Date;
-            updatedAt: Date;
         };
     } & {
+        method: import(".prisma/client").$Enums.PaymentMethod;
         status: import(".prisma/client").$Enums.PaymentStatus;
         id: string;
         createdAt: Date;
         updatedAt: Date;
         orderId: string;
-        method: import(".prisma/client").$Enums.PaymentMethod;
         amount: import("@prisma/client/runtime/library").Decimal;
         transactionId: string | null;
         metadata: import("@prisma/client/runtime/library").JsonValue | null;
     }) | null>;
     findByOrderId(orderId: string): Promise<{
+        method: import(".prisma/client").$Enums.PaymentMethod;
         status: import(".prisma/client").$Enums.PaymentStatus;
         id: string;
         createdAt: Date;
         updatedAt: Date;
         orderId: string;
-        method: import(".prisma/client").$Enums.PaymentMethod;
         amount: import("@prisma/client/runtime/library").Decimal;
         transactionId: string | null;
         metadata: import("@prisma/client/runtime/library").JsonValue | null;
     }[]>;
     updateStatus(id: string, status: string, transactionId?: string, metadata?: Record<string, unknown>): Promise<{
+        method: import(".prisma/client").$Enums.PaymentMethod;
         status: import(".prisma/client").$Enums.PaymentStatus;
         id: string;
         createdAt: Date;
         updatedAt: Date;
         orderId: string;
-        method: import(".prisma/client").$Enums.PaymentMethod;
         amount: import("@prisma/client/runtime/library").Decimal;
         transactionId: string | null;
         metadata: import("@prisma/client/runtime/library").JsonValue | null;

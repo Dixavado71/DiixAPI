@@ -194,14 +194,38 @@ Cliente → Express → Middleware → Controller → Service → Repository →
 ```
 WhatsApp Client ↔ Evolution API ↔ ECMS6 Webhook
                                       ↓
+                              WebhookController (validação)
+                                      ↓
                               Store Resolver
                                       ↓
                               Customer Resolver
                                       ↓
-                              Bot Engine (Futuro)
+                              ConversationService (Fase 7)
+                                      ↓
+                              Bot Engine (Fase 7)
                                       ↓
                               Order/Commerce Services
+                                      ↓
+                              EvolutionClient (respostas)
 ```
+
+### Componentes Implementados
+
+**EvolutionClient** (`src/integrations/evolution/evolution.client.ts`):
+- `getInstances()` - Listar instâncias
+- `getConnectionState()` - Verificar status da conexão
+- `sendText()` - Enviar mensagens de texto
+- `sendMedia()` - Enviar imagens/mídia
+- `setWebhook()` - Configurar webhook
+- `createInstance()` - Criar nova instância
+- `deleteInstance()` - Remover instância
+- `logout()` - Desconectar instância
+
+**Webhook Endpoint** (`src/routes/webhook.routes.ts`):
+- `POST /api/v1/webhooks/evolution`
+- Validação de payload com Zod
+- Logging estruturado
+- Idempotência (pendente implementação completa)
 
 ## Modelo de Dados Principal
 
