@@ -15,39 +15,39 @@ export declare const createPromotionSchema: z.ZodObject<{
         type: z.ZodEnum<["CATEGORY", "PRODUCT", "DAY_OF_WEEK", "MIN_QUANTITY", "CUSTOMER_TYPE"]>;
         value: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        type: "CATEGORY" | "PRODUCT" | "DAY_OF_WEEK" | "MIN_QUANTITY" | "CUSTOMER_TYPE";
         value: string;
+        type: "CATEGORY" | "PRODUCT" | "DAY_OF_WEEK" | "MIN_QUANTITY" | "CUSTOMER_TYPE";
     }, {
-        type: "CATEGORY" | "PRODUCT" | "DAY_OF_WEEK" | "MIN_QUANTITY" | "CUSTOMER_TYPE";
         value: string;
+        type: "CATEGORY" | "PRODUCT" | "DAY_OF_WEEK" | "MIN_QUANTITY" | "CUSTOMER_TYPE";
     }>, "many">>;
     productIds: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
 }, "strip", z.ZodTypeAny, {
     name: string;
-    type: "PERCENTAGE" | "FIXED";
     value: number;
+    type: "PERCENTAGE" | "FIXED";
     active: boolean;
     startDate: Date;
     endDate: Date;
     description?: string | undefined;
     minAmount?: number | undefined;
     rules?: {
-        type: "CATEGORY" | "PRODUCT" | "DAY_OF_WEEK" | "MIN_QUANTITY" | "CUSTOMER_TYPE";
         value: string;
+        type: "CATEGORY" | "PRODUCT" | "DAY_OF_WEEK" | "MIN_QUANTITY" | "CUSTOMER_TYPE";
     }[] | undefined;
     productIds?: string[] | undefined;
 }, {
     name: string;
-    type: "PERCENTAGE" | "FIXED";
     value: number;
+    type: "PERCENTAGE" | "FIXED";
     startDate: Date;
     endDate: Date;
     description?: string | undefined;
     active?: boolean | undefined;
     minAmount?: number | undefined;
     rules?: {
-        type: "CATEGORY" | "PRODUCT" | "DAY_OF_WEEK" | "MIN_QUANTITY" | "CUSTOMER_TYPE";
         value: string;
+        type: "CATEGORY" | "PRODUCT" | "DAY_OF_WEEK" | "MIN_QUANTITY" | "CUSTOMER_TYPE";
     }[] | undefined;
     productIds?: string[] | undefined;
 }>;
@@ -65,8 +65,8 @@ export declare const updatePromotionSchema: z.ZodObject<{
     active: z.ZodOptional<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
     name?: string | undefined;
-    type?: "PERCENTAGE" | "FIXED" | undefined;
     value?: number | undefined;
+    type?: "PERCENTAGE" | "FIXED" | undefined;
     description?: string | undefined;
     active?: boolean | undefined;
     minAmount?: number | undefined;
@@ -74,8 +74,8 @@ export declare const updatePromotionSchema: z.ZodObject<{
     endDate?: Date | undefined;
 }, {
     name?: string | undefined;
-    type?: "PERCENTAGE" | "FIXED" | undefined;
     value?: number | undefined;
+    type?: "PERCENTAGE" | "FIXED" | undefined;
     description?: string | undefined;
     active?: boolean | undefined;
     minAmount?: number | undefined;
@@ -89,11 +89,11 @@ export declare const addPromotionRuleSchema: z.ZodObject<{
     type: z.ZodEnum<["CATEGORY", "PRODUCT", "DAY_OF_WEEK", "MIN_QUANTITY", "CUSTOMER_TYPE"]>;
     value: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    type: "CATEGORY" | "PRODUCT" | "DAY_OF_WEEK" | "MIN_QUANTITY" | "CUSTOMER_TYPE";
     value: string;
+    type: "CATEGORY" | "PRODUCT" | "DAY_OF_WEEK" | "MIN_QUANTITY" | "CUSTOMER_TYPE";
 }, {
-    type: "CATEGORY" | "PRODUCT" | "DAY_OF_WEEK" | "MIN_QUANTITY" | "CUSTOMER_TYPE";
     value: string;
+    type: "CATEGORY" | "PRODUCT" | "DAY_OF_WEEK" | "MIN_QUANTITY" | "CUSTOMER_TYPE";
 }>;
 /**
  * Schema for adding a product to a promotion

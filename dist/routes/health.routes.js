@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const database_1 = require("../config/database");
-const redis_1 = require("../config/redis");
 const logger_1 = require("../utils/logger");
 const router = (0, express_1.Router)();
 const logger = (0, logger_1.getLogger)().child({ module: 'health' });
@@ -20,17 +19,14 @@ router.get('/', (_req, res) => {
 });
 /**
  * GET /api/v1/health/ready
- * Readiness check - verifies database and Redis connectivity
+ * Readiness check - verifies database connectivity
  */
 router.get('/ready', async (_req, res) => {
     try {
-        const [databaseHealthy, redisHealthy] = await Promise.all([
-            (0, database_1.checkDatabaseHealth)(),
-            (0, redis_1.checkRedisHealth)(),
-        ]);
-        const isReady = databaseHealthy && redisHealthy;
+        const databaseHealthy = await (0, database_1.checkDatabaseHealth)();
+        const isReady = databaseHealthy;
         if (!isReady) {
-            logger.warn({ database: databaseHealthy, redis: redisHealthy }, 'Service not ready');
+            logger.warn({ database: databaseHealthy }, 'Service not ready');
             res.status(503).json({
                 status: 'not_ready',
                 service: 'ecms6',
@@ -38,7 +34,6 @@ router.get('/ready', async (_req, res) => {
                 timestamp: new Date().toISOString(),
                 checks: {
                     database: databaseHealthy,
-                    redis: redisHealthy,
                 },
             });
             return;
@@ -51,7 +46,6 @@ router.get('/ready', async (_req, res) => {
             timestamp: new Date().toISOString(),
             checks: {
                 database: databaseHealthy,
-                redis: redisHealthy,
             },
         });
     }
