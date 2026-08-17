@@ -1,16 +1,18 @@
-import { createApp } from './app';
-import { validateEnv } from './config/env';
-import { connectDatabase, disconnectDatabase } from './config/database';
-import { getLogger } from './utils/logger';
-const logger = getLogger();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const app_1 = require("./app");
+const env_1 = require("./config/env");
+const database_1 = require("./config/database");
+const logger_1 = require("./utils/logger");
+const logger = (0, logger_1.getLogger)();
 async function bootstrap() {
     // Validate environment variables
-    const env = validateEnv();
+    const env = (0, env_1.validateEnv)();
     logger.info({ env: env.NODE_ENV }, 'Environment validated');
     // Connect to database
-    await connectDatabase();
+    await (0, database_1.connectDatabase)();
     // Create Express app
-    const app = createApp();
+    const app = (0, app_1.createApp)();
     // Start server
     const port = env.PORT;
     const server = app.listen(port, () => {
@@ -22,7 +24,7 @@ async function bootstrap() {
         server.close(async () => {
             logger.info('HTTP server closed');
             try {
-                await disconnectDatabase();
+                await (0, database_1.disconnectDatabase)();
                 logger.info('All connections closed');
                 process.exit(0);
             }

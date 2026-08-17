@@ -2,7 +2,7 @@
   "name": "ecms6",
   "version": "1.0.0",
   "description": "ECMS6 - Plataforma comercial multi-loja integrada ao WhatsApp via Evolution API",
-  "type": "module",
+  "type": "commonjs",
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",

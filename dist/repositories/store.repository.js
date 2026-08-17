@@ -1,5 +1,8 @@
-import { StoreStatus } from '@prisma/client';
-export class StoreRepository {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StoreRepository = void 0;
+const client_1 = require("@prisma/client");
+class StoreRepository {
     prisma;
     constructor(prisma) {
         this.prisma = prisma;
@@ -42,13 +45,13 @@ export class StoreRepository {
         });
     }
     async activate(id) {
-        return this.updateStatus(id, StoreStatus.ACTIVE);
+        return this.updateStatus(id, client_1.StoreStatus.ACTIVE);
     }
     async deactivate(id) {
-        return this.updateStatus(id, StoreStatus.INACTIVE);
+        return this.updateStatus(id, client_1.StoreStatus.INACTIVE);
     }
     async suspend(id) {
-        return this.updateStatus(id, StoreStatus.SUSPENDED);
+        return this.updateStatus(id, client_1.StoreStatus.SUSPENDED);
     }
     async existsBySlug(slug, excludeId) {
         const store = await this.prisma.store.findFirst({
@@ -69,4 +72,5 @@ export class StoreRepository {
         return !!store;
     }
 }
+exports.StoreRepository = StoreRepository;
 //# sourceMappingURL=store.repository.js.map

@@ -1,11 +1,14 @@
-import { Router } from 'express';
-import { CartController } from '../controllers/cart';
-export class CartRoutes {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CartRoutes = void 0;
+const express_1 = require("express");
+const cart_1 = require("../controllers/cart");
+class CartRoutes {
     router;
     controller;
     constructor() {
-        this.router = Router();
-        this.controller = new CartController();
+        this.router = (0, express_1.Router)();
+        this.controller = new cart_1.CartController();
         this.initializeRoutes();
     }
     initializeRoutes() {
@@ -26,4 +29,5 @@ export class CartRoutes {
         return this.router;
     }
 }
+exports.CartRoutes = CartRoutes;
 //# sourceMappingURL=cart.routes.js.map

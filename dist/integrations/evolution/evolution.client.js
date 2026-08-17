@@ -1,16 +1,23 @@
-import axios from 'axios';
-import { getLogger } from '../../utils/logger';
-const logger = getLogger().child({ module: 'evolution-client' });
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EvolutionClient = void 0;
+exports.getEvolutionClient = getEvolutionClient;
+const axios_1 = __importDefault(require("axios"));
+const logger_1 = require("../../utils/logger");
+const logger = (0, logger_1.getLogger)().child({ module: 'evolution-client' });
 /**
  * Evolution API Client - Centralizes all communication with Evolution API v2.3.7
  *
  * IMPORTANT: Only implement methods that are confirmed to exist in the API version.
  * If a method is not implemented, it will throw NOT_IMPLEMENTED error.
  */
-export class EvolutionClient {
+class EvolutionClient {
     client;
     constructor(config) {
-        this.client = axios.create({
+        this.client = axios_1.default.create({
             baseURL: config.baseUrl,
             headers: {
                 'Content-Type': 'application/json',
@@ -163,7 +170,7 @@ export class EvolutionClient {
         }
     }
     handleError(error) {
-        if (axios.isAxiosError(error)) {
+        if (axios_1.default.isAxiosError(error)) {
             const status = error.response?.status;
             const data = error.response?.data;
             if (status === 401) {
@@ -183,9 +190,10 @@ export class EvolutionClient {
         return new Error('Unknown error in Evolution API client');
     }
 }
+exports.EvolutionClient = EvolutionClient;
 // Singleton instance (created when needed)
 let evolutionClient = null;
-export function getEvolutionClient() {
+function getEvolutionClient() {
     if (!evolutionClient) {
         const baseUrl = process.env.EVOLUTION_API_URL;
         const apiKey = process.env.EVOLUTION_API_KEY;

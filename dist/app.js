@@ -1,24 +1,30 @@
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
-import pinoHttp from 'pino-http';
-import { getLogger } from './utils/logger';
-import routes from './routes';
-const logger = getLogger();
-export function createApp() {
-    const app = express();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.createApp = createApp;
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const helmet_1 = __importDefault(require("helmet"));
+const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
+const pino_http_1 = __importDefault(require("pino-http"));
+const logger_1 = require("./utils/logger");
+const routes_1 = __importDefault(require("./routes"));
+const logger = (0, logger_1.getLogger)();
+function createApp() {
+    const app = (0, express_1.default)();
     // Security middleware
-    app.use(helmet());
+    app.use((0, helmet_1.default)());
     // CORS configuration
     const corsOrigin = process.env.CORS_ORIGIN || '*';
-    app.use(cors({
+    app.use((0, cors_1.default)({
         origin: corsOrigin === '*' ? '*' : corsOrigin.split(','),
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
         allowedHeaders: ['Content-Type', 'Authorization'],
     }));
     // Rate limiting
-    const limiter = rateLimit({
+    const limiter = (0, express_rate_limit_1.default)({
         windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 60000,
         max: Number(process.env.RATE_LIMIT_MAX) || 100,
         message: {
@@ -30,17 +36,17 @@ export function createApp() {
     });
     app.use('/api', limiter);
     // Body parsing with size limit
-    app.use(express.json({ limit: '1mb' }));
-    app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+    app.use(express_1.default.json({ limit: '1mb' }));
+    app.use(express_1.default.urlencoded({ extended: true, limit: '1mb' }));
     // HTTP logging
-    app.use(pinoHttp({
+    app.use((0, pino_http_1.default)({
         logger,
         autoLogging: {
             ignore: (req) => req.url === '/health',
         },
     }));
     // API routes
-    app.use('/api/v1', routes);
+    app.use('/api/v1', routes_1.default);
     // Root endpoint
     app.get('/', (_req, res) => {
         res.json({

@@ -1,5 +1,8 @@
-import { adminAuthService } from '../services/admin/admin-auth.service.js';
-export const authenticate = async (req, res, next) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.optionalAuth = exports.requireOperator = exports.requireStoreManager = exports.requireStoreOwner = exports.requireSuperAdmin = exports.authorize = exports.authenticate = void 0;
+const admin_auth_service_js_1 = require("../services/admin/admin-auth.service.js");
+const authenticate = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -15,7 +18,7 @@ export const authenticate = async (req, res, next) => {
             });
             return;
         }
-        const result = await adminAuthService.verifyToken(token);
+        const result = await admin_auth_service_js_1.adminAuthService.verifyToken(token);
         if (!result.valid || !result.userId || !result.email || !result.role) {
             res.status(401).json({
                 error: result.error || 'Invalid token',
@@ -35,7 +38,8 @@ export const authenticate = async (req, res, next) => {
         });
     }
 };
-export const authorize = (...allowedRoles) => {
+exports.authenticate = authenticate;
+const authorize = (...allowedRoles) => {
     return (req, res, next) => {
         if (!req.user) {
             res.status(401).json({
@@ -54,17 +58,18 @@ export const authorize = (...allowedRoles) => {
         next();
     };
 };
-export const requireSuperAdmin = authorize('SUPER_ADMIN');
-export const requireStoreOwner = authorize('STORE_OWNER', 'SUPER_ADMIN');
-export const requireStoreManager = authorize('STORE_MANAGER', 'STORE_OWNER', 'SUPER_ADMIN');
-export const requireOperator = authorize('OPERATOR', 'STORE_MANAGER', 'STORE_OWNER', 'SUPER_ADMIN');
-export const optionalAuth = async (req, _res, next) => {
+exports.authorize = authorize;
+exports.requireSuperAdmin = (0, exports.authorize)('SUPER_ADMIN');
+exports.requireStoreOwner = (0, exports.authorize)('STORE_OWNER', 'SUPER_ADMIN');
+exports.requireStoreManager = (0, exports.authorize)('STORE_MANAGER', 'STORE_OWNER', 'SUPER_ADMIN');
+exports.requireOperator = (0, exports.authorize)('OPERATOR', 'STORE_MANAGER', 'STORE_OWNER', 'SUPER_ADMIN');
+const optionalAuth = async (req, _res, next) => {
     try {
         const authHeader = req.headers.authorization;
         if (authHeader && authHeader.startsWith('Bearer ')) {
             const token = authHeader.split(' ')[1];
             if (token) {
-                const result = await adminAuthService.verifyToken(token);
+                const result = await admin_auth_service_js_1.adminAuthService.verifyToken(token);
                 if (result.valid && result.userId && result.email && result.role) {
                     req.user = {
                         userId: result.userId,
@@ -80,4 +85,5 @@ export const optionalAuth = async (req, _res, next) => {
         next();
     }
 };
+exports.optionalAuth = optionalAuth;
 //# sourceMappingURL=auth.middleware.js.map

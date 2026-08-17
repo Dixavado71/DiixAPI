@@ -1,4 +1,7 @@
-export class StoreSettingsRepository {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StoreSettingsRepository = void 0;
+class StoreSettingsRepository {
     prisma;
     constructor(prisma) {
         this.prisma = prisma;
@@ -38,4 +41,5 @@ export class StoreSettingsRepository {
         });
     }
 }
+exports.StoreSettingsRepository = StoreSettingsRepository;
 //# sourceMappingURL=store-settings.repository.js.map

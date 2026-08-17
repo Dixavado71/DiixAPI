@@ -1,9 +1,12 @@
-import { ProductRepository } from '../../repositories/product.repository';
-import { prisma } from '../../config/database';
-export class ProductService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProductService = void 0;
+const product_repository_1 = require("../../repositories/product.repository");
+const database_1 = require("../../config/database");
+class ProductService {
     repository;
     constructor() {
-        this.repository = new ProductRepository(prisma);
+        this.repository = new product_repository_1.ProductRepository(database_1.prisma);
     }
     async findAll(storeId, filters) {
         const result = await this.repository.findByStore(storeId, {
@@ -25,4 +28,5 @@ export class ProductService {
         await this.repository.deactivate(id);
     }
 }
+exports.ProductService = ProductService;
 //# sourceMappingURL=product.service.js.map
