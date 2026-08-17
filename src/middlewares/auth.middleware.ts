@@ -22,9 +22,15 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
 
     const token = authHeader.split(' ')[1];
 
+    if (!token) {
+      return res.status(401).json({
+        error: 'Invalid token format',
+      });
+    }
+
     const result = await adminAuthService.verifyToken(token);
 
-    if (!result.valid) {
+    if (!result.valid || !result.userId || !result.email || !result.role) {
       return res.status(401).json({
         error: result.error || 'Invalid token',
       });
@@ -72,20 +78,23 @@ export const requireStoreManager = authorize('STORE_MANAGER', 'STORE_OWNER', 'SU
 
 export const requireOperator = authorize('OPERATOR', 'STORE_MANAGER', 'STORE_OWNER', 'SUPER_ADMIN');
 
-export const optionalAuth = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const optionalAuth = async (req: AuthRequest, _res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization;
 
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
-      const result = await adminAuthService.verifyToken(token);
 
-      if (result.valid) {
-        req.user = {
-          userId: result.userId,
-          email: result.email,
-          role: result.role,
-        };
+      if (token) {
+        const result = await adminAuthService.verifyToken(token);
+
+        if (result.valid && result.userId && result.email && result.role) {
+          req.user = {
+            userId: result.userId,
+            email: result.email,
+            role: result.role,
+          };
+        }
       }
     }
 

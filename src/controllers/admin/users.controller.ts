@@ -35,6 +35,12 @@ export class UsersController {
     try {
       const { id } = req.params;
 
+      if (!id || Array.isArray(id)) {
+        return res.status(400).json({
+          error: 'Invalid user ID',
+        });
+      }
+
       const user = await adminAuthService.getUserById(id);
 
       return res.json({
@@ -58,7 +64,7 @@ export class UsersController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 20;
 
-      if (!['SUPER_ADMIN', 'STORE_OWNER', 'STORE_MANAGER', 'OPERATOR'].includes(role)) {
+      if (!role || Array.isArray(role) || !['SUPER_ADMIN', 'STORE_OWNER', 'STORE_MANAGER', 'OPERATOR'].includes(role)) {
         return res.status(400).json({
           error: 'Invalid role',
         });
@@ -86,10 +92,16 @@ export class UsersController {
       const { id } = req.params;
       const { name, email, role, active } = req.body;
 
+      if (!id || Array.isArray(id)) {
+        return res.status(400).json({
+          error: 'Invalid user ID',
+        });
+      }
+
       const user = await adminAuthService.updateUser(id, {
         name,
         email,
-        role: role as Role,
+        role: role as Role | undefined,
         active,
       });
 
@@ -97,12 +109,12 @@ export class UsersController {
       await auditService.logUserUpdate(
         req.user!.userId,
         id,
-        { name, email, role, active },
+        { name, email, role: role as string | undefined, active },
         req.ip || undefined
       );
 
       // If role changed, log it
-      if (role) {
+      if (role && typeof role === 'string') {
         await auditService.logRoleChange(
           req.user!.userId,
           id,
@@ -132,6 +144,12 @@ export class UsersController {
     try {
       const { id } = req.params;
 
+      if (!id || Array.isArray(id)) {
+        return res.status(400).json({
+          error: 'Invalid user ID',
+        });
+      }
+
       const user = await adminAuthService.deactivateUser(id);
 
       // Audit log
@@ -156,6 +174,12 @@ export class UsersController {
   async activateUser(req: AuthRequest, res: Response) {
     try {
       const { id } = req.params;
+
+      if (!id || Array.isArray(id)) {
+        return res.status(400).json({
+          error: 'Invalid user ID',
+        });
+      }
 
       const user = await adminAuthService.activateUser(id);
 
@@ -189,7 +213,13 @@ export class UsersController {
       const { id } = req.params;
       const { newPassword } = req.body;
 
-      if (!newPassword) {
+      if (!id || Array.isArray(id)) {
+        return res.status(400).json({
+          error: 'Invalid user ID',
+        });
+      }
+
+      if (!newPassword || Array.isArray(newPassword)) {
         return res.status(400).json({
           error: 'New password is required',
         });
@@ -225,6 +255,12 @@ export class UsersController {
   async deleteUser(req: AuthRequest, res: Response) {
     try {
       const { id } = req.params;
+
+      if (!id || Array.isArray(id)) {
+        return res.status(400).json({
+          error: 'Invalid user ID',
+        });
+      }
 
       const user = await adminAuthService.deleteUser(id);
 

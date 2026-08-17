@@ -11,8 +11,13 @@ const authenticate = async (req, res, next) => {
             });
         }
         const token = authHeader.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({
+                error: 'Invalid token format',
+            });
+        }
         const result = await admin_auth_service_js_1.adminAuthService.verifyToken(token);
-        if (!result.valid) {
+        if (!result.valid || !result.userId || !result.email || !result.role) {
             return res.status(401).json({
                 error: result.error || 'Invalid token',
             });
@@ -58,13 +63,15 @@ const optionalAuth = async (req, res, next) => {
         const authHeader = req.headers.authorization;
         if (authHeader && authHeader.startsWith('Bearer ')) {
             const token = authHeader.split(' ')[1];
-            const result = await admin_auth_service_js_1.adminAuthService.verifyToken(token);
-            if (result.valid) {
-                req.user = {
-                    userId: result.userId,
-                    email: result.email,
-                    role: result.role,
-                };
+            if (token) {
+                const result = await admin_auth_service_js_1.adminAuthService.verifyToken(token);
+                if (result.valid && result.userId && result.email && result.role) {
+                    req.user = {
+                        userId: result.userId,
+                        email: result.email,
+                        role: result.role,
+                    };
+                }
             }
         }
         next();

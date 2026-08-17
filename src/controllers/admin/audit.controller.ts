@@ -40,6 +40,13 @@ export class AuditController {
   async getLogsByEntity(req: AuthRequest, res: Response) {
     try {
       const { entity, entityId } = req.params;
+
+      if (!entity || Array.isArray(entity) || !entityId || Array.isArray(entityId)) {
+        return res.status(400).json({
+          error: 'Invalid entity or entityId',
+        });
+      }
+
       const limit = parseInt(req.query.limit as string) || 20;
 
       const logs = await auditService.getLogsByEntity(entity, entityId, limit);
@@ -62,6 +69,13 @@ export class AuditController {
   async getLogsByUser(req: AuthRequest, res: Response) {
     try {
       const { userId } = req.params;
+
+      if (!userId || Array.isArray(userId)) {
+        return res.status(400).json({
+          error: 'Invalid userId',
+        });
+      }
+
       const limit = parseInt(req.query.limit as string) || 20;
 
       const logs = await auditService.getLogsByUser(userId, limit);

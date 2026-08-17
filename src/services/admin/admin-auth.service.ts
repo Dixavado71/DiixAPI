@@ -110,8 +110,8 @@ export class AdminAuthService {
     });
 
     const config = getConfig();
-    const JWT_SECRET = config.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
-    const JWT_EXPIRES_IN = config.JWT_EXPIRES_IN || process.env.JWT_EXPIRES_IN || '24h';
+    const JWT_SECRET = config?.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
+    const JWT_EXPIRES_IN = config?.JWT_EXPIRES_IN || process.env.JWT_EXPIRES_IN || '24h';
 
     const token = jwt.sign(
       {
@@ -120,7 +120,7 @@ export class AdminAuthService {
         role: user.role,
       },
       JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN }
+      { expiresIn: JWT_EXPIRES_IN as string }
     );
 
     return {
@@ -301,7 +301,7 @@ export class AdminAuthService {
   async verifyToken(token: string) {
     try {
       const config = getConfig();
-      const JWT_SECRET = config.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
+      const JWT_SECRET = config?.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
 
       const decoded = jwt.verify(token, JWT_SECRET) as {
         userId: string;

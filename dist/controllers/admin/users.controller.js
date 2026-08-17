@@ -31,6 +31,11 @@ class UsersController {
     async getUserById(req, res) {
         try {
             const { id } = req.params;
+            if (!id || Array.isArray(id)) {
+                return res.status(400).json({
+                    error: 'Invalid user ID',
+                });
+            }
             const user = await admin_auth_service_js_1.adminAuthService.getUserById(id);
             return res.json({
                 user,
@@ -52,7 +57,7 @@ class UsersController {
             const { role } = req.params;
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 20;
-            if (!['SUPER_ADMIN', 'STORE_OWNER', 'STORE_MANAGER', 'OPERATOR'].includes(role)) {
+            if (!role || Array.isArray(role) || !['SUPER_ADMIN', 'STORE_OWNER', 'STORE_MANAGER', 'OPERATOR'].includes(role)) {
                 return res.status(400).json({
                     error: 'Invalid role',
                 });
@@ -77,6 +82,11 @@ class UsersController {
         try {
             const { id } = req.params;
             const { name, email, role, active } = req.body;
+            if (!id || Array.isArray(id)) {
+                return res.status(400).json({
+                    error: 'Invalid user ID',
+                });
+            }
             const user = await admin_auth_service_js_1.adminAuthService.updateUser(id, {
                 name,
                 email,
@@ -84,9 +94,9 @@ class UsersController {
                 active,
             });
             // Audit log
-            await audit_service_js_1.auditService.logUserUpdate(req.user.userId, id, { name, email, role, active }, req.ip || undefined);
+            await audit_service_js_1.auditService.logUserUpdate(req.user.userId, id, { name, email, role: role, active }, req.ip || undefined);
             // If role changed, log it
-            if (role) {
+            if (role && typeof role === 'string') {
                 await audit_service_js_1.auditService.logRoleChange(req.user.userId, id, 'UNKNOWN', role, req.ip || undefined);
             }
             return res.json({
@@ -108,6 +118,11 @@ class UsersController {
     async deactivateUser(req, res) {
         try {
             const { id } = req.params;
+            if (!id || Array.isArray(id)) {
+                return res.status(400).json({
+                    error: 'Invalid user ID',
+                });
+            }
             const user = await admin_auth_service_js_1.adminAuthService.deactivateUser(id);
             // Audit log
             await audit_service_js_1.auditService.logUserDeletion(req.user.userId, id, req.ip || undefined);
@@ -130,6 +145,11 @@ class UsersController {
     async activateUser(req, res) {
         try {
             const { id } = req.params;
+            if (!id || Array.isArray(id)) {
+                return res.status(400).json({
+                    error: 'Invalid user ID',
+                });
+            }
             const user = await admin_auth_service_js_1.adminAuthService.activateUser(id);
             // Audit log
             await audit_service_js_1.auditService.log({
@@ -159,7 +179,12 @@ class UsersController {
         try {
             const { id } = req.params;
             const { newPassword } = req.body;
-            if (!newPassword) {
+            if (!id || Array.isArray(id)) {
+                return res.status(400).json({
+                    error: 'Invalid user ID',
+                });
+            }
+            if (!newPassword || Array.isArray(newPassword)) {
                 return res.status(400).json({
                     error: 'New password is required',
                 });
@@ -192,6 +217,11 @@ class UsersController {
     async deleteUser(req, res) {
         try {
             const { id } = req.params;
+            if (!id || Array.isArray(id)) {
+                return res.status(400).json({
+                    error: 'Invalid user ID',
+                });
+            }
             const user = await admin_auth_service_js_1.adminAuthService.deleteUser(id);
             // Audit log
             await audit_service_js_1.auditService.logUserDeletion(req.user.userId, id, req.ip || undefined);

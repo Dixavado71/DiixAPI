@@ -42,6 +42,11 @@ class AuditController {
     async getLogsByEntity(req, res) {
         try {
             const { entity, entityId } = req.params;
+            if (!entity || Array.isArray(entity) || !entityId || Array.isArray(entityId)) {
+                return res.status(400).json({
+                    error: 'Invalid entity or entityId',
+                });
+            }
             const limit = parseInt(req.query.limit) || 20;
             const logs = await audit_service_js_1.auditService.getLogsByEntity(entity, entityId, limit);
             return res.json({
@@ -62,6 +67,11 @@ class AuditController {
     async getLogsByUser(req, res) {
         try {
             const { userId } = req.params;
+            if (!userId || Array.isArray(userId)) {
+                return res.status(400).json({
+                    error: 'Invalid userId',
+                });
+            }
             const limit = parseInt(req.query.limit) || 20;
             const logs = await audit_service_js_1.auditService.getLogsByUser(userId, limit);
             return res.json({
