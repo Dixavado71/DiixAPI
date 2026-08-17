@@ -58,7 +58,7 @@ exports.requireSuperAdmin = (0, exports.authorize)('SUPER_ADMIN');
 exports.requireStoreOwner = (0, exports.authorize)('STORE_OWNER', 'SUPER_ADMIN');
 exports.requireStoreManager = (0, exports.authorize)('STORE_MANAGER', 'STORE_OWNER', 'SUPER_ADMIN');
 exports.requireOperator = (0, exports.authorize)('OPERATOR', 'STORE_MANAGER', 'STORE_OWNER', 'SUPER_ADMIN');
-const optionalAuth = async (req, res, next) => {
+const optionalAuth = async (req, _res, next) => {
     try {
         const authHeader = req.headers.authorization;
         if (authHeader && authHeader.startsWith('Bearer ')) {

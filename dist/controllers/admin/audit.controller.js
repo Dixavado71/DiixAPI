@@ -2,6 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.auditController = exports.AuditController = void 0;
 const audit_service_js_1 = require("../../services/audit/audit.service.js");
+// Helper function to safely extract string from query params
+const getStringParam = (param) => {
+    if (typeof param === 'string')
+        return param;
+    return undefined;
+};
 class AuditController {
     /**
      * Get audit logs with filters
@@ -9,19 +15,19 @@ class AuditController {
      */
     async getLogs(req, res) {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 50;
+            const page = parseInt(getStringParam(req.query.page) || '1', 10);
+            const limit = parseInt(getStringParam(req.query.limit) || '50', 10);
             const { action, entity, userId, startDate, endDate } = req.query;
             const filters = {};
-            if (action)
+            if (action && typeof action === 'string')
                 filters.action = action;
-            if (entity)
+            if (entity && typeof entity === 'string')
                 filters.entity = entity;
-            if (userId)
+            if (userId && typeof userId === 'string')
                 filters.userId = userId;
-            if (startDate)
+            if (startDate && typeof startDate === 'string')
                 filters.startDate = new Date(startDate);
-            if (endDate)
+            if (endDate && typeof endDate === 'string')
                 filters.endDate = new Date(endDate);
             const result = await audit_service_js_1.auditService.getLogs(filters, page, limit);
             return res.json({
@@ -41,13 +47,14 @@ class AuditController {
      */
     async getLogsByEntity(req, res) {
         try {
-            const { entity, entityId } = req.params;
-            if (!entity || Array.isArray(entity) || !entityId || Array.isArray(entityId)) {
+            const entity = getStringParam(req.params.entity);
+            const entityId = getStringParam(req.params.entityId);
+            if (!entity || !entityId) {
                 return res.status(400).json({
                     error: 'Invalid entity or entityId',
                 });
             }
-            const limit = parseInt(req.query.limit) || 20;
+            const limit = parseInt(getStringParam(req.query.limit) || '20', 10);
             const logs = await audit_service_js_1.auditService.getLogsByEntity(entity, entityId, limit);
             return res.json({
                 logs,
@@ -66,13 +73,13 @@ class AuditController {
      */
     async getLogsByUser(req, res) {
         try {
-            const { userId } = req.params;
-            if (!userId || Array.isArray(userId)) {
+            const userId = getStringParam(req.params.userId);
+            if (!userId) {
                 return res.status(400).json({
                     error: 'Invalid userId',
                 });
             }
-            const limit = parseInt(req.query.limit) || 20;
+            const limit = parseInt(getStringParam(req.query.limit) || '20', 10);
             const logs = await audit_service_js_1.auditService.getLogsByUser(userId, limit);
             return res.json({
                 logs,
