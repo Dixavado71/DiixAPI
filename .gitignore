@@ -1,20 +1,25 @@
 ```
-# Build artifacts
+# Compiled and build artifacts
+*.pyc
+*.o
+*.obj
 dist/
 build/
-target/
-
-# Compiled files
-*.js
-*.js.map
 *.d.ts
 *.d.ts.map
+*.js
+*.js.map
 
 # Dependencies
-node_modules/
+.node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
 
 # Environment
 .env
@@ -24,12 +29,22 @@ yarn-error.log*
 # Editors
 .vscode/
 .idea/
-*.swp
-*.swo
 
-# Logs
-*.log
+# Coverage
+coverage/
+htmlcov/
+.coverage
 
-# Backup files
-*.bak
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+.env
+.envs
+.pytest_cache/
+.mypy_cache/
 ```

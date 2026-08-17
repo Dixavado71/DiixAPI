@@ -10,19 +10,30 @@ const createBotEngineService = () => {
   return new BotEngineService(prisma);
 };
 
+// Helper para extrair string segura de params
+const getStringParam = (param: string | string[] | undefined): string => {
+  if (Array.isArray(param)) {
+    return param[0] ?? '';
+  }
+  return param ?? '';
+};
+
+
 /**
  * POST /bot/:customerId/:storeId/message
  * Envia uma mensagem para o bot e recebe a resposta
  */
-router.post('/:customerId/:storeId/message', async (req: Request, res: Response) => {
+router.post('/:customerId/:storeId/message', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { customerId, storeId } = req.params;
+    const customerId = getStringParam(req.params.customerId);
+    const storeId = getStringParam(req.params.storeId);
     const { message } = req.body;
 
     if (!message || typeof message !== 'string') {
-      return res.status(400).json({
+      res.status(400).json({
         error: 'Message is required and must be a string',
       });
+      return;
     }
 
     const botService = createBotEngineService();
@@ -50,14 +61,16 @@ router.post('/:customerId/:storeId/message', async (req: Request, res: Response)
  * POST /bot/:customerId/:storeId/reset
  * Reseta o contexto da conversação
  */
-router.post('/:customerId/:storeId/reset', async (req: Request, res: Response) => {
+router.post('/:customerId/:storeId/reset', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { customerId, storeId } = req.params;
+    const customerId = getStringParam(req.params.customerId);
+    const storeId = getStringParam(req.params.storeId);
 
     if (!customerId || !storeId) {
-      return res.status(400).json({
+      res.status(400).json({
         error: 'customerId and storeId are required',
       });
+      return;
     }
 
     const prisma = new PrismaClient();
@@ -91,14 +104,16 @@ router.post('/:customerId/:storeId/reset', async (req: Request, res: Response) =
  * POST /bot/:customerId/:storeId/end
  * Finaliza a conversação
  */
-router.post('/:customerId/:storeId/end', async (req: Request, res: Response) => {
+router.post('/:customerId/:storeId/end', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { customerId, storeId } = req.params;
+    const customerId = getStringParam(req.params.customerId);
+    const storeId = getStringParam(req.params.storeId);
 
     if (!customerId || !storeId) {
-      return res.status(400).json({
+      res.status(400).json({
         error: 'customerId and storeId are required',
       });
+      return;
     }
 
     const prisma = new PrismaClient();
@@ -132,14 +147,16 @@ router.post('/:customerId/:storeId/end', async (req: Request, res: Response) => 
  * GET /bot/:customerId/:storeId/context
  * Obtém o contexto atual da conversação
  */
-router.get('/:customerId/:storeId/context', async (req: Request, res: Response) => {
+router.get('/:customerId/:storeId/context', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { customerId, storeId } = req.params;
+    const customerId = getStringParam(req.params.customerId);
+    const storeId = getStringParam(req.params.storeId);
 
     if (!customerId || !storeId) {
-      return res.status(400).json({
+      res.status(400).json({
         error: 'customerId and storeId are required',
       });
+      return;
     }
 
     const prisma = new PrismaClient();
@@ -155,13 +172,14 @@ router.get('/:customerId/:storeId/context', async (req: Request, res: Response) 
     });
 
     if (!conversation) {
-      return res.json({
+      res.json({
         success: true,
         data: {
           hasActiveConversation: false,
           context: null,
         },
       });
+      return;
     }
 
     res.json({
@@ -183,3 +201,4 @@ router.get('/:customerId/:storeId/context', async (req: Request, res: Response) 
     });
   }
 });
+export default router;

@@ -4,7 +4,7 @@ import webhookRoutes from './webhook.routes';
 import { createOrderRoutes } from './order.routes';
 import { PromotionRoutes } from './promotion.routes';
 import { CartRoutes } from './cart.routes';
-import { botRoutes } from './bot.routes';
+import botRoutes from './bot.routes';
 import { adminRoutes } from './admin.routes';
 
 const router = Router();

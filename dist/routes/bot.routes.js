@@ -9,18 +9,27 @@ const createBotEngineService = () => {
     const prisma = new client_1.PrismaClient();
     return new bot_engine_service_1.BotEngineService(prisma);
 };
+// Helper para extrair string segura de params
+const getStringParam = (param) => {
+    if (Array.isArray(param)) {
+        return param[0] ?? '';
+    }
+    return param ?? '';
+};
 /**
  * POST /bot/:customerId/:storeId/message
  * Envia uma mensagem para o bot e recebe a resposta
  */
 router.post('/:customerId/:storeId/message', async (req, res) => {
     try {
-        const { customerId, storeId } = req.params;
+        const customerId = getStringParam(req.params.customerId);
+        const storeId = getStringParam(req.params.storeId);
         const { message } = req.body;
         if (!message || typeof message !== 'string') {
-            return res.status(400).json({
+            res.status(400).json({
                 error: 'Message is required and must be a string',
             });
+            return;
         }
         const botService = createBotEngineService();
         const responses = await botService.processMessage(customerId, storeId, message);
@@ -48,11 +57,13 @@ router.post('/:customerId/:storeId/message', async (req, res) => {
  */
 router.post('/:customerId/:storeId/reset', async (req, res) => {
     try {
-        const { customerId, storeId } = req.params;
+        const customerId = getStringParam(req.params.customerId);
+        const storeId = getStringParam(req.params.storeId);
         if (!customerId || !storeId) {
-            return res.status(400).json({
+            res.status(400).json({
                 error: 'customerId and storeId are required',
             });
+            return;
         }
         const prisma = new client_1.PrismaClient();
         await prisma.conversationState.updateMany({
@@ -86,11 +97,13 @@ router.post('/:customerId/:storeId/reset', async (req, res) => {
  */
 router.post('/:customerId/:storeId/end', async (req, res) => {
     try {
-        const { customerId, storeId } = req.params;
+        const customerId = getStringParam(req.params.customerId);
+        const storeId = getStringParam(req.params.storeId);
         if (!customerId || !storeId) {
-            return res.status(400).json({
+            res.status(400).json({
                 error: 'customerId and storeId are required',
             });
+            return;
         }
         const prisma = new client_1.PrismaClient();
         await prisma.conversationState.updateMany({
@@ -124,11 +137,13 @@ router.post('/:customerId/:storeId/end', async (req, res) => {
  */
 router.get('/:customerId/:storeId/context', async (req, res) => {
     try {
-        const { customerId, storeId } = req.params;
+        const customerId = getStringParam(req.params.customerId);
+        const storeId = getStringParam(req.params.storeId);
         if (!customerId || !storeId) {
-            return res.status(400).json({
+            res.status(400).json({
                 error: 'customerId and storeId are required',
             });
+            return;
         }
         const prisma = new client_1.PrismaClient();
         const conversation = await prisma.conversationState.findFirst({
@@ -141,13 +156,14 @@ router.get('/:customerId/:storeId/context', async (req, res) => {
             },
         });
         if (!conversation) {
-            return res.json({
+            res.json({
                 success: true,
                 data: {
                     hasActiveConversation: false,
                     context: null,
                 },
             });
+            return;
         }
         res.json({
             success: true,
@@ -169,4 +185,5 @@ router.get('/:customerId/:storeId/context', async (req, res) => {
         });
     }
 });
+exports.default = router;
 //# sourceMappingURL=bot.routes.js.map
