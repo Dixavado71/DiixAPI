@@ -6,12 +6,17 @@ import type { Role } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // Lazy load config to avoid import issues in tests
+let envConfig: { JWT_SECRET: string; JWT_EXPIRES_IN: string } | undefined;
 const getConfig = () => {
+  if (envConfig) return envConfig;
   try {
-    return require('../config/index.js').env;
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    envConfig = require('../config/index.js').env;
   } catch {
-    return require('../config/env.js');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    envConfig = require('../config/env.js');
   }
+  return envConfig;
 };
 
 export interface AdminUserCreateInput {

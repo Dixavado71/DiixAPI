@@ -236,7 +236,7 @@ export class BotEngineService {
   ): Promise<BotMessage[]> {
     const products = await this.productService.findAll(_context.storeId);
 
-    if (products.length === 0) {
+    if (!products || products.length === 0) {
       return [
         {
           text: 'Desculpe, não há produtos disponíveis no momento.',

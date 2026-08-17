@@ -7,49 +7,63 @@ dist/
 build/
 target/
 
-# Cache directories
-.vite/
-
-# Environment
-.env
-.env.local
-*.env.*
+# Temporary files
+*.tmp
+*.swp
 
 # Logs
 *.log
 
-# Test coverage
-coverage/
-.htmlcov/
-.coverage
+# Environment
+.env
+.env.local
+.env.*
 
-# IDE files
+# Editors
 .vscode/
 .idea/
-*.swp
-*.swo
-*.tmp
 
 # Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.hprof
+hs_err_pid*
+
+# C/C++
+*.o
+*.obj
 *.so
-*.egg-info/
-.eggs/
+*.a
+*.lib
+*.dll
+*.dylib
+*.exe
+*.out
 
 # Node.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# OS generated files
+# Vite/Vitest
+.node/
+.vite/
+
+# Coverage
+coverage/
+.nyc_output/
+istanbul-reports/
+
+# OS
 .DS_Store
 Thumbs.db
-
-# Temporary files
-*.tmp
-*.temp
 ```
