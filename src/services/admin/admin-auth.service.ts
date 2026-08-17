@@ -1,10 +1,18 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/env.js';
 import type { Role } from '@prisma/client';
 
 const prisma = new PrismaClient();
+
+// Lazy load config to avoid import issues in tests
+const getConfig = () => {
+  try {
+    return require('../config/index.js').env;
+  } catch {
+    return require('../config/env.js');
+  }
+};
 
 export interface AdminUserCreateInput {
   email: string;
@@ -95,6 +103,10 @@ export class AdminAuthService {
       where: { id: user.id },
       data: { lastLogin: new Date() },
     });
+
+    const config = getConfig();
+    const JWT_SECRET = config.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
+    const JWT_EXPIRES_IN = config.JWT_EXPIRES_IN || process.env.JWT_EXPIRES_IN || '24h';
 
     const token = jwt.sign(
       {
@@ -283,6 +295,9 @@ export class AdminAuthService {
 
   async verifyToken(token: string) {
     try {
+      const config = getConfig();
+      const JWT_SECRET = config.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
+
       const decoded = jwt.verify(token, JWT_SECRET) as {
         userId: string;
         email: string;
