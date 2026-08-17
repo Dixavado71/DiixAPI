@@ -1,55 +1,40 @@
-```gitignore
+```
+# Build artifacts
+dist/
+*.d.ts
+*.d.ts.map
+*.js.map
+
 # Dependencies
 node_modules/
 
-# Build artifacts
-dist/
-build/
-target/
+# Environment
+.env
+.env.local
+*.env.*
+
+# Logs
+*.log
+
+# Editors
+.vscode/
+.idea/
 
 # Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
-env/
-venv/
-.venv/
-.eggs/
-.egg-info/
-*.egg-info/
 
-# Logs
-*.log
+# Compiled files
+*.o
+*.obj
+*.so
+*.a
+*.dll
+*.exe
 
-# Environment variables
-.env
-.env.local
-*.env.*
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Coverage
-coverage/
-htmlcov/
-.coverage
-
-# Testing
-.mypy_cache/
-.pytest_cache/
-.nyc_output/
-coverage-final.json
-
-# Compressed files
+# Compression
 *.zip
 *.gz
 *.tar
@@ -72,4 +57,8 @@ coverage-final.json
 *.tar.bz2
 *.tar.xz
 *.tar.zst
+
+# System
+.DS_Store
+Thumbs.db
 ```

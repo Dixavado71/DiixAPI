@@ -34,9 +34,9 @@ export declare class PaymentRepository {
         createdAt: Date;
         updatedAt: Date;
         orderId: string;
+        metadata: import("@prisma/client/runtime/library").JsonValue | null;
         amount: import("@prisma/client/runtime/library").Decimal;
         transactionId: string | null;
-        metadata: import("@prisma/client/runtime/library").JsonValue | null;
     }>;
     findById(id: string): Promise<({
         order: {
@@ -74,9 +74,9 @@ export declare class PaymentRepository {
         createdAt: Date;
         updatedAt: Date;
         orderId: string;
+        metadata: import("@prisma/client/runtime/library").JsonValue | null;
         amount: import("@prisma/client/runtime/library").Decimal;
         transactionId: string | null;
-        metadata: import("@prisma/client/runtime/library").JsonValue | null;
     }) | null>;
     findByOrderId(orderId: string): Promise<{
         method: import(".prisma/client").$Enums.PaymentMethod;
@@ -85,9 +85,9 @@ export declare class PaymentRepository {
         createdAt: Date;
         updatedAt: Date;
         orderId: string;
+        metadata: import("@prisma/client/runtime/library").JsonValue | null;
         amount: import("@prisma/client/runtime/library").Decimal;
         transactionId: string | null;
-        metadata: import("@prisma/client/runtime/library").JsonValue | null;
     }[]>;
     updateStatus(id: string, status: string, transactionId?: string, metadata?: Record<string, unknown>): Promise<{
         method: import(".prisma/client").$Enums.PaymentMethod;
@@ -96,9 +96,9 @@ export declare class PaymentRepository {
         createdAt: Date;
         updatedAt: Date;
         orderId: string;
+        metadata: import("@prisma/client/runtime/library").JsonValue | null;
         amount: import("@prisma/client/runtime/library").Decimal;
         transactionId: string | null;
-        metadata: import("@prisma/client/runtime/library").JsonValue | null;
     }>;
 }
 //# sourceMappingURL=payment.repository.d.ts.map

@@ -8,6 +8,7 @@ const envSchema = z.object({
   EVOLUTION_API_KEY: z.string().min(1),
   EVOLUTION_WEBHOOK_SECRET: z.string().min(1),
   JWT_SECRET: z.string().min(32),
+  JWT_EXPIRES_IN: z.string().default('7d'),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
   CORS_ORIGIN: z.string(),
   RATE_LIMIT_WINDOW_MS: z.string().transform((val) => Number(val)).pipe(z.number().positive()),
