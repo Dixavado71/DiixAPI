@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:20-alpine AS builder
+FROM node:20-bookworm AS builder
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ RUN npx prisma generate
 RUN npm run build
 
 # Stage 2: Production
-FROM node:20-alpine
+FROM node:20-bookworm
 
 WORKDIR /app
 
