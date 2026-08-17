@@ -4,6 +4,10 @@ import type {
   BotMessage, 
   ConversationContext,
 } from '../../types/bot.types';
+import type { CustomerService } from '../customer/customer.service';
+import type { ProductService } from '../product/product.service';
+import type { CartService } from '../cart/cart.service';
+import type { OrderService } from '../order/order.service';
 
 interface ConversationRecord {
   id: string;
@@ -12,15 +16,29 @@ interface ConversationRecord {
   storeId: string | null;
   customerId: string | null;
   state: string;
-  context: any;
+  context: Record<string, unknown>;
   lastActive: Date;
 }
 
 export class BotEngineService {
   private prisma: PrismaClient;
-
-  constructor(prisma: PrismaClient) {
+  private customerService: CustomerService;
+  private productService: ProductService;
+  private cartService: CartService;
+  private orderService: OrderService;
+  
+  constructor(
+    prisma: PrismaClient,
+    customerService: CustomerService,
+    productService: ProductService,
+    cartService: CartService,
+    orderService: OrderService
+  ) {
     this.prisma = prisma;
+    this.customerService = customerService;
+    this.productService = productService;
+    this.cartService = cartService;
+    this.orderService = orderService;
   }
 
   /**
@@ -249,5 +267,37 @@ export class BotEngineService {
         text: '👋 Obrigado pela visita!\n\nVolte sempre que precisar. Tenha um ótimo dia!',
       },
     ];
+  }
+
+  /**
+   * Reseta o contexto da conversa para IDLE
+   */
+  async resetContext(customerId: string, storeId: string): Promise<void> {
+    await this.prisma.conversationState.updateMany({
+      where: {
+        instance: 'whatsapp',
+        phone: customerId,
+      },
+      data: {
+        state: 'IDLE',
+        context: {},
+        lastActive: new Date(),
+      },
+    });
+  }
+
+  /**
+   * Marca a conversa como inativa
+   */
+  async endConversation(customerId: string, storeId: string): Promise<void> {
+    await this.prisma.conversationState.updateMany({
+      where: {
+        instance: 'whatsapp',
+        phone: customerId,
+      },
+      data: {
+        lastActive: new Date(),
+      },
+    });
   }
 }

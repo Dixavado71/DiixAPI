@@ -1,50 +1,52 @@
 ```
-# Compiled and build artifacts
-*.pyc
-*.o
-*.obj
+# Dependencies
+node_modules/
+
+# Build artifacts
 dist/
 build/
-*.d.ts
-*.d.ts.map
-*.js
-*.js.map
+target/
 
-# Dependencies
-.node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-
-# Environment
-.env
-.env.local
-.env.*
-
-# Editors
-.vscode/
-.idea/
-
-# Coverage
-coverage/
-htmlcov/
-.coverage
+# Cache directories
+.vite/
 
 # Python
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
+*.pyc
+*.pyo
+*.pyd
 .Python
+env/
 venv/
 .venv/
-.env
-.envs
-.pytest_cache/
+.ENV
+.pip_cache/
 .mypy_cache/
+.pytest_cache/
+.coverage
+coverage/
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+htmlcov/
 ```
