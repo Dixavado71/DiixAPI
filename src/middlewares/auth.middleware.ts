@@ -10,28 +10,33 @@ export interface AuthRequest extends Request {
   };
 }
 
-export const authenticate = async (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({
+      res.status(401).json({
         error: 'Access denied. No token provided.',
       });
+      return;
     }
 
     const token = authHeader.split(' ')[1];
 
+    if (!token) {
+      res.status(401).json({
+        error: 'Invalid token format',
+      });
+      return;
+    }
+
     const result = await adminAuthService.verifyToken(token);
 
-    if (!result.valid) {
-      return res.status(401).json({
+    if (!result.valid || !result.userId || !result.email || !result.role) {
+      res.status(401).json({
         error: result.error || 'Invalid token',
       });
+      return;
     }
 
     req.user = {
@@ -41,27 +46,29 @@ export const authenticate = async (
     };
 
     next();
-  } catch (error) {
-    return res.status(500).json({
+  } catch {
+    res.status(500).json({
       error: 'Internal server error during authentication',
     });
   }
 };
 
-export const authorize = (...allowedRoles: Role[]) => {
-  return (req: AuthRequest, res: Response, next: NextFunction) => {
+export const authorize = (...allowedRoles: Role[]): ((req: AuthRequest, res: Response, next: NextFunction) => void) => {
+  return (req: AuthRequest, res: Response, next: NextFunction): void => {
     if (!req.user) {
-      return res.status(401).json({
+      res.status(401).json({
         error: 'Authentication required',
       });
+      return;
     }
 
     if (!allowedRoles.includes(req.user.role)) {
-      return res.status(403).json({
+      res.status(403).json({
         error: 'Insufficient permissions',
         requiredRoles: allowedRoles,
         yourRole: req.user.role,
       });
+      return;
     }
 
     next();
@@ -72,42 +79,32 @@ export const requireSuperAdmin = authorize('SUPER_ADMIN');
 
 export const requireStoreOwner = authorize('STORE_OWNER', 'SUPER_ADMIN');
 
-export const requireStoreManager = authorize(
-  'STORE_MANAGER',
-  'STORE_OWNER',
-  'SUPER_ADMIN'
-);
+export const requireStoreManager = authorize('STORE_MANAGER', 'STORE_OWNER', 'SUPER_ADMIN');
 
-export const requireOperator = authorize(
-  'OPERATOR',
-  'STORE_MANAGER',
-  'STORE_OWNER',
-  'SUPER_ADMIN'
-);
+export const requireOperator = authorize('OPERATOR', 'STORE_MANAGER', 'STORE_OWNER', 'SUPER_ADMIN');
 
-export const optionalAuth = async (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export const optionalAuth = async (req: AuthRequest, _res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization;
 
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
-      const result = await adminAuthService.verifyToken(token);
 
-      if (result.valid) {
-        req.user = {
-          userId: result.userId,
-          email: result.email,
-          role: result.role,
-        };
+      if (token) {
+        const result = await adminAuthService.verifyToken(token);
+
+        if (result.valid && result.userId && result.email && result.role) {
+          req.user = {
+            userId: result.userId,
+            email: result.email,
+            role: result.role,
+          };
+        }
       }
     }
 
     next();
-  } catch (error) {
+  } catch {
     next();
   }
 };

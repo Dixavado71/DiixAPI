@@ -16,6 +16,8 @@ declare const envSchema: z.ZodObject<{
     LOG_LEVEL: "info" | "fatal" | "error" | "warn" | "debug" | "trace";
     EVOLUTION_API_URL: string;
     EVOLUTION_API_KEY: string;
+    JWT_SECRET: string;
+    JWT_EXPIRES_IN: string;
     CORS_ORIGIN: string;
     RATE_LIMIT_WINDOW_MS: number;
     RATE_LIMIT_MAX: number;
@@ -23,21 +25,19 @@ declare const envSchema: z.ZodObject<{
     PORT: number;
     DATABASE_URL: string;
     EVOLUTION_WEBHOOK_SECRET: string;
-    JWT_SECRET: string;
-    JWT_EXPIRES_IN: string;
 }, {
     EVOLUTION_API_URL: string;
     EVOLUTION_API_KEY: string;
+    JWT_SECRET: string;
     CORS_ORIGIN: string;
     RATE_LIMIT_WINDOW_MS: string;
     RATE_LIMIT_MAX: string;
     PORT: string;
     DATABASE_URL: string;
     EVOLUTION_WEBHOOK_SECRET: string;
-    JWT_SECRET: string;
     LOG_LEVEL?: "info" | "fatal" | "error" | "warn" | "debug" | "trace" | undefined;
-    NODE_ENV?: "production" | "development" | "test" | undefined;
     JWT_EXPIRES_IN?: string | undefined;
+    NODE_ENV?: "production" | "development" | "test" | undefined;
 }>;
 export type Env = z.infer<typeof envSchema>;
 export declare function validateEnv(): Env;

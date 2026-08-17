@@ -17,7 +17,10 @@ export class ProductRepository {
     });
   }
 
-  async findByStore(storeId: string, options?: { categoryId?: string; active?: boolean; page?: number; limit?: number }) {
+  async findByStore(
+    storeId: string,
+    options?: { categoryId?: string; active?: boolean; page?: number; limit?: number }
+  ) {
     const { categoryId, active, page = 1, limit = 20 } = options || {};
 
     const where: any = { storeId };
@@ -76,17 +79,20 @@ export class ProductRepository {
     });
   }
 
-  async update(id: string, data: Partial<{
-    name: string;
-    description?: string;
-    sku?: string;
-    price: number;
-    promoPrice?: number;
-    stock?: number;
-    active: boolean;
-    images: string[];
-    categoryId?: string;
-  }>) {
+  async update(
+    id: string,
+    data: Partial<{
+      name: string;
+      description?: string;
+      sku?: string;
+      price: number;
+      promoPrice?: number;
+      stock?: number;
+      active: boolean;
+      images: string[];
+      categoryId?: string;
+    }>
+  ) {
     return this.prisma.product.update({
       where: { id },
       data,

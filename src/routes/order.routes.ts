@@ -31,7 +31,9 @@ export function createOrderRoutes(): Router {
    * @desc    Update order status with state machine validation
    * @access  Private (store staff only)
    */
-  router.patch('/:orderId/status', (req, res, next) => controller.updateOrderStatus(req, res, next));
+  router.patch('/:orderId/status', (req, res, next) =>
+    controller.updateOrderStatus(req, res, next)
+  );
 
   /**
    * @route   POST /api/v1/stores/:storeId/orders/:orderId/cancel
@@ -45,7 +47,9 @@ export function createOrderRoutes(): Router {
    * @desc    Get possible next states for an order
    * @access  Private
    */
-  router.get('/:orderId/possible-states', (req, res, next) => controller.getPossibleStates(req, res, next));
+  router.get('/:orderId/possible-states', (req, res, next) =>
+    controller.getPossibleStates(req, res, next)
+  );
 
   return router;
 }

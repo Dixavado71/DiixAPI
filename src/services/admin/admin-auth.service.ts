@@ -1,10 +1,23 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/index.js';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import type { Role } from '@prisma/client';
 
 const prisma = new PrismaClient();
+
+// Lazy load config to avoid import issues in tests
+let envConfig: { JWT_SECRET: string; JWT_EXPIRES_IN: string } | undefined;
+const getConfig = () => {
+  if (envConfig) return envConfig;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    envConfig = require('../config/index.js').env;
+  } catch {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    envConfig = require('../config/env.js');
+  }
+  return envConfig;
+};
 
 export interface AdminUserCreateInput {
   email: string;
@@ -96,6 +109,11 @@ export class AdminAuthService {
       data: { lastLogin: new Date() },
     });
 
+    const config = getConfig();
+    const JWT_SECRET = config?.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
+    const JWT_SECRET = config?.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
+    const JWT_EXPIRES_IN = config?.JWT_EXPIRES_IN || process.env.JWT_EXPIRES_IN || '24h';
+
     const token = jwt.sign(
       {
         userId: user.id,
@@ -103,7 +121,17 @@ export class AdminAuthService {
         role: user.role,
       },
       JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN }
+      { expiresIn: JWT_EXPIRES_IN } as any
+    );
+
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+      },
+      JWT_SECRET,
+      signOptions
     );
 
     return {
@@ -283,6 +311,9 @@ export class AdminAuthService {
 
   async verifyToken(token: string) {
     try {
+      const config = getConfig();
+      const JWT_SECRET = config?.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
+
       const decoded = jwt.verify(token, JWT_SECRET) as {
         userId: string;
         email: string;
@@ -304,7 +335,7 @@ export class AdminAuthService {
         email: decoded.email,
         role: decoded.role,
       };
-    } catch (error) {
+    } catch {
       return {
         valid: false,
         error: 'Invalid or expired token',

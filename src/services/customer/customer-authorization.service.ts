@@ -1,5 +1,18 @@
-import { Store, StoreSettings, Customer, StoreCustomer, StoreCustomerStatus, StoreStatus, CustomerStatus } from '@prisma/client';
-import { getStoreRepository, getCustomerRepository, getStoreCustomerRepository, getStoreSettingsRepository } from '../../repositories';
+import {
+  Store,
+  StoreSettings,
+  Customer,
+  StoreCustomer,
+  StoreCustomerStatus,
+  StoreStatus,
+  CustomerStatus,
+} from '@prisma/client';
+import {
+  getStoreRepository,
+  getCustomerRepository,
+  getStoreCustomerRepository,
+  getStoreSettingsRepository,
+} from '../../repositories';
 import { normalizePhone } from '../../utils/phone';
 
 export interface AuthorizationResult {
@@ -13,7 +26,7 @@ export interface AuthorizationResult {
 
 /**
  * CustomerAuthorizationService
- * 
+ *
  * Central service for determining if a customer is allowed to interact with a store.
  * This is critical for multi-tenant security and access control.
  */
@@ -25,17 +38,14 @@ export class CustomerAuthorizationService {
 
   /**
    * Check if a customer is allowed to interact with a store
-   * 
+   *
    * Rules:
    * 1. Store must be ACTIVE
    * 2. If customerRegistrationRequired is true, customer must be registered in the store
    * 3. If customerApprovalRequired is true, customer must have APPROVED status
    * 4. Customer cannot be BLOCKED at global or store level
    */
-  async isCustomerAllowed(
-    storeId: string,
-    customerId: string
-  ): Promise<AuthorizationResult> {
+  async isCustomerAllowed(storeId: string, customerId: string): Promise<AuthorizationResult> {
     // Load store
     const store = await this.storeRepository.findById(storeId);
     if (!store) {
@@ -158,10 +168,7 @@ export class CustomerAuthorizationService {
    * Check if a customer is allowed based on phone number
    * Useful for WhatsApp webhook processing
    */
-  async isCustomerAllowedByPhone(
-    storeId: string,
-    phone: string
-  ): Promise<AuthorizationResult> {
+  async isCustomerAllowedByPhone(storeId: string, phone: string): Promise<AuthorizationResult> {
     const normalizedPhone = normalizePhone(phone);
     const customer = await this.customerRepository.findByPhone(normalizedPhone);
 

@@ -218,11 +218,7 @@ export class AuditService {
   /**
    * Get audit logs with filters and pagination
    */
-  async getLogs(
-    filters: AuditLogFilters = {},
-    page: number = 1,
-    limit: number = 50
-  ) {
+  async getLogs(filters: AuditLogFilters = {}, page: number = 1, limit: number = 50) {
     const skip = (page - 1) * limit;
     const { action, entity, userId, startDate, endDate } = filters;
 

@@ -50,9 +50,9 @@ export class OrderController {
         data: orderResult.order,
         message: orderResult.message,
       });
-    } catch (error: any) {
-      logger.error({ error: error.message }, 'Error creating order');
-      
+    } catch (error: unknown) {
+      logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error creating order');
+
       const errorMap: Record<string, { status: number; code: string }> = {
         CUSTOMER_NOT_AUTHORIZED: { status: 403, code: 'CUSTOMER_NOT_AUTHORIZED' },
         STORE_SETTINGS_NOT_FOUND: { status: 404, code: 'STORE_SETTINGS_NOT_FOUND' },
@@ -67,13 +67,14 @@ export class OrderController {
         OUT_OF_STOCK: { status: 409, code: 'OUT_OF_STOCK' },
       };
 
-      const errorConfig = errorMap[error.message];
+      const errorMessage = error instanceof Error ? error.message : '';
+      const errorConfig = errorMap[errorMessage];
       if (errorConfig) {
         res.status(errorConfig.status).json({
           success: false,
           error: {
             code: errorConfig.code,
-            message: error.message,
+            message: errorMessage,
           },
         });
         return;
@@ -116,8 +117,8 @@ export class OrderController {
         success: true,
         data: orders,
       });
-    } catch (error: any) {
-      logger.error({ error: error.message }, 'Error getting orders');
+    } catch (error: unknown) {
+      logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error getting orders');
       next(error);
     }
   }
@@ -136,10 +137,10 @@ export class OrderController {
         success: true,
         data: order,
       });
-    } catch (error: any) {
-      logger.error({ error: error.message }, 'Error getting order');
-      
-      if (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH') {
+    } catch (error: unknown) {
+      logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error getting order');
+
+      if (error instanceof Error && (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH')) {
         res.status(404).json({
           success: false,
           error: {
@@ -187,10 +188,10 @@ export class OrderController {
         data: order,
         message: 'Order status updated successfully',
       });
-    } catch (error: any) {
-      logger.error({ error: error.message }, 'Error updating order status');
-      
-      if (error.message.includes('Invalid state transition')) {
+    } catch (error: unknown) {
+      logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error updating order status');
+
+      if (error instanceof Error && error.message.includes('Invalid state transition')) {
         res.status(422).json({
           success: false,
           error: {
@@ -201,7 +202,7 @@ export class OrderController {
         return;
       }
 
-      if (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH') {
+      if (error instanceof Error && ((error as Error).message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH')) {
         res.status(404).json({
           success: false,
           error: {
@@ -249,10 +250,10 @@ export class OrderController {
         data: order,
         message: 'Order cancelled successfully',
       });
-    } catch (error: any) {
-      logger.error({ error: error.message }, 'Error cancelling order');
-      
-      if (error.message.includes('ORDER_CANNOT_BE_CANCELLED')) {
+    } catch (error: unknown) {
+      logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error cancelling order');
+
+      if (error instanceof Error && error.message.includes('ORDER_CANNOT_BE_CANCELLED')) {
         res.status(422).json({
           success: false,
           error: {
@@ -263,7 +264,7 @@ export class OrderController {
         return;
       }
 
-      if (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH') {
+      if (error instanceof Error && ((error as Error).message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH')) {
         res.status(404).json({
           success: false,
           error: {
@@ -303,10 +304,10 @@ export class OrderController {
           isFinalState: isFinal,
         },
       });
-    } catch (error: any) {
-      logger.error({ error: error.message }, 'Error getting possible states');
-      
-      if (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH') {
+    } catch (error: unknown) {
+      logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error getting possible states');
+
+      if (error instanceof Error && ((error as Error).message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH')) {
         res.status(404).json({
           success: false,
           error: {

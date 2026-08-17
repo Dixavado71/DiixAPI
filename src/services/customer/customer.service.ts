@@ -51,13 +51,13 @@ export class CustomerService {
     // Normalize phone if provided
     if (data.phone) {
       const normalizedPhone = normalizePhone(data.phone);
-      
+
       // Check if another customer already has this phone
       const existingCustomer = await this.customerRepository.findByPhone(normalizedPhone);
       if (existingCustomer && existingCustomer.id !== id) {
         throw new Error('CUSTOMER_ALREADY_EXISTS');
       }
-      
+
       data.phone = normalizedPhone;
     }
 

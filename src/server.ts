@@ -18,7 +18,7 @@ async function bootstrap(): Promise<void> {
 
   // Start server
   const port = env.PORT;
-  
+
   const server = app.listen(port, () => {
     logger.info({ port, env: env.NODE_ENV }, `ECMS6 server listening on port ${port}`);
   });
@@ -26,10 +26,10 @@ async function bootstrap(): Promise<void> {
   // Graceful shutdown
   const shutdown = async (signal: string) => {
     logger.info({ signal }, 'Graceful shutdown initiated');
-    
+
     server.close(async () => {
       logger.info('HTTP server closed');
-      
+
       try {
         await disconnectDatabase();
         logger.info('All connections closed');

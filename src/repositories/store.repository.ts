@@ -88,10 +88,7 @@ export class StoreRepository {
     return !!store;
   }
 
-  async existsByEvolutionInstance(
-    instanceName: string,
-    excludeId?: string
-  ): Promise<boolean> {
+  async existsByEvolutionInstance(instanceName: string, excludeId?: string): Promise<boolean> {
     const store = await this.prisma.store.findFirst({
       where: {
         evolutionInstanceId: instanceName,

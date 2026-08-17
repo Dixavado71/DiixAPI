@@ -10,11 +10,13 @@ const logger = getLogger().child({ module: 'webhook' });
  * Schema for validating Evolution API webhook payload
  * Adjust based on actual Evolution API v2.3.7 payload structure
  */
-const webhookPayloadSchema = z.object({
-  event: z.string(),
-  instance: z.string(),
-  data: z.record(z.unknown()).optional(),
-}).passthrough();
+const webhookPayloadSchema = z
+  .object({
+    event: z.string(),
+    instance: z.string(),
+    data: z.record(z.unknown()).optional(),
+  })
+  .passthrough();
 
 /**
  * POST /api/v1/webhooks/evolution
@@ -26,7 +28,7 @@ router.post('/evolution' as const, async (req: Request, res: Response) => {
 
     // Validate basic payload structure
     const validationResult = webhookPayloadSchema.safeParse(payload);
-    
+
     if (!validationResult.success) {
       logger.warn({ error: validationResult.error }, 'Invalid webhook payload');
       res.status(400).json({
@@ -39,8 +41,8 @@ router.post('/evolution' as const, async (req: Request, res: Response) => {
     const { event, instance } = validationResult.data;
 
     logger.info(
-      { 
-        event, 
+      {
+        event,
         instance,
         hasData: !!payload.data,
       },

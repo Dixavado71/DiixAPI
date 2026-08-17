@@ -4,7 +4,6 @@ import { usersController } from '../controllers/admin/users.controller.js';
 import { auditController } from '../controllers/admin/audit.controller.js';
 import {
   authenticate,
-  authorize,
   requireSuperAdmin,
   requireStoreOwner,
   requireOperator,
@@ -27,26 +26,14 @@ router.post('/auth/login', adminController.login.bind(adminController));
 // ============================================
 
 // Auth routes
-router.get(
-  '/auth/me',
-  authenticate,
-  adminController.getProfile.bind(adminController)
-);
-router.put(
-  '/auth/profile',
-  authenticate,
-  adminController.updateProfile.bind(adminController)
-);
+router.get('/auth/me', authenticate, adminController.getProfile.bind(adminController));
+router.put('/auth/profile', authenticate, adminController.updateProfile.bind(adminController));
 router.post(
   '/auth/change-password',
   authenticate,
   adminController.changePassword.bind(adminController)
 );
-router.post(
-  '/auth/logout',
-  authenticate,
-  adminController.logout.bind(adminController)
-);
+router.post('/auth/logout', authenticate, adminController.logout.bind(adminController));
 
 // User management routes (SUPER_ADMIN and STORE_OWNER only)
 router.get(

@@ -85,12 +85,12 @@ export class OrderService {
 
     // 4. Validate payment method if provided
     if (paymentMethod) {
-      const paymentEnabled = 
+      const paymentEnabled =
         (paymentMethod === 'PIX' && settings.pixEnabled) ||
         (paymentMethod === 'CARD' && settings.cardEnabled) ||
         (paymentMethod === 'CASH' && settings.cashEnabled) ||
         (paymentMethod === 'PAYMENT_ON_DELIVERY' && settings.paymentOnDeliveryEnabled);
-      
+
       if (!paymentEnabled) {
         throw new Error(`PAYMENT_METHOD_NOT_ENABLED: ${paymentMethod}`);
       }
@@ -98,10 +98,13 @@ export class OrderService {
 
     // 5. Validate delivery method if provided
     if (deliveryMethod) {
-      const deliveryEnabled = 
+      const deliveryEnabled =
         (deliveryMethod === 'PICKUP' && settings.pickupEnabled) ||
-        ((deliveryMethod === 'STORE_DELIVERY' || deliveryMethod === 'COURIER' || deliveryMethod === 'THIRD_PARTY') && settings.deliveryEnabled);
-      
+        ((deliveryMethod === 'STORE_DELIVERY' ||
+          deliveryMethod === 'COURIER' ||
+          deliveryMethod === 'THIRD_PARTY') &&
+          settings.deliveryEnabled);
+
       if (!deliveryEnabled) {
         throw new Error(`DELIVERY_METHOD_NOT_ENABLED: ${deliveryMethod}`);
       }
@@ -139,7 +142,7 @@ export class OrderService {
     for (const cartItem of cartItems) {
       // Fetch fresh product data to get current price and stock
       const product = await this.productRepository.findById(cartItem.productId);
-      
+
       if (!product) {
         throw new Error(`PRODUCT_NOT_FOUND: ${cartItem.productId}`);
       }
@@ -155,7 +158,7 @@ export class OrderService {
 
       // Calculate unit price (use promo price if available)
       const unitPrice = product.promoPrice ? Number(product.promoPrice) : Number(product.price);
-      
+
       // Check stock if tracking is enabled
       if (product.stock !== null && product.stock !== undefined) {
         if (cartItem.quantity > product.stock) {
@@ -227,7 +230,7 @@ export class OrderService {
    */
   async getOrderById(orderId: string, storeId: string): Promise<Order> {
     const order = await this.orderRepository.findById(orderId);
-    
+
     if (!order) {
       throw new Error('ORDER_NOT_FOUND');
     }
@@ -270,10 +273,7 @@ export class OrderService {
 
     const updatedOrder = await this.orderRepository.updateStatus(orderId, newStatus);
 
-    logger.info(
-      { orderId, oldStatus: order.status, newStatus },
-      'Order status updated'
-    );
+    logger.info({ orderId, oldStatus: order.status, newStatus }, 'Order status updated');
 
     return updatedOrder;
   }
@@ -291,10 +291,7 @@ export class OrderService {
 
     const cancelledOrder = await this.orderRepository.updateStatus(orderId, 'CANCELLED');
 
-    logger.info(
-      { orderId, reason, previousStatus: order.status },
-      'Order cancelled'
-    );
+    logger.info({ orderId, reason, previousStatus: order.status }, 'Order cancelled');
 
     return cancelledOrder;
   }
@@ -302,18 +299,16 @@ export class OrderService {
   /**
    * Update payment status
    */
-  async updatePaymentStatus(
-    orderId: string,
-    storeId: string,
-    paymentStatus: any
-  ): Promise<Order> {
+  async updatePaymentStatus(orderId: string, storeId: string, paymentStatus: any): Promise<Order> {
     const order = await this.getOrderById(orderId, storeId);
 
     const updatedOrder = await this.orderRepository.updatePaymentStatus(orderId, paymentStatus);
 
     // If payment is confirmed and order is in PAYMENT_PENDING, transition to PAID or PREPARING
     if (paymentStatus === 'PAID' && order.status === 'PAYMENT_PENDING') {
-      const nextStatus = OrderStateMachine.canTransition('PAYMENT_PENDING', 'PAID') ? 'PAID' : 'PREPARING';
+      const nextStatus = OrderStateMachine.canTransition('PAYMENT_PENDING', 'PAID')
+        ? 'PAID'
+        : 'PREPARING';
       return this.orderRepository.updateStatus(orderId, nextStatus);
     }
 

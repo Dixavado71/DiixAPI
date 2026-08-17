@@ -163,11 +163,7 @@ export class PromotionRepository {
   /**
    * Add rule to promotion
    */
-  async addRule(
-    promotionId: string,
-    type: RuleType,
-    value: string
-  ): Promise<PromotionRule> {
+  async addRule(promotionId: string, type: RuleType, value: string): Promise<PromotionRule> {
     return this.prisma.promotionRule.create({
       data: {
         promotionId,

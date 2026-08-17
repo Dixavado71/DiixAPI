@@ -66,7 +66,7 @@ export class PromotionController {
 
       res.json(promotion);
     } catch (error: any) {
-      if (error.message === 'PROMOTION_NOT_FOUND') {
+      if ((error as Error).message === 'PROMOTION_NOT_FOUND') {
         res.status(404).json({ error: error.message });
         return;
       }
@@ -140,7 +140,7 @@ export class PromotionController {
       loggerInstance.info({ promotionId: id }, 'Promotion updated');
       res.json(promotion);
     } catch (error: any) {
-      if (error.message === 'PROMOTION_NOT_FOUND') {
+      if ((error as Error).message === 'PROMOTION_NOT_FOUND') {
         res.status(404).json({ error: error.message });
         return;
       }
@@ -170,7 +170,7 @@ export class PromotionController {
       loggerInstance.info({ promotionId: id }, 'Promotion deleted');
       res.status(204).send();
     } catch (error: any) {
-      if (error.message === 'PROMOTION_NOT_FOUND') {
+      if ((error as Error).message === 'PROMOTION_NOT_FOUND') {
         res.status(404).json({ error: error.message });
         return;
       }
@@ -199,7 +199,7 @@ export class PromotionController {
       loggerInstance.info({ promotionId: id, ruleId: rule.id }, 'Rule added to promotion');
       res.status(201).json(rule);
     } catch (error: any) {
-      if (error.message === 'PROMOTION_NOT_FOUND') {
+      if ((error as Error).message === 'PROMOTION_NOT_FOUND') {
         res.status(404).json({ error: error.message });
         return;
       }
@@ -242,10 +242,16 @@ export class PromotionController {
         validatedData.productId
       );
 
-      loggerInstance.info({ promotionId: id, productId: validatedData.productId }, 'Product added to promotion');
+      loggerInstance.info(
+        { promotionId: id, productId: validatedData.productId },
+        'Product added to promotion'
+      );
       res.status(201).json(promotionProduct);
     } catch (error: any) {
-      if (error.message === 'PROMOTION_NOT_FOUND' || error.message === 'PRODUCT_NOT_FOUND') {
+      if (
+        (error as Error).message === 'PROMOTION_NOT_FOUND' ||
+        error.message === 'PRODUCT_NOT_FOUND'
+      ) {
         res.status(404).json({ error: error.message });
         return;
       }

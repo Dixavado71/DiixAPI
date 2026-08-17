@@ -204,7 +204,8 @@ class PromotionController {
             res.status(201).json(promotionProduct);
         }
         catch (error) {
-            if (error.message === 'PROMOTION_NOT_FOUND' || error.message === 'PRODUCT_NOT_FOUND') {
+            if (error.message === 'PROMOTION_NOT_FOUND' ||
+                error.message === 'PRODUCT_NOT_FOUND') {
                 res.status(404).json({ error: error.message });
                 return;
             }

@@ -21,7 +21,7 @@ class EvolutionClient {
             baseURL: config.baseUrl,
             headers: {
                 'Content-Type': 'application/json',
-                'apikey': config.apiKey,
+                apikey: config.apiKey,
             },
             timeout: config.timeout || 30000,
         });

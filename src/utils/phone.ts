@@ -13,7 +13,7 @@ export function stripNonNumeric(phone: string): string {
 /**
  * Normalizes a phone number to E.164-like format (without + prefix)
  * Handles Brazilian and international numbers
- * 
+ *
  * Examples:
  * - "(61) 99999-9999" -> "5561999999999"
  * - "61999999999" -> "5561999999999"

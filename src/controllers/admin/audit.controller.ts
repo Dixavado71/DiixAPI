@@ -1,6 +1,12 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { auditService } from '../../services/audit/audit.service.js';
 import type { AuthRequest } from '../../middlewares/auth.middleware.js';
+
+// Helper function to safely extract string from query params
+const getStringParam = (param: string | string[] | undefined): string | undefined => {
+  if (typeof param === 'string') return param;
+  return undefined;
+};
 
 export class AuditController {
   /**
@@ -9,25 +15,26 @@ export class AuditController {
    */
   async getLogs(req: AuthRequest, res: Response) {
     try {
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 50;
+      const page = parseInt(getStringParam(req.query.page as string) || '1', 10);
+      const limit = parseInt(getStringParam(req.query.limit as string) || '50', 10);
       const { action, entity, userId, startDate, endDate } = req.query;
 
-      const filters: any = {};
-      if (action) filters.action = action as string;
-      if (entity) filters.entity = entity as string;
-      if (userId) filters.userId = userId as string;
-      if (startDate) filters.startDate = new Date(startDate as string);
-      if (endDate) filters.endDate = new Date(endDate as string);
+      const filters: Record<string, unknown> = {};
+      if (action && typeof action === 'string') filters.action = action;
+      if (entity && typeof entity === 'string') filters.entity = entity;
+      if (userId && typeof userId === 'string') filters.userId = userId;
+      if (startDate && typeof startDate === 'string') filters.startDate = new Date(startDate);
+      if (endDate && typeof endDate === 'string') filters.endDate = new Date(endDate);
 
       const result = await auditService.getLogs(filters, page, limit);
 
       return res.json({
         ...result,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(500).json({
-        error: error.message || 'Failed to fetch audit logs',
+        error: err.message || 'Failed to fetch audit logs',
       });
     }
   }
@@ -38,17 +45,26 @@ export class AuditController {
    */
   async getLogsByEntity(req: AuthRequest, res: Response) {
     try {
-      const { entity, entityId } = req.params;
-      const limit = parseInt(req.query.limit as string) || 20;
+      const entity = getStringParam(req.params.entity);
+      const entityId = getStringParam(req.params.entityId);
+
+      if (!entity || !entityId) {
+        return res.status(400).json({
+          error: 'Invalid entity or entityId',
+        });
+      }
+
+      const limit = parseInt(getStringParam(req.query.limit as string) || '20', 10);
 
       const logs = await auditService.getLogsByEntity(entity, entityId, limit);
 
       return res.json({
         logs,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(500).json({
-        error: error.message || 'Failed to fetch audit logs',
+        error: err.message || 'Failed to fetch audit logs',
       });
     }
   }
@@ -59,17 +75,25 @@ export class AuditController {
    */
   async getLogsByUser(req: AuthRequest, res: Response) {
     try {
-      const { userId } = req.params;
-      const limit = parseInt(req.query.limit as string) || 20;
+      const userId = getStringParam(req.params.userId);
+
+      if (!userId) {
+        return res.status(400).json({
+          error: 'Invalid userId',
+        });
+      }
+
+      const limit = parseInt(getStringParam(req.query.limit as string) || '20', 10);
 
       const logs = await auditService.getLogsByUser(userId, limit);
 
       return res.json({
         logs,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(500).json({
-        error: error.message || 'Failed to fetch audit logs',
+        error: err.message || 'Failed to fetch audit logs',
       });
     }
   }
@@ -87,9 +111,10 @@ export class AuditController {
       return res.json({
         logs,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(500).json({
-        error: error.message || 'Failed to fetch recent audit logs',
+        error: err.message || 'Failed to fetch recent audit logs',
       });
     }
   }
@@ -110,9 +135,10 @@ export class AuditController {
       return res.json({
         stats,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(500).json({
-        error: error.message || 'Failed to fetch audit statistics',
+        error: err.message || 'Failed to fetch audit statistics',
       });
     }
   }
@@ -131,9 +157,10 @@ export class AuditController {
         message: 'Audit logs cleaned successfully',
         ...result,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(500).json({
-        error: error.message || 'Failed to clean audit logs',
+        error: err.message || 'Failed to clean audit logs',
       });
     }
   }

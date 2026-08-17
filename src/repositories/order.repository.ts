@@ -25,12 +25,15 @@ export class OrderRepository {
     });
   }
 
-  async findByStore(storeId: string, options?: {
-    status?: OrderStatus;
-    customerId?: string;
-    limit?: number;
-    offset?: number;
-  }): Promise<Order[]> {
+  async findByStore(
+    storeId: string,
+    options?: {
+      status?: OrderStatus;
+      customerId?: string;
+      limit?: number;
+      offset?: number;
+    }
+  ): Promise<Order[]> {
     const where: any = { storeId };
 
     if (options?.status) {

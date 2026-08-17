@@ -109,11 +109,7 @@ export class CartService {
   /**
    * Remove item from cart
    */
-  async removeItem(
-    storeId: string,
-    customerId: string,
-    itemId: string
-  ): Promise<CartWithItems> {
+  async removeItem(storeId: string, customerId: string, itemId: string): Promise<CartWithItems> {
     const logContext = {
       storeId,
       customerId,
@@ -193,11 +189,7 @@ export class CartService {
   /**
    * Convert cart to order (checkout)
    */
-  async checkout(
-    cartId: string,
-    customerAddressId: string,
-    paymentMethodId: string
-  ): Promise<any> {
+  async checkout(cartId: string, customerAddressId: string, paymentMethodId: string): Promise<any> {
     const cart = await this.cartRepository.findById(cartId);
     if (!cart) {
       throw new Error('CART_NOT_FOUND');

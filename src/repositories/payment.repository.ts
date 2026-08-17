@@ -49,7 +49,12 @@ export class PaymentRepository {
     });
   }
 
-  async updateStatus(id: string, status: string, transactionId?: string, metadata?: Record<string, unknown>) {
+  async updateStatus(
+    id: string,
+    status: string,
+    transactionId?: string,
+    metadata?: Record<string, unknown>
+  ) {
     return this.prisma.payment.update({
       where: { id },
       data: {

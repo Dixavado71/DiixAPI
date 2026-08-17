@@ -19,7 +19,9 @@ export class PromotionRoutes {
     this.router.get('/', (req, res, next) => this.controller.getPromotions(req, res, next));
 
     // Get active promotions
-    this.router.get('/active', (req, res, next) => this.controller.getActivePromotions(req, res, next));
+    this.router.get('/active', (req, res, next) =>
+      this.controller.getActivePromotions(req, res, next)
+    );
 
     // Get promotion by ID
     this.router.get('/:id', (req, res, next) => this.controller.getPromotion(req, res, next));
@@ -39,7 +41,9 @@ export class PromotionRoutes {
     );
 
     // Add product to promotion
-    this.router.post('/:id/products', (req, res, next) => this.controller.addProduct(req, res, next));
+    this.router.post('/:id/products', (req, res, next) =>
+      this.controller.addProduct(req, res, next)
+    );
 
     // Remove product from promotion
     this.router.delete('/:id/products/:productId', (req, res, next) =>

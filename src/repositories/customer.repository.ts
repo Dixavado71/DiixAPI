@@ -21,11 +21,7 @@ export class CustomerRepository {
     });
   }
 
-  async create(data: {
-    name?: string;
-    phone: string;
-    email?: string;
-  }): Promise<Customer> {
+  async create(data: { name?: string; phone: string; email?: string }): Promise<Customer> {
     return this.prisma.customer.create({
       data,
     });

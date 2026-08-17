@@ -1,77 +1,76 @@
 /**
- * Tipos para o Bot Engine e fluxos de conversação
+ * Bot Engine Types
+ * Types for conversation states, message types, and bot responses
  */
 
-export type BotState = 
+export type ConversationState = 
   | 'IDLE'
   | 'BROWSE_CATALOG'
   | 'VIEW_PRODUCT'
-  | 'CART_ADD'
-  | 'CART_VIEW'
-  | 'CHECKOUT_START'
-  | 'CHECKOUT_ADDRESS'
-  | 'CHECKOUT_PAYMENT'
-  | 'ORDER_TRACKING'
-  | 'SUPPORT';
+  | 'ADD_TO_CART'
+  | 'VIEW_CART'
+  | 'CHECKOUT'
+  | 'PAYMENT_PENDING'
+  | 'ORDER_CONFIRMED'
+  | 'SUPPORT'
+  | 'GOODBYE';
 
-export interface ConversationContext {
-  state: BotState;
-  customerId: string;
-  storeId: string;
-  currentProductId?: string;
-  currentCartId?: string;
-  currentOrderId?: string;
-  lastMessageAt: Date;
-  metadata?: Record<string, any>;
-}
+export type MessageType = 'text' | 'button' | 'list' | 'image' | 'quick_reply';
 
 export interface BotMessage {
+  type: MessageType;
   text: string;
-  type: 'text' | 'image' | 'button' | 'list' | 'quick_reply';
-  buttons?: ButtonOption[];
-  sections?: ListSection[];
-  image?: {
-    url: string;
-    caption?: string;
-  };
+  buttons?: Button[];
+  image?: string;
+  list?: ListItem[];
 }
 
-export interface ButtonOption {
+export interface Button {
   id: string;
-  text: string;
-  type: 'reply' | 'url' | 'phone';
-  url?: string;
-  phone?: string;
+  label: string;
+  payload?: string;
 }
 
-export interface ListSection {
-  title: string;
-  rows: ListRow[];
-}
-
-export interface ListRow {
+export interface ListItem {
   id: string;
   title: string;
-  description?: string;
+  subtitle?: string;
+  imageUrl?: string;
 }
 
-export interface FlowStep {
-  id: string;
-  name: string;
-  trigger: (context: ConversationContext, message: string) => Promise<boolean>;
-  execute: (context: ConversationContext, message: string) => Promise<BotMessage[]>;
-  transitions: FlowTransition[];
+export interface BotContext {
+  customerId: string;
+  storeId: string;
+  state: ConversationState;
+  lastProductId?: string;
+  lastCategoryId?: string;
+  metadata?: Record<string, unknown>;
 }
 
-export interface FlowTransition {
-  condition: (context: ConversationContext, message: string) => boolean;
-  nextState: BotState;
+export interface BotResponse {
+  messages: BotMessage[];
+  nextState: ConversationState;
+  context?: Partial<BotContext>;
 }
 
-export interface BotConfig {
-  welcomeMessage: string;
-  timeoutMinutes: number;
-  maxRetries: number;
-  enableSuggestions: boolean;
-  language: 'pt-BR' | 'en-US' | 'es-ES';
+export interface ConversationContext {
+  customerId: string;
+  storeId: string;
+  state: ConversationState;
+  step?: FlowStep;
+  lastProductId?: string;
+  lastCategoryId?: string;
+  metadata?: Record<string, unknown>;
 }
+
+export type FlowStep = 
+  | 'INIT'
+  | 'SELECT_CATEGORY'
+  | 'SELECT_PRODUCT'
+  | 'VIEW_DETAILS'
+  | 'ADD_TO_CART'
+  | 'CONFIRM_CART'
+  | 'ENTER_ADDRESS'
+  | 'CONFIRM_PAYMENT'
+  | 'WAITING_PAYMENT'
+  | 'ORDER_COMPLETE';
