@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { BotEngineService } from '../../src/services/bot/bot-engine.service';
 import { PrismaClient } from '@prisma/client';
 import { CustomerService } from '../../src/services/customer/customer.service';
@@ -26,7 +27,7 @@ describe('BotEngineService', () => {
   let botService: BotEngineService;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     botService = new BotEngineService(
       mockPrisma,
       mockCustomerService,

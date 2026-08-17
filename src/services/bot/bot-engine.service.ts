@@ -43,7 +43,7 @@ export class BotEngineService {
   async processMessage(
     customerId: string,
     storeId: string,
-    _message: string
+    message: string
   ): Promise<BotMessage[]> {
     // Obtém ou cria contexto da conversação
     const context = await this.getOrCreateContext(customerId, storeId);
@@ -168,8 +168,8 @@ export class BotEngineService {
     return {
       id: 'idle',
       name: 'Estado Inicial',
-      trigger: async (_context) => context.state === 'IDLE',
-      execute: async (_context, _message) => {
+      trigger: async (context) => context.state === 'IDLE',
+      execute: async (context, message) => {
         const lowerMessage = message.toLowerCase();
 
         // Comandos principais
@@ -216,8 +216,8 @@ export class BotEngineService {
     return {
       id: 'browse_catalog',
       name: 'Navegar Catálogo',
-      trigger: async (_context) => context.state === 'BROWSE_CATALOG',
-      execute: async (_context, _message) => {
+      trigger: async (context) => context.state === 'BROWSE_CATALOG',
+      execute: async (context, message) => {
         return await this.executeBrowseCatalog(context, message);
       },
       transitions: [],
@@ -264,8 +264,8 @@ export class BotEngineService {
     return {
       id: 'view_product',
       name: 'Ver Produto',
-      trigger: async (_context) => context.state === 'VIEW_PRODUCT',
-      execute: async (_context, _message) => {
+      trigger: async (context) => context.state === 'VIEW_PRODUCT',
+      execute: async (context, message) => {
         if (!context.currentProductId) {
           context.state = 'BROWSE_CATALOG';
           await this.saveContext(context);
@@ -305,8 +305,8 @@ export class BotEngineService {
     return {
       id: 'cart_add',
       name: 'Adicionar ao Carrinho',
-      trigger: async (_context) => context.state === 'CART_ADD',
-      execute: async (_context, _message) => {
+      trigger: async (context) => context.state === 'CART_ADD',
+      execute: async (context, message) => {
         // Lógica para adicionar produto ao carrinho
         context.state = 'CART_VIEW';
         await this.saveContext(context);
@@ -333,8 +333,8 @@ export class BotEngineService {
     return {
       id: 'cart_view',
       name: 'Ver Carrinho',
-      trigger: async (_context) => context.state === 'CART_VIEW',
-      execute: async (_context, _message) => {
+      trigger: async (context) => context.state === 'CART_VIEW',
+      execute: async (context, message) => {
         return await this.executeCartView(context, message);
       },
       transitions: [],
@@ -365,8 +365,8 @@ export class BotEngineService {
     return {
       id: 'checkout_start',
       name: 'Iniciar Checkout',
-      trigger: async (_context) => context.state === 'CHECKOUT_START',
-      execute: async (_context, _message) => {
+      trigger: async (context) => context.state === 'CHECKOUT_START',
+      execute: async (context, message) => {
         context.state = 'CHECKOUT_ADDRESS';
         await this.saveContext(context);
 
@@ -388,8 +388,8 @@ export class BotEngineService {
     return {
       id: 'checkout_address',
       name: 'Endereço de Entrega',
-      trigger: async (_context) => context.state === 'CHECKOUT_ADDRESS',
-      execute: async (_context, _message) => {
+      trigger: async (context) => context.state === 'CHECKOUT_ADDRESS',
+      execute: async (context, message) => {
         // Salvar endereço no metadata
         context.metadata = { ...context.metadata, address: message };
         context.state = 'CHECKOUT_PAYMENT';
@@ -418,8 +418,8 @@ export class BotEngineService {
     return {
       id: 'checkout_payment',
       name: 'Pagamento',
-      trigger: async (_context) => context.state === 'CHECKOUT_PAYMENT',
-      execute: async (_context, _message) => {
+      trigger: async (context) => context.state === 'CHECKOUT_PAYMENT',
+      execute: async (context, message) => {
         // Processar pagamento e criar pedido
         context.state = 'ORDER_TRACKING';
         await this.saveContext(context);
@@ -442,8 +442,8 @@ export class BotEngineService {
     return {
       id: 'order_tracking',
       name: 'Acompanhamento de Pedido',
-      trigger: async (_context) => context.state === 'ORDER_TRACKING',
-      execute: async (_context, _message) => {
+      trigger: async (context) => context.state === 'ORDER_TRACKING',
+      execute: async (context, message) => {
         return await this.executeOrderTracking(context, message);
       },
       transitions: [],
@@ -472,8 +472,8 @@ export class BotEngineService {
     return {
       id: 'support',
       name: 'Suporte',
-      trigger: async (_context) => context.state === 'SUPPORT',
-      execute: async (_context, _message) => {
+      trigger: async (context) => context.state === 'SUPPORT',
+      execute: async (context, message) => {
         return await this.executeSupport(context, message);
       },
       transitions: [],

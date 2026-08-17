@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/index.js';
+import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/env.js';
 import type { Role } from '@prisma/client';
 
 const prisma = new PrismaClient();

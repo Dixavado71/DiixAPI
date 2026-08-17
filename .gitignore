@@ -9,6 +9,25 @@ target/
 
 # Package lock files
 package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test results
+.tests/
+*.test.js
+*.spec.js
+coverage/
+.nyc_output/
+.vite/
+
+# Environment
+.env
+.env.local
+.env.*
+
+# Logs
+*.log
 
 # IDE files
 .vscode/
@@ -16,22 +35,24 @@ package-lock.json
 *.swp
 *.swo
 
-# Logs
-*.log
+# OS generated files
+.DS_Store
+Thumbs.db
 
-# Environment
-.env
-.env.local
-*.env.*
+# Python related (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
 
 # Temporary files
 *.tmp
-
-# Test coverage
-coverage/
-htmlcov/
-.coverage
-
-# Vite specific
-.node_modules/.vite/
+*.temp
+*~
 ```
