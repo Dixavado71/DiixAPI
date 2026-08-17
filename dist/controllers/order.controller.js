@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.OrderController = void 0;
-const order_service_1 = require("../services/order/order.service");
-const order_state_machine_1 = require("../services/order/order-state-machine");
-const order_validator_1 = require("../validators/order.validator");
-const logger_1 = require("../utils/logger");
-class OrderController {
+import { OrderService } from '../services/order/order.service';
+import { OrderStateMachine } from '../services/order/order-state-machine';
+import { createOrderSchema, updateOrderStatusSchema, cancelOrderSchema, orderQuerySchema, } from '../validators/order.validator';
+import { logger } from '../utils/logger';
+export class OrderController {
     orderService;
     constructor() {
-        this.orderService = new order_service_1.OrderService();
+        this.orderService = new OrderService();
     }
     /**
      * Create an order from customer's active cart
@@ -19,7 +16,7 @@ class OrderController {
             const storeId = req.params.storeId;
             const customerId = req.body.customerId; // Will come from auth context in real scenario
             // Validate request body
-            const validationResult = order_validator_1.createOrderSchema.safeParse(req.body);
+            const validationResult = createOrderSchema.safeParse(req.body);
             if (!validationResult.success) {
                 res.status(400).json({
                     success: false,
@@ -43,7 +40,7 @@ class OrderController {
             });
         }
         catch (error) {
-            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error creating order');
+            logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error creating order');
             const errorMap = {
                 CUSTOMER_NOT_AUTHORIZED: { status: 403, code: 'CUSTOMER_NOT_AUTHORIZED' },
                 STORE_SETTINGS_NOT_FOUND: { status: 404, code: 'STORE_SETTINGS_NOT_FOUND' },
@@ -80,7 +77,7 @@ class OrderController {
         try {
             const storeId = req.params.storeId;
             // Validate query parameters
-            const validationResult = order_validator_1.orderQuerySchema.safeParse(req.query);
+            const validationResult = orderQuerySchema.safeParse(req.query);
             if (!validationResult.success) {
                 res.status(400).json({
                     success: false,
@@ -104,7 +101,7 @@ class OrderController {
             });
         }
         catch (error) {
-            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error getting orders');
+            logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error getting orders');
             next(error);
         }
     }
@@ -122,7 +119,7 @@ class OrderController {
             });
         }
         catch (error) {
-            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error getting order');
+            logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error getting order');
             if (error instanceof Error &&
                 (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH')) {
                 res.status(404).json({
@@ -145,7 +142,7 @@ class OrderController {
         try {
             const { orderId, storeId } = req.params;
             // Validate request body
-            const validationResult = order_validator_1.updateOrderStatusSchema.safeParse(req.body);
+            const validationResult = updateOrderStatusSchema.safeParse(req.body);
             if (!validationResult.success) {
                 res.status(400).json({
                     success: false,
@@ -165,7 +162,7 @@ class OrderController {
             });
         }
         catch (error) {
-            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error updating order status');
+            logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error updating order status');
             if (error instanceof Error && error.message.includes('Invalid state transition')) {
                 res.status(422).json({
                     success: false,
@@ -198,7 +195,7 @@ class OrderController {
         try {
             const { orderId, storeId } = req.params;
             // Validate request body
-            const validationResult = order_validator_1.cancelOrderSchema.safeParse(req.body);
+            const validationResult = cancelOrderSchema.safeParse(req.body);
             if (!validationResult.success) {
                 res.status(400).json({
                     success: false,
@@ -218,7 +215,7 @@ class OrderController {
             });
         }
         catch (error) {
-            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error cancelling order');
+            logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error cancelling order');
             if (error instanceof Error && error.message.includes('ORDER_CANNOT_BE_CANCELLED')) {
                 res.status(422).json({
                     success: false,
@@ -251,10 +248,10 @@ class OrderController {
         try {
             const { orderId, storeId } = req.params;
             const order = await this.orderService.getOrderById(orderId, storeId);
-            const possibleStates = order_state_machine_1.OrderStateMachine.getPossibleNextStates(order.status);
-            const canCancel = order_state_machine_1.OrderStateMachine.canCancel(order.status);
-            const isTerminal = order_state_machine_1.OrderStateMachine.isTerminalState(order.status);
-            const isFinal = order_state_machine_1.OrderStateMachine.isFinalState(order.status);
+            const possibleStates = OrderStateMachine.getPossibleNextStates(order.status);
+            const canCancel = OrderStateMachine.canCancel(order.status);
+            const isTerminal = OrderStateMachine.isTerminalState(order.status);
+            const isFinal = OrderStateMachine.isFinalState(order.status);
             res.json({
                 success: true,
                 data: {
@@ -267,7 +264,7 @@ class OrderController {
             });
         }
         catch (error) {
-            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error getting possible states');
+            logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error getting possible states');
             if (error instanceof Error &&
                 (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH')) {
                 res.status(404).json({
@@ -283,5 +280,4 @@ class OrderController {
         }
     }
 }
-exports.OrderController = OrderController;
 //# sourceMappingURL=order.controller.js.map

@@ -1,13 +1,7 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.adminAuthService = exports.AdminAuthService = void 0;
-const client_1 = require("@prisma/client");
-const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const prisma = new client_1.PrismaClient();
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+const prisma = new PrismaClient();
 // Lazy load config to avoid import issues in tests
 let envConfig;
 const getConfig = () => {
@@ -23,7 +17,7 @@ const getConfig = () => {
     }
     return envConfig;
 };
-class AdminAuthService {
+export class AdminAuthService {
     async createUser(input) {
         const { email, password, name, role = 'OPERATOR' } = input;
         const existingUser = await prisma.adminUser.findUnique({
@@ -32,7 +26,7 @@ class AdminAuthService {
         if (existingUser) {
             throw new Error('User with this email already exists');
         }
-        const hashedPassword = await bcryptjs_1.default.hash(password, 12);
+        const hashedPassword = await bcrypt.hash(password, 12);
         const user = await prisma.adminUser.create({
             data: {
                 email,
@@ -62,7 +56,7 @@ class AdminAuthService {
         if (!user.active) {
             throw new Error('User account is inactive');
         }
-        const isValid = await bcryptjs_1.default.compare(password, user.password);
+        const isValid = await bcrypt.compare(password, user.password);
         if (!isValid) {
             throw new Error('Invalid credentials');
         }
@@ -73,7 +67,7 @@ class AdminAuthService {
         const config = getConfig();
         const JWT_SECRET = config?.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
         const JWT_EXPIRES_IN = config?.JWT_EXPIRES_IN || process.env.JWT_EXPIRES_IN || '24h';
-        const token = jsonwebtoken_1.default.sign({
+        const token = jwt.sign({
             userId: user.id,
             email: user.email,
             role: user.role,
@@ -170,11 +164,11 @@ class AdminAuthService {
         if (!user) {
             throw new Error('User not found');
         }
-        const isValid = await bcryptjs_1.default.compare(currentPassword, user.password);
+        const isValid = await bcrypt.compare(currentPassword, user.password);
         if (!isValid) {
             throw new Error('Current password is incorrect');
         }
-        const hashedPassword = await bcryptjs_1.default.hash(newPassword, 12);
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
         await prisma.adminUser.update({
             where: { id: userId },
             data: { password: hashedPassword },
@@ -188,7 +182,7 @@ class AdminAuthService {
         if (!admin || !['SUPER_ADMIN', 'STORE_OWNER'].includes(admin.role)) {
             throw new Error('Insufficient permissions');
         }
-        const hashedPassword = await bcryptjs_1.default.hash(newPassword, 12);
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
         await prisma.adminUser.update({
             where: { id: targetUserId },
             data: { password: hashedPassword },
@@ -228,7 +222,7 @@ class AdminAuthService {
         try {
             const config = getConfig();
             const JWT_SECRET = config?.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
-            const decoded = jsonwebtoken_1.default.verify(token, JWT_SECRET);
+            const decoded = jwt.verify(token, JWT_SECRET);
             const user = await prisma.adminUser.findUnique({
                 where: { id: decoded.userId },
                 select: { id: true, active: true, role: true },
@@ -280,6 +274,5 @@ class AdminAuthService {
         };
     }
 }
-exports.AdminAuthService = AdminAuthService;
-exports.adminAuthService = new AdminAuthService();
+export const adminAuthService = new AdminAuthService();
 //# sourceMappingURL=admin-auth.service.js.map

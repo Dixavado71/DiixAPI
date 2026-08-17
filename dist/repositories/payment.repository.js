@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PaymentRepository = void 0;
-class PaymentRepository {
+export class PaymentRepository {
     prisma;
     constructor(prisma) {
         this.prisma = prisma;
@@ -51,5 +48,4 @@ class PaymentRepository {
         });
     }
 }
-exports.PaymentRepository = PaymentRepository;
 //# sourceMappingURL=payment.repository.js.map

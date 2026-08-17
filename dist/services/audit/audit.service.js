@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.auditService = exports.AuditService = void 0;
-const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
-class AuditService {
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+export class AuditService {
     /**
      * Create an audit log entry
      */
@@ -363,6 +360,5 @@ class AuditService {
         };
     }
 }
-exports.AuditService = AuditService;
-exports.auditService = new AuditService();
+export const auditService = new AuditService();
 //# sourceMappingURL=audit.service.js.map

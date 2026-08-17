@@ -1,10 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const database_1 = require("../config/database");
-const logger_1 = require("../utils/logger");
-const router = (0, express_1.Router)();
-const logger = (0, logger_1.getLogger)().child({ module: 'health' });
+import { Router } from 'express';
+import { checkDatabaseHealth } from '../config/database';
+import { getLogger } from '../utils/logger';
+const router = Router();
+const logger = getLogger().child({ module: 'health' });
 /**
  * GET /api/v1/health
  * Basic health check - returns service status
@@ -23,7 +21,7 @@ router.get('/', (_req, res) => {
  */
 router.get('/ready', async (_req, res) => {
     try {
-        const databaseHealthy = await (0, database_1.checkDatabaseHealth)();
+        const databaseHealthy = await checkDatabaseHealth();
         const isReady = databaseHealthy;
         if (!isReady) {
             logger.warn({ database: databaseHealthy }, 'Service not ready');
@@ -60,5 +58,5 @@ router.get('/ready', async (_req, res) => {
         });
     }
 });
-exports.default = router;
+export default router;
 //# sourceMappingURL=health.routes.js.map

@@ -1,13 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const bot_engine_service_1 = require("../services/bot/bot-engine.service");
-const client_1 = require("@prisma/client");
-const router = (0, express_1.Router)();
+import { Router } from 'express';
+import { BotEngineService } from '../services/bot/bot-engine.service';
+import { PrismaClient } from '@prisma/client';
+const router = Router();
 // Factory para criar instância do BotEngineService
 const createBotEngineService = () => {
-    const prisma = new client_1.PrismaClient();
-    return new bot_engine_service_1.BotEngineService(prisma);
+    const prisma = new PrismaClient();
+    return new BotEngineService(prisma);
 };
 // Helper para extrair string segura de params
 const getStringParam = (param) => {
@@ -65,7 +63,7 @@ router.post('/:customerId/:storeId/reset', async (req, res) => {
             });
             return;
         }
-        const prisma = new client_1.PrismaClient();
+        const prisma = new PrismaClient();
         await prisma.conversationState.updateMany({
             where: {
                 instance: 'whatsapp',
@@ -105,7 +103,7 @@ router.post('/:customerId/:storeId/end', async (req, res) => {
             });
             return;
         }
-        const prisma = new client_1.PrismaClient();
+        const prisma = new PrismaClient();
         await prisma.conversationState.updateMany({
             where: {
                 instance: 'whatsapp',
@@ -145,7 +143,7 @@ router.get('/:customerId/:storeId/context', async (req, res) => {
             });
             return;
         }
-        const prisma = new client_1.PrismaClient();
+        const prisma = new PrismaClient();
         const conversation = await prisma.conversationState.findFirst({
             where: {
                 instance: 'whatsapp',
@@ -185,5 +183,5 @@ router.get('/:customerId/:storeId/context', async (req, res) => {
         });
     }
 });
-exports.default = router;
+export default router;
 //# sourceMappingURL=bot.routes.js.map

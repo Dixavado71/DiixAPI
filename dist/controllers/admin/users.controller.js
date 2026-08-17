@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.usersController = exports.UsersController = void 0;
-const admin_auth_service_js_1 = require("../../services/admin/admin-auth.service.js");
-const audit_service_js_1 = require("../../services/audit/audit.service.js");
-class UsersController {
+import { adminAuthService } from '../../services/admin/admin-auth.service.js';
+import { auditService } from '../../services/audit/audit.service.js';
+export class UsersController {
     /**
      * Get all users with pagination
      * GET /admin/users
@@ -12,7 +9,7 @@ class UsersController {
         try {
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 20;
-            const result = await admin_auth_service_js_1.adminAuthService.getAllUsers(page, limit);
+            const result = await adminAuthService.getAllUsers(page, limit);
             return res.json({
                 ...result,
             });
@@ -36,7 +33,7 @@ class UsersController {
                     error: 'Invalid user ID',
                 });
             }
-            const user = await admin_auth_service_js_1.adminAuthService.getUserById(id);
+            const user = await adminAuthService.getUserById(id);
             return res.json({
                 user,
             });
@@ -64,7 +61,7 @@ class UsersController {
                     error: 'Invalid role',
                 });
             }
-            const result = await admin_auth_service_js_1.adminAuthService.getUsersByRole(role, page, limit);
+            const result = await adminAuthService.getUsersByRole(role, page, limit);
             return res.json({
                 ...result,
             });
@@ -89,17 +86,17 @@ class UsersController {
                     error: 'Invalid user ID',
                 });
             }
-            const user = await admin_auth_service_js_1.adminAuthService.updateUser(id, {
+            const user = await adminAuthService.updateUser(id, {
                 name,
                 email,
                 role: role,
                 active,
             });
             // Audit log
-            await audit_service_js_1.auditService.logUserUpdate(req.user.userId, id, { name, email, role: role, active }, req.ip || undefined);
+            await auditService.logUserUpdate(req.user.userId, id, { name, email, role: role, active }, req.ip || undefined);
             // If role changed, log it
             if (role && typeof role === 'string') {
-                await audit_service_js_1.auditService.logRoleChange(req.user.userId, id, 'UNKNOWN', role, req.ip || undefined);
+                await auditService.logRoleChange(req.user.userId, id, 'UNKNOWN', role, req.ip || undefined);
             }
             return res.json({
                 message: 'User updated successfully',
@@ -125,9 +122,9 @@ class UsersController {
                     error: 'Invalid user ID',
                 });
             }
-            const user = await admin_auth_service_js_1.adminAuthService.deactivateUser(id);
+            const user = await adminAuthService.deactivateUser(id);
             // Audit log
-            await audit_service_js_1.auditService.logUserDeletion(req.user.userId, id, req.ip || undefined);
+            await auditService.logUserDeletion(req.user.userId, id, req.ip || undefined);
             return res.json({
                 message: 'User deactivated successfully',
                 user,
@@ -152,9 +149,9 @@ class UsersController {
                     error: 'Invalid user ID',
                 });
             }
-            const user = await admin_auth_service_js_1.adminAuthService.activateUser(id);
+            const user = await adminAuthService.activateUser(id);
             // Audit log
-            await audit_service_js_1.auditService.log({
+            await auditService.log({
                 userId: req.user.userId,
                 action: 'USER_ACTIVATED',
                 entity: 'AdminUser',
@@ -191,9 +188,9 @@ class UsersController {
                     error: 'New password is required',
                 });
             }
-            await admin_auth_service_js_1.adminAuthService.resetPassword(req.user.userId, id, newPassword);
+            await adminAuthService.resetPassword(req.user.userId, id, newPassword);
             // Audit log
-            await audit_service_js_1.auditService.log({
+            await auditService.log({
                 userId: req.user.userId,
                 action: 'PASSWORD_RESET',
                 entity: 'AdminUser',
@@ -224,9 +221,9 @@ class UsersController {
                     error: 'Invalid user ID',
                 });
             }
-            const user = await admin_auth_service_js_1.adminAuthService.deleteUser(id);
+            const user = await adminAuthService.deleteUser(id);
             // Audit log
-            await audit_service_js_1.auditService.logUserDeletion(req.user.userId, id, req.ip || undefined);
+            await auditService.logUserDeletion(req.user.userId, id, req.ip || undefined);
             return res.json({
                 message: 'User deleted successfully',
                 user,
@@ -240,6 +237,5 @@ class UsersController {
         }
     }
 }
-exports.UsersController = UsersController;
-exports.usersController = new UsersController();
+export const usersController = new UsersController();
 //# sourceMappingURL=users.controller.js.map

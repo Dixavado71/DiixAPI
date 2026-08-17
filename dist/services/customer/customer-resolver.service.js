@@ -1,23 +1,20 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CustomerResolverService = void 0;
-const repositories_1 = require("../../repositories");
-const phone_1 = require("../../utils/phone");
-const logger_1 = require("../../utils/logger");
-const logger = (0, logger_1.getLogger)().child({ module: 'customer-resolver' });
+import { getCustomerRepository, getStoreCustomerRepository } from '../../repositories';
+import { normalizePhone } from '../../utils/phone';
+import { getLogger } from '../../utils/logger';
+const logger = getLogger().child({ module: 'customer-resolver' });
 /**
  * CustomerResolverService
  *
  * Resolves a customer from phone number and their relationship with a store.
  */
-class CustomerResolverService {
-    customerRepository = (0, repositories_1.getCustomerRepository)();
-    storeCustomerRepository = (0, repositories_1.getStoreCustomerRepository)();
+export class CustomerResolverService {
+    customerRepository = getCustomerRepository();
+    storeCustomerRepository = getStoreCustomerRepository();
     /**
      * Resolve customer by phone number
      */
     async resolveByPhone(phone) {
-        const normalizedPhone = (0, phone_1.normalizePhone)(phone);
+        const normalizedPhone = normalizePhone(phone);
         const customer = await this.customerRepository.findByPhone(normalizedPhone);
         if (customer) {
             logger.debug({ customerId: customer.id }, 'Customer resolved by phone');
@@ -37,7 +34,7 @@ class CustomerResolverService {
      * Resolve customer and their store relationship
      */
     async resolveWithStoreRelationship(storeId, phone) {
-        const normalizedPhone = (0, phone_1.normalizePhone)(phone);
+        const normalizedPhone = normalizePhone(phone);
         const customer = await this.customerRepository.findByPhone(normalizedPhone);
         if (!customer) {
             logger.debug({ phone: normalizedPhone }, 'Customer not found');
@@ -59,7 +56,7 @@ class CustomerResolverService {
      * Use with caution - only when customer registration is not required
      */
     async findOrCreateByPhone(phone, name) {
-        const normalizedPhone = (0, phone_1.normalizePhone)(phone);
+        const normalizedPhone = normalizePhone(phone);
         let customer = await this.customerRepository.findByPhone(normalizedPhone);
         if (customer) {
             logger.debug({ customerId: customer.id }, 'Existing customer found');
@@ -74,5 +71,4 @@ class CustomerResolverService {
         return customer;
     }
 }
-exports.CustomerResolverService = CustomerResolverService;
 //# sourceMappingURL=customer-resolver.service.js.map

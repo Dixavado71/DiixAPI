@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CustomerService = void 0;
-const repositories_1 = require("../../repositories");
-const phone_1 = require("../../utils/phone");
-const logger_1 = require("../../utils/logger");
-const logger = (0, logger_1.getLogger)().child({ module: 'customer-service' });
-class CustomerService {
-    customerRepository = (0, repositories_1.getCustomerRepository)();
-    storeCustomerRepository = (0, repositories_1.getStoreCustomerRepository)();
+import { getCustomerRepository, getStoreCustomerRepository } from '../../repositories';
+import { normalizePhone } from '../../utils/phone';
+import { getLogger } from '../../utils/logger';
+const logger = getLogger().child({ module: 'customer-service' });
+export class CustomerService {
+    customerRepository = getCustomerRepository();
+    storeCustomerRepository = getStoreCustomerRepository();
     async findAll() {
         return this.customerRepository.findAll();
     }
@@ -15,12 +12,12 @@ class CustomerService {
         return this.customerRepository.findById(id);
     }
     async findByPhone(phone) {
-        const normalizedPhone = (0, phone_1.normalizePhone)(phone);
+        const normalizedPhone = normalizePhone(phone);
         return this.customerRepository.findByPhone(normalizedPhone);
     }
     async create(data) {
         // Normalize phone number
-        const normalizedPhone = (0, phone_1.normalizePhone)(data.phone);
+        const normalizedPhone = normalizePhone(data.phone);
         // Check if customer already exists with this phone
         const existingCustomer = await this.customerRepository.findByPhone(normalizedPhone);
         if (existingCustomer) {
@@ -40,7 +37,7 @@ class CustomerService {
         }
         // Normalize phone if provided
         if (data.phone) {
-            const normalizedPhone = (0, phone_1.normalizePhone)(data.phone);
+            const normalizedPhone = normalizePhone(data.phone);
             // Check if another customer already has this phone
             const existingCustomer = await this.customerRepository.findByPhone(normalizedPhone);
             if (existingCustomer && existingCustomer.id !== id) {
@@ -136,5 +133,4 @@ class CustomerService {
         return this.storeCustomerRepository.findByCustomer(customerId);
     }
 }
-exports.CustomerService = CustomerService;
 //# sourceMappingURL=customer.service.js.map

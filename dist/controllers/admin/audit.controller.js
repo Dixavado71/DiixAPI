@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.auditController = exports.AuditController = void 0;
-const audit_service_js_1 = require("../../services/audit/audit.service.js");
+import { auditService } from '../../services/audit/audit.service.js';
 // Helper function to safely extract string from query params
 const getStringParam = (param) => {
     if (typeof param === 'string')
         return param;
     return undefined;
 };
-class AuditController {
+export class AuditController {
     /**
      * Get audit logs with filters
      * GET /admin/audit/logs
@@ -29,7 +26,7 @@ class AuditController {
                 filters.startDate = new Date(startDate);
             if (endDate && typeof endDate === 'string')
                 filters.endDate = new Date(endDate);
-            const result = await audit_service_js_1.auditService.getLogs(filters, page, limit);
+            const result = await auditService.getLogs(filters, page, limit);
             return res.json({
                 ...result,
             });
@@ -55,7 +52,7 @@ class AuditController {
                 });
             }
             const limit = parseInt(getStringParam(req.query.limit) || '20', 10);
-            const logs = await audit_service_js_1.auditService.getLogsByEntity(entity, entityId, limit);
+            const logs = await auditService.getLogsByEntity(entity, entityId, limit);
             return res.json({
                 logs,
             });
@@ -80,7 +77,7 @@ class AuditController {
                 });
             }
             const limit = parseInt(getStringParam(req.query.limit) || '20', 10);
-            const logs = await audit_service_js_1.auditService.getLogsByUser(userId, limit);
+            const logs = await auditService.getLogsByUser(userId, limit);
             return res.json({
                 logs,
             });
@@ -99,7 +96,7 @@ class AuditController {
     async getRecentLogs(req, res) {
         try {
             const limit = parseInt(req.query.limit) || 50;
-            const logs = await audit_service_js_1.auditService.getRecentLogs(limit);
+            const logs = await auditService.getRecentLogs(limit);
             return res.json({
                 logs,
             });
@@ -120,7 +117,7 @@ class AuditController {
             const { startDate, endDate } = req.query;
             const start = startDate ? new Date(startDate) : undefined;
             const end = endDate ? new Date(endDate) : undefined;
-            const stats = await audit_service_js_1.auditService.getStats(start, end);
+            const stats = await auditService.getStats(start, end);
             return res.json({
                 stats,
             });
@@ -139,7 +136,7 @@ class AuditController {
     async cleanupLogs(req, res) {
         try {
             const retentionDays = parseInt(req.body.retentionDays) || 365;
-            const result = await audit_service_js_1.auditService.cleanOldLogs(retentionDays);
+            const result = await auditService.cleanOldLogs(retentionDays);
             return res.json({
                 message: 'Audit logs cleaned successfully',
                 ...result,
@@ -153,6 +150,5 @@ class AuditController {
         }
     }
 }
-exports.AuditController = AuditController;
-exports.auditController = new AuditController();
+export const auditController = new AuditController();
 //# sourceMappingURL=audit.controller.js.map
