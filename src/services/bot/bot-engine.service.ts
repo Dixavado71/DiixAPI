@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
-import type { 
-  ConversationState as ConversationStateType, 
-  BotMessage, 
+import type {
+  ConversationState as ConversationStateType,
+  BotMessage,
   ConversationContext,
 } from '../../types/bot.types';
 
@@ -12,7 +12,7 @@ interface ConversationRecord {
   storeId: string | null;
   customerId: string | null;
   state: string;
-  context: any;
+  context: Record<string, unknown>;
   lastActive: Date;
 }
 
@@ -75,15 +75,15 @@ export class BotEngineService {
     const phone = customerId;
     const instance = 'whatsapp';
 
-    let conversation = await this.prisma.conversationState.findFirst({
+    let conversation = (await this.prisma.conversationState.findFirst({
       where: {
         instance,
         phone,
       },
-    }) as ConversationRecord | null;
+    })) as ConversationRecord | null;
 
     if (!conversation) {
-      conversation = await this.prisma.conversationState.create({
+      conversation = (await this.prisma.conversationState.create({
         data: {
           instance,
           phone,
@@ -92,7 +92,7 @@ export class BotEngineService {
           state: 'IDLE',
           context: {},
         },
-      }) as ConversationRecord;
+      })) as ConversationRecord;
     }
 
     return {
@@ -105,7 +105,7 @@ export class BotEngineService {
 
   private async saveContext(context: ConversationContext): Promise<void> {
     const contextData = context.metadata ? JSON.parse(JSON.stringify(context.metadata)) : {};
-    
+
     await this.prisma.conversationState.updateMany({
       where: {
         instance: 'whatsapp',
@@ -119,13 +119,14 @@ export class BotEngineService {
     });
   }
 
-  private async handleIdle(
-    context: ConversationContext,
-    message: string
-  ): Promise<BotMessage[]> {
+  private async handleIdle(context: ConversationContext, message: string): Promise<BotMessage[]> {
     const normalizedMessage = message.toLowerCase().trim();
 
-    if (normalizedMessage.includes('catalog') || normalizedMessage.includes('produto')) {
+    if (
+      normalizedMessage.includes('catalog') ||
+      normalizedMessage.includes('catálogo') ||
+      normalizedMessage.includes('produto')
+    ) {
       return this.handleBrowseCatalog(context, message);
     }
 
@@ -249,5 +250,37 @@ export class BotEngineService {
         text: '👋 Obrigado pela visita!\n\nVolte sempre que precisar. Tenha um ótimo dia!',
       },
     ];
+  }
+
+  /**
+   * Reseta o contexto da conversa para IDLE
+   */
+  async resetContext(customerId: string, _storeId: string): Promise<void> {
+    await this.prisma.conversationState.updateMany({
+      where: {
+        instance: 'whatsapp',
+        phone: customerId,
+      },
+      data: {
+        state: 'IDLE',
+        context: {},
+        lastActive: new Date(),
+      },
+    });
+  }
+
+  /**
+   * Marca a conversa como inativa
+   */
+  async endConversation(customerId: string, _storeId: string): Promise<void> {
+    await this.prisma.conversationState.updateMany({
+      where: {
+        instance: 'whatsapp',
+        phone: customerId,
+      },
+      data: {
+        lastActive: new Date(),
+      },
+    });
   }
 }

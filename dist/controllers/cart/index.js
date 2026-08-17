@@ -149,7 +149,8 @@ class CartController {
             res.status(201).json(result);
         }
         catch (error) {
-            if (error instanceof Error && (error.message === 'CART_NOT_FOUND' || error.message === 'CART_NOT_ACTIVE')) {
+            if (error instanceof Error &&
+                (error.message === 'CART_NOT_FOUND' || error.message === 'CART_NOT_ACTIVE')) {
                 res.status(400).json({ error: error.message });
                 return;
             }

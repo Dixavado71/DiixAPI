@@ -123,7 +123,8 @@ class OrderController {
         }
         catch (error) {
             logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error getting order');
-            if (error instanceof Error && (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH')) {
+            if (error instanceof Error &&
+                (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH')) {
                 res.status(404).json({
                     success: false,
                     error: {
@@ -175,7 +176,8 @@ class OrderController {
                 });
                 return;
             }
-            if (error instanceof Error && (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH')) {
+            if (error instanceof Error &&
+                (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH')) {
                 res.status(404).json({
                     success: false,
                     error: {
@@ -227,7 +229,8 @@ class OrderController {
                 });
                 return;
             }
-            if (error instanceof Error && (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH')) {
+            if (error instanceof Error &&
+                (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH')) {
                 res.status(404).json({
                     success: false,
                     error: {
@@ -265,7 +268,8 @@ class OrderController {
         }
         catch (error) {
             logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error getting possible states');
-            if (error instanceof Error && (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH')) {
+            if (error instanceof Error &&
+                (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH')) {
                 res.status(404).json({
                     success: false,
                     error: {

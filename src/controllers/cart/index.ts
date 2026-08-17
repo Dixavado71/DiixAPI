@@ -58,7 +58,10 @@ export class CartController {
         res.status(400).json({ error: error.message });
         return;
       }
-      logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error adding item to cart');
+      logger.error(
+        { error: error instanceof Error ? error.message : 'Unknown error' },
+        'Error adding item to cart'
+      );
       next(error);
     }
   }
@@ -89,7 +92,10 @@ export class CartController {
         res.status(404).json({ error: error.message });
         return;
       }
-      logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error updating cart item');
+      logger.error(
+        { error: error instanceof Error ? error.message : 'Unknown error' },
+        'Error updating cart item'
+      );
       next(error);
     }
   }
@@ -119,7 +125,10 @@ export class CartController {
         res.status(404).json({ error: error.message });
         return;
       }
-      logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error removing item from cart');
+      logger.error(
+        { error: error instanceof Error ? error.message : 'Unknown error' },
+        'Error removing item from cart'
+      );
       next(error);
     }
   }
@@ -142,7 +151,10 @@ export class CartController {
         res.status(404).json({ error: error.message });
         return;
       }
-      logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error clearing cart');
+      logger.error(
+        { error: error instanceof Error ? error.message : 'Unknown error' },
+        'Error clearing cart'
+      );
       next(error);
     }
   }
@@ -166,11 +178,17 @@ export class CartController {
       logger.info({ cartId: cart.id, result }, 'Cart checkout processed');
       res.status(201).json(result);
     } catch (error: unknown) {
-      if (error instanceof Error && (error.message === 'CART_NOT_FOUND' || error.message === 'CART_NOT_ACTIVE')) {
+      if (
+        error instanceof Error &&
+        (error.message === 'CART_NOT_FOUND' || error.message === 'CART_NOT_ACTIVE')
+      ) {
         res.status(400).json({ error: error.message });
         return;
       }
-      logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error processing checkout');
+      logger.error(
+        { error: error instanceof Error ? error.message : 'Unknown error' },
+        'Error processing checkout'
+      );
       next(error);
     }
   }

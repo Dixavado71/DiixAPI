@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, DeliveryMethod, DeliveryStatus } from '@prisma/client';
 
 export class DeliveryRepository {
   private prisma: PrismaClient;
@@ -20,7 +20,7 @@ export class DeliveryRepository {
       data: {
         orderId: data.orderId,
         storeId: data.storeId,
-        method: data.method as any,
+        method: data.method as DeliveryMethod,
         address: data.address,
         recipientName: data.recipientName,
         recipientPhone: data.recipientPhone,
@@ -53,8 +53,13 @@ export class DeliveryRepository {
   }
 
   async updateStatus(id: string, status: string, trackingInfo?: string) {
-    const updateData: any = {
-      status: status as any,
+    const updateData: {
+      status: DeliveryStatus;
+      updatedAt: Date;
+      trackingInfo?: string;
+      deliveredAt?: Date;
+    } = {
+      status: status as DeliveryStatus,
       updatedAt: new Date(),
     };
 
