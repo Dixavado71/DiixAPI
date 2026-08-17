@@ -3,9 +3,13 @@ FROM node:20-bookworm AS builder
 
 WORKDIR /app
 
-# Install dependencies
+# Install dependencies (root)
 COPY package*.json ./
 RUN npm ci
+
+# Install frontend dependencies
+COPY frontend/package*.json ./frontend/
+RUN cd frontend && npm ci
 
 # Copy source code
 COPY . .
@@ -13,22 +17,30 @@ COPY . .
 # Generate Prisma client
 RUN npx prisma generate
 
+# Build frontend
+RUN cd frontend && npm run build
+
 # Build TypeScript
-RUN npm run build
+RUN npm run build:backend
 
 # Stage 2: Production
 FROM node:20-bookworm
 
 WORKDIR /app
 
-# Install production dependencies only
+# Install production dependencies only (root)
 COPY package*.json ./
 RUN npm ci --only=production
+
+# Install frontend production dependencies
+COPY frontend/package*.json ./frontend/
+RUN cd frontend && npm ci --only=production
 
 # Copy built files from builder
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/frontend/dist ./frontend/dist
 
 # Create non-root user
 RUN groupadd -r nodejs && useradd -r -g nodejs nodejs

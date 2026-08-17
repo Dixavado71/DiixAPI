@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import pinoHttp from 'pino-http';
+import path from 'path';
 import { getLogger } from './utils/logger';
 import routes from './routes';
 
@@ -53,6 +54,22 @@ export function createApp(): Application {
 
   // API routes
   app.use('/api/v1', routes);
+
+  // Serve static files from frontend build in production
+  const isProduction = process.env.NODE_ENV === 'production';
+  if (isProduction) {
+    const distPath = path.join(__dirname, '..', '..', 'frontend', 'dist');
+    logger.info({ distPath }, 'Serving static files from');
+    app.use(express.static(distPath));
+
+    // SPA fallback - serve index.html for all non-API routes
+    app.get('*', (req, res, next) => {
+      if (req.url.startsWith('/api')) {
+        return next();
+      }
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
+  }
 
   // Root endpoint
   app.get('/' as const, (_req: Request, res: Response) => {
