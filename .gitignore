@@ -1,26 +1,27 @@
 ```
+# Docker related
+.dockerignore
+Dockerfile.*
+
 # Dependencies
 node_modules/
 .venv/
 venv/
 __pycache__/
-.mypy_cache/
-.pytest_cache/
-target/
-.gradle/
+*.egg-info/
+dist-packages/
 
 # Build artifacts
-dist/
 build/
+dist/
+target/
 *.pyc
 *.class
 *.o
-*.exe
-*.dll
-*.so
-*.a
 *.obj
-*.out
+*.so
+*.dll
+*.exe
 
 # Logs and temporary files
 *.log
@@ -28,41 +29,32 @@ build/
 *.swp
 *.swo
 
-# Environment files
+# Environment
 .env
 .env.local
-*.env.*
+.env.*
 
 # Editors
 .vscode/
 .idea/
+*.iml
+*.ipr
+*.iws
 
-# System files
+# OS
 .DS_Store
 Thumbs.db
 
 # Coverage
+.coverage
 coverage/
 htmlcov/
-.coverage
 
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
+# Python specific
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.sqlite3
 ```
