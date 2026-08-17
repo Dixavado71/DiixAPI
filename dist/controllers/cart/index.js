@@ -48,12 +48,11 @@ class CartController {
             });
         }
         catch (error) {
-            if (error.message === 'PRODUCT_NOT_FOUND' ||
-                error.message === 'PRODUCT_STORE_MISMATCH') {
+            if (error instanceof Error && error.message === 'PRODUCT_NOT_FOUND') {
                 res.status(400).json({ error: error.message });
                 return;
             }
-            logger_1.logger.error({ error: error.message }, 'Error adding item to cart');
+            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error adding item to cart');
             next(error);
         }
     }
@@ -77,11 +76,11 @@ class CartController {
             });
         }
         catch (error) {
-            if (error.message === 'CART_NOT_FOUND') {
+            if (error instanceof Error && error.message === 'CART_NOT_FOUND') {
                 res.status(404).json({ error: error.message });
                 return;
             }
-            logger_1.logger.error({ error: error.message }, 'Error updating cart item');
+            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error updating cart item');
             next(error);
         }
     }
@@ -104,11 +103,11 @@ class CartController {
             });
         }
         catch (error) {
-            if (error.message === 'CART_NOT_FOUND') {
+            if (error instanceof Error && error.message === 'CART_NOT_FOUND') {
                 res.status(404).json({ error: error.message });
                 return;
             }
-            logger_1.logger.error({ error: error.message }, 'Error removing item from cart');
+            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error removing item from cart');
             next(error);
         }
     }
@@ -125,11 +124,11 @@ class CartController {
             res.status(204).send();
         }
         catch (error) {
-            if (error.message === 'CART_NOT_FOUND') {
+            if (error instanceof Error && error.message === 'CART_NOT_FOUND') {
                 res.status(404).json({ error: error.message });
                 return;
             }
-            logger_1.logger.error({ error: error.message }, 'Error clearing cart');
+            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error clearing cart');
             next(error);
         }
     }
@@ -150,11 +149,11 @@ class CartController {
             res.status(201).json(result);
         }
         catch (error) {
-            if (error.message === 'CART_NOT_FOUND' || error.message === 'CART_NOT_ACTIVE') {
+            if (error instanceof Error && (error.message === 'CART_NOT_FOUND' || error.message === 'CART_NOT_ACTIVE')) {
                 res.status(400).json({ error: error.message });
                 return;
             }
-            logger_1.logger.error({ error: error.message }, 'Error processing checkout');
+            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error processing checkout');
             next(error);
         }
     }
