@@ -9,12 +9,15 @@ export class ProductService {
     this.repository = new ProductRepository(prisma);
   }
 
-  async findAll(storeId: string, filters?: {
-    category?: string;
-    search?: string;
-    minPrice?: number;
-    maxPrice?: number;
-  }): Promise<Product[]> {
+  async findAll(
+    storeId: string,
+    filters?: {
+      category?: string;
+      search?: string;
+      minPrice?: number;
+      maxPrice?: number;
+    }
+  ): Promise<Product[]> {
     return this.repository.findAll(storeId, filters);
   }
 

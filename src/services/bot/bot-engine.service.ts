@@ -51,6 +51,9 @@ export class BotEngineService {
     // Atualiza timestamp da última mensagem
     context.lastMessageAt = new Date();
 
+    // Salva o contexto atualizado
+    await this.saveContext(context);
+
     // Encontra o step atual baseado no estado
     const step = this.getCurrentStep(context.state);
 
@@ -231,7 +234,7 @@ export class BotEngineService {
     _context: ConversationContext,
     _message: string
   ): Promise<BotMessage[]> {
-    const products = await this.productService.findAll(context.storeId);
+    const products = await this.productService.findAll(_context.storeId);
 
     if (products.length === 0) {
       return [
@@ -242,7 +245,7 @@ export class BotEngineService {
       ];
     }
 
-    const buttons = products.slice(0, 5).map((product, _index) => ({
+    const buttons = products.slice(0, 5).map((product) => ({
       id: `view_product_${product.id}`,
       text: product.name.substring(0, 20),
       type: 'reply' as const,
@@ -306,7 +309,7 @@ export class BotEngineService {
       id: 'cart_add',
       name: 'Adicionar ao Carrinho',
       trigger: async (context) => context.state === 'CART_ADD',
-      execute: async (context, message) => {
+      execute: async (context, _message) => {
         // Lógica para adicionar produto ao carrinho
         context.state = 'CART_VIEW';
         await this.saveContext(context);
@@ -366,7 +369,7 @@ export class BotEngineService {
       id: 'checkout_start',
       name: 'Iniciar Checkout',
       trigger: async (context) => context.state === 'CHECKOUT_START',
-      execute: async (context, message) => {
+      execute: async (context, _message) => {
         context.state = 'CHECKOUT_ADDRESS';
         await this.saveContext(context);
 
@@ -419,7 +422,7 @@ export class BotEngineService {
       id: 'checkout_payment',
       name: 'Pagamento',
       trigger: async (context) => context.state === 'CHECKOUT_PAYMENT',
-      execute: async (context, message) => {
+      execute: async (context, _message) => {
         // Processar pagamento e criar pedido
         context.state = 'ORDER_TRACKING';
         await this.saveContext(context);
@@ -499,8 +502,8 @@ export class BotEngineService {
    * Trata comandos gerais quando não há step específico
    */
   private async handleGeneralCommand(
-    _context: ConversationContext,
-    _message: string
+    context: ConversationContext,
+    message: string
   ): Promise<BotMessage[]> {
     const lowerMessage = message.toLowerCase();
 
