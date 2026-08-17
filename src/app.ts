@@ -58,7 +58,7 @@ export function createApp(): Application {
   // Serve static files from frontend build in production
   const isProduction = process.env.NODE_ENV === 'production';
   if (isProduction) {
-    const distPath = path.join(__dirname, '..', '..', 'frontend', 'dist');
+    const distPath = path.join(__dirname, '..', 'frontend', 'dist');
     logger.info({ distPath }, 'Serving static files from');
     app.use(express.static(distPath));
 
