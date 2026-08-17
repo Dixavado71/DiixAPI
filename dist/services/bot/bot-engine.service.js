@@ -3,25 +3,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BotEngineService = void 0;
 class BotEngineService {
     prisma;
-    customerService;
     productService;
-    cartService;
-    orderService;
-    config;
-    constructor(prisma, customerService, productService, cartService, orderService, config) {
+    handlers;
+    constructor(prisma, productService) {
         this.prisma = prisma;
-        this.customerService = customerService;
         this.productService = productService;
-        this.cartService = cartService;
-        this.orderService = orderService;
-        this.config = {
-            welcomeMessage: 'Olá! Bem-vindo à nossa loja. Como posso ajudar você hoje?',
-            timeoutMinutes: 30,
-            maxRetries: 3,
-            enableSuggestions: true,
-            language: 'pt-BR',
-            ...config,
-        };
+        this.handlers = new Map();
+        this.initializeHandlers();
+    }
+    initializeHandlers() {
+        this.handlers.set('IDLE', this.handleIdle.bind(this));
+        this.handlers.set('BROWSE_CATALOG', this.handleBrowseCatalog.bind(this));
+        this.handlers.set('VIEW_PRODUCT', this.handleViewProduct.bind(this));
+        this.handlers.set('ADD_TO_CART', this.handleAddToCart.bind(this));
+        this.handlers.set('VIEW_CART', this.handleViewCart.bind(this));
+        this.handlers.set('CHECKOUT', this.handleCheckout.bind(this));
+        this.handlers.set('SUPPORT', this.handleSupport.bind(this));
+        this.handlers.set('GOODBYE', this.handleGoodbye.bind(this));
     }
     /**
      * Processa uma mensagem recebida e retorna as respostas do bot

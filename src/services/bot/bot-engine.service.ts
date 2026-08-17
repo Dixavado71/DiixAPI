@@ -1,40 +1,35 @@
 import { PrismaClient } from '@prisma/client';
-import { ConversationContext, BotState, BotMessage, FlowStep, BotConfig } from '../../types/bot.types';
+import type { ConversationState, BotMessage, BotContext } from '../../types/bot.types';
 import { ProductService } from '../product/product.service';
-import { CartService } from '../cart/index';
-import { OrderService } from '../order/order.service';
-import { CustomerService } from '../customer/customer.service';
+
+interface HandlerFunction {
+  (context: BotContext, message: string): Promise<BotMessage[]>;
+}
 
 export class BotEngineService {
   private prisma: PrismaClient;
-  private customerService: CustomerService;
   private productService: ProductService;
-  private cartService: CartService;
-  private orderService: OrderService;
-  private config: BotConfig;
+  private handlers: Map<string, HandlerFunction>;
 
   constructor(
     prisma: PrismaClient,
-    customerService: CustomerService,
-    productService: ProductService,
-    cartService: CartService,
-    orderService: OrderService,
-    config?: Partial<BotConfig>
+    productService: ProductService
   ) {
     this.prisma = prisma;
-    this.customerService = customerService;
     this.productService = productService;
-    this.cartService = cartService;
-    this.orderService = orderService;
+    this.handlers = new Map();
+    this.initializeHandlers();
+  }
 
-    this.config = {
-      welcomeMessage: 'Olá! Bem-vindo à nossa loja. Como posso ajudar você hoje?',
-      timeoutMinutes: 30,
-      maxRetries: 3,
-      enableSuggestions: true,
-      language: 'pt-BR',
-      ...config,
-    };
+  private initializeHandlers(): void {
+    this.handlers.set('IDLE', this.handleIdle.bind(this));
+    this.handlers.set('BROWSE_CATALOG', this.handleBrowseCatalog.bind(this));
+    this.handlers.set('VIEW_PRODUCT', this.handleViewProduct.bind(this));
+    this.handlers.set('ADD_TO_CART', this.handleAddToCart.bind(this));
+    this.handlers.set('VIEW_CART', this.handleViewCart.bind(this));
+    this.handlers.set('CHECKOUT', this.handleCheckout.bind(this));
+    this.handlers.set('SUPPORT', this.handleSupport.bind(this));
+    this.handlers.set('GOODBYE', this.handleGoodbye.bind(this));
   }
 
   /**

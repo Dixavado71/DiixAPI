@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import type { Role } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -113,6 +113,8 @@ export class AdminAuthService {
     const JWT_SECRET = config?.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
     const JWT_EXPIRES_IN = config?.JWT_EXPIRES_IN || process.env.JWT_EXPIRES_IN || '24h';
 
+    const signOptions: SignOptions = { expiresIn: JWT_EXPIRES_IN };
+
     const token = jwt.sign(
       {
         userId: user.id,
@@ -120,7 +122,7 @@ export class AdminAuthService {
         role: user.role,
       },
       JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN as string }
+      signOptions
     );
 
     return {
