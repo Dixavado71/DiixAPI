@@ -10,6 +10,7 @@ const helmet_1 = __importDefault(require("helmet"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const pino_http_1 = __importDefault(require("pino-http"));
 const path_1 = __importDefault(require("path"));
+const fs_1 = __importDefault(require("fs"));
 const logger_1 = require("./utils/logger");
 const routes_1 = __importDefault(require("./routes"));
 const logger = (0, logger_1.getLogger)();
@@ -46,23 +47,9 @@ function createApp() {
             ignore: (req) => req.url === '/health',
         },
     }));
-    // API routes
+    // API routes (must be first)
     app.use('/api/v1', routes_1.default);
-    // Serve static files from frontend build in production
-    const isProduction = process.env.NODE_ENV === 'production';
-    if (isProduction) {
-        const distPath = path_1.default.join(__dirname, '..', 'frontend', 'dist');
-        logger.info({ distPath }, 'Serving static files from');
-        app.use(express_1.default.static(distPath));
-        // SPA fallback - serve index.html for all non-API routes
-        app.get('*', (req, res, next) => {
-            if (req.url.startsWith('/api')) {
-                return next();
-            }
-            res.sendFile(path_1.default.join(distPath, 'index.html'));
-        });
-    }
-    // Root endpoint
+    // Root endpoint - API info
     app.get('/', (_req, res) => {
         res.json({
             service: 'ecms6',
@@ -70,14 +57,55 @@ function createApp() {
             documentation: '/api/v1/health',
         });
     });
-    // 404 handler
+    // Health check endpoint
+    app.get('/health', (_req, res) => {
+        res.json({ status: 'ok', timestamp: new Date().toISOString() });
+    });
+    // Production: Serve frontend static files and SPA fallback
+    const isProduction = process.env.NODE_ENV === 'production';
+    if (isProduction) {
+        const distPath = path_1.default.join(__dirname, '..', 'frontend', 'dist');
+        logger.info({ distPath, __dirname }, 'Checking frontend build');
+        // Verify frontend build exists
+        const indexHtmlPath = path_1.default.join(distPath, 'index.html');
+        const frontendExists = fs_1.default.existsSync(distPath) && fs_1.default.existsSync(indexHtmlPath);
+        if (frontendExists) {
+            const files = fs_1.default.readdirSync(distPath);
+            logger.info({ distPath, files }, 'Frontend build found, serving static files');
+            // Serve static assets with proper caching
+            app.use(express_1.default.static(distPath, {
+                maxAge: '1d',
+                etag: true,
+                lastModified: true,
+            }));
+            // SPA fallback: serve index.html for all non-API routes
+            app.get('*', (req, res, next) => {
+                // Skip API routes
+                if (req.path.startsWith('/api/') || req.path === '/api') {
+                    return next();
+                }
+                // Skip if file exists in dist
+                const filePath = path_1.default.join(distPath, req.path);
+                if (fs_1.default.existsSync(filePath) && fs_1.default.statSync(filePath).isFile()) {
+                    return next();
+                }
+                // Serve index.html for SPA routing
+                logger.info({ path: req.path }, 'SPA fallback serving index.html');
+                res.sendFile(indexHtmlPath);
+            });
+        }
+        else {
+            logger.warn({ distPath, indexHtmlPath, frontendExists }, 'Frontend build not found');
+        }
+    }
+    // 404 handler - must be after all routes
     app.use((_req, res) => {
         res.status(404).json({
             status: 'error',
             message: 'Route not found',
         });
     });
-    // Global error handler
+    // Global error handler - must be last
     app.use((err, _req, res, next) => {
         logger.error({ err }, 'Unhandled error');
         if (res.headersSent) {

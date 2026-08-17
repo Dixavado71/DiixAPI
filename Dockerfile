@@ -20,7 +20,7 @@ RUN npx prisma generate
 # Build frontend
 RUN cd frontend && npm run build
 
-# Build TypeScript
+# Build TypeScript backend
 RUN npm run build:backend
 
 # Stage 2: Production
@@ -32,14 +32,18 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
 
-# Install frontend production dependencies
+# Install frontend production dependencies (needed for any frontend runtime deps)
 COPY frontend/package*.json ./frontend/
-RUN cd frontend && npm ci --only=production
+RUN cd frontend && npm ci --only=production || true
 
-# Copy built files from builder
+# Copy built backend files
 COPY --from=builder /app/dist ./dist
+
+# Copy Prisma files
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/prisma ./prisma
+
+# Copy frontend build - IMPORTANT: place it at the correct relative path
 COPY --from=builder /app/frontend/dist ./frontend/dist
 
 # Create non-root user
