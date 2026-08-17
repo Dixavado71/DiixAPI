@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.OrderStateMachine = void 0;
 // Define valid state transitions
 const ORDER_STATE_TRANSITIONS = {
     PENDING: ['CONFIRMED', 'CANCELLED'],
@@ -13,7 +10,7 @@ const ORDER_STATE_TRANSITIONS = {
     DELIVERED: [], // Terminal state
     CANCELLED: [], // Terminal state
 };
-class OrderStateMachine {
+export class OrderStateMachine {
     /**
      * Check if a transition from current status to new status is valid
      */
@@ -58,5 +55,4 @@ class OrderStateMachine {
         return status === 'DELIVERED' || status === 'CANCELLED';
     }
 }
-exports.OrderStateMachine = OrderStateMachine;
 //# sourceMappingURL=order-state-machine.js.map

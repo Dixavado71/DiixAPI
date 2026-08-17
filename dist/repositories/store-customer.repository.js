@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.StoreCustomerRepository = void 0;
-const client_1 = require("@prisma/client");
-class StoreCustomerRepository {
+import { StoreCustomerStatus } from '@prisma/client';
+export class StoreCustomerRepository {
     prisma;
     constructor(prisma) {
         this.prisma = prisma;
@@ -59,22 +56,22 @@ class StoreCustomerRepository {
             },
             data: {
                 status,
-                approvedAt: status === client_1.StoreCustomerStatus.APPROVED ? now : null,
-                blockedAt: status === client_1.StoreCustomerStatus.BLOCKED ? now : null,
+                approvedAt: status === StoreCustomerStatus.APPROVED ? now : null,
+                blockedAt: status === StoreCustomerStatus.BLOCKED ? now : null,
             },
         });
     }
     async approve(storeId, customerId) {
-        return this.updateStatus(storeId, customerId, client_1.StoreCustomerStatus.APPROVED);
+        return this.updateStatus(storeId, customerId, StoreCustomerStatus.APPROVED);
     }
     async block(storeId, customerId) {
-        return this.updateStatus(storeId, customerId, client_1.StoreCustomerStatus.BLOCKED);
+        return this.updateStatus(storeId, customerId, StoreCustomerStatus.BLOCKED);
     }
     async deactivate(storeId, customerId) {
-        return this.updateStatus(storeId, customerId, client_1.StoreCustomerStatus.INACTIVE);
+        return this.updateStatus(storeId, customerId, StoreCustomerStatus.INACTIVE);
     }
     async reactivate(storeId, customerId) {
-        return this.updateStatus(storeId, customerId, client_1.StoreCustomerStatus.PENDING);
+        return this.updateStatus(storeId, customerId, StoreCustomerStatus.PENDING);
     }
     async deleteByStoreAndCustomer(storeId, customerId) {
         await this.prisma.storeCustomer.delete({
@@ -96,5 +93,4 @@ class StoreCustomerRepository {
         return !!storeCustomer;
     }
 }
-exports.StoreCustomerRepository = StoreCustomerRepository;
 //# sourceMappingURL=store-customer.repository.js.map

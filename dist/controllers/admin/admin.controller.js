@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.adminController = exports.AdminController = void 0;
-const admin_auth_service_js_1 = require("../../services/admin/admin-auth.service.js");
-const audit_service_js_1 = require("../../services/audit/audit.service.js");
-class AdminController {
+import { adminAuthService } from '../../services/admin/admin-auth.service.js';
+import { auditService } from '../../services/audit/audit.service.js';
+export class AdminController {
     async register(req, res) {
         try {
             const { email, password, name, role } = req.body;
@@ -12,13 +9,13 @@ class AdminController {
                     error: 'Email, password and name are required',
                 });
             }
-            const user = await admin_auth_service_js_1.adminAuthService.createUser({
+            const user = await adminAuthService.createUser({
                 email,
                 password,
                 name,
                 role: role,
             });
-            await audit_service_js_1.auditService.logUserCreation('system', user.id, req.ip || undefined);
+            await auditService.logUserCreation('system', user.id, req.ip || undefined);
             return res.status(201).json({
                 message: 'User created successfully',
                 user,
@@ -39,8 +36,8 @@ class AdminController {
                     error: 'Email and password are required',
                 });
             }
-            const result = await admin_auth_service_js_1.adminAuthService.login({ email, password });
-            await audit_service_js_1.auditService.logLogin(result.user.id, req.ip || undefined, true);
+            const result = await adminAuthService.login({ email, password });
+            await auditService.logLogin(result.user.id, req.ip || undefined, true);
             return res.json({
                 message: 'Login successful',
                 ...result,
@@ -60,7 +57,7 @@ class AdminController {
                     error: 'Authentication required',
                 });
             }
-            const user = await admin_auth_service_js_1.adminAuthService.getUserById(req.user.userId);
+            const user = await adminAuthService.getUserById(req.user.userId);
             return res.json({
                 user,
             });
@@ -80,11 +77,11 @@ class AdminController {
                 });
             }
             const { name, email } = req.body;
-            const user = await admin_auth_service_js_1.adminAuthService.updateUser(req.user.userId, {
+            const user = await adminAuthService.updateUser(req.user.userId, {
                 name,
                 email,
             });
-            await audit_service_js_1.auditService.logUserUpdate(req.user.userId, req.user.userId, { name, email }, req.ip || undefined);
+            await auditService.logUserUpdate(req.user.userId, req.user.userId, { name, email }, req.ip || undefined);
             return res.json({
                 message: 'Profile updated successfully',
                 user,
@@ -110,8 +107,8 @@ class AdminController {
                     error: 'Current password and new password are required',
                 });
             }
-            await admin_auth_service_js_1.adminAuthService.changePassword(req.user.userId, currentPassword, newPassword);
-            await audit_service_js_1.auditService.logPasswordChange(req.user.userId, req.ip || undefined);
+            await adminAuthService.changePassword(req.user.userId, currentPassword, newPassword);
+            await auditService.logPasswordChange(req.user.userId, req.ip || undefined);
             return res.json({
                 message: 'Password changed successfully',
             });
@@ -130,7 +127,7 @@ class AdminController {
                     error: 'Authentication required',
                 });
             }
-            await audit_service_js_1.auditService.logLogout(req.user.userId, req.ip || undefined);
+            await auditService.logLogout(req.user.userId, req.ip || undefined);
             return res.json({
                 message: 'Logout successful',
             });
@@ -143,6 +140,5 @@ class AdminController {
         }
     }
 }
-exports.AdminController = AdminController;
-exports.adminController = new AdminController();
+export const adminController = new AdminController();
 //# sourceMappingURL=admin.controller.js.map

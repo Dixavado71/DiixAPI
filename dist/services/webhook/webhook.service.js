@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.webhookService = exports.WebhookService = void 0;
-const database_1 = require("../../config/database");
-const logger_1 = require("../../utils/logger");
-const evolution_client_1 = require("../../integrations/evolution/evolution.client");
-const logger = (0, logger_1.getLogger)().child({ module: 'webhook-service' });
-class WebhookService {
+import { prisma } from '../../config/database';
+import { getLogger } from '../../utils/logger';
+import { getEvolutionClient, } from '../../integrations/evolution/evolution.client';
+const logger = getLogger().child({ module: 'webhook-service' });
+export class WebhookService {
     /**
      * Process incoming webhook from Evolution API
      */
@@ -18,7 +15,7 @@ class WebhookService {
                 instance: payload.instance,
             }, 'Processing webhook');
             // Check for idempotency - prevent duplicate processing
-            const existingEvent = await database_1.prisma.webhookEvent.findUnique({
+            const existingEvent = await prisma.webhookEvent.findUnique({
                 where: { eventId: payload.data['id'] || eventId },
             });
             if (existingEvent) {
@@ -26,7 +23,7 @@ class WebhookService {
                 return { success: true, eventId: existingEvent.id };
             }
             // Log webhook event
-            await database_1.prisma.webhookEvent.create({
+            await prisma.webhookEvent.create({
                 data: {
                     eventId: payload.data['id'] || eventId,
                     instance: payload.instance,
@@ -50,7 +47,7 @@ class WebhookService {
                     logger.debug({ event: payload.event }, 'Unhandled webhook event type');
             }
             // Mark event as processed
-            await database_1.prisma.webhookEvent.updateMany({
+            await prisma.webhookEvent.updateMany({
                 where: { eventId: payload.data['id'] || eventId },
                 data: {
                     processed: true,
@@ -63,7 +60,7 @@ class WebhookService {
         catch (error) {
             logger.error({ error, eventId }, 'Error processing webhook');
             // Update webhook event with error
-            await database_1.prisma.webhookEvent.updateMany({
+            await prisma.webhookEvent.updateMany({
                 where: { eventId: payload.data['id'] || eventId },
                 data: {
                     processed: true,
@@ -93,7 +90,7 @@ class WebhookService {
         // TODO: Import and call BotEngineService when implemented
         logger.info({ customerId: customer.id, state: conversationState.state }, 'Message ready for bot processing');
         // For now, just update last active timestamp
-        await database_1.prisma.conversationState.update({
+        await prisma.conversationState.update({
             where: { id: conversationState.id },
             data: {
                 lastActive: new Date(),
@@ -123,11 +120,11 @@ class WebhookService {
      * Get existing customer or create new one
      */
     async getOrCreateCustomer(phone, name) {
-        let customer = await database_1.prisma.customer.findUnique({
+        let customer = await prisma.customer.findUnique({
             where: { phone },
         });
         if (!customer) {
-            customer = await database_1.prisma.customer.create({
+            customer = await prisma.customer.create({
                 data: {
                     phone,
                     name: name || null,
@@ -141,7 +138,7 @@ class WebhookService {
      * Get or create conversation state
      */
     async getOrCreateConversationState(instance, phone, customerId) {
-        let state = await database_1.prisma.conversationState.findUnique({
+        let state = await prisma.conversationState.findUnique({
             where: {
                 instance_phone: {
                     instance,
@@ -150,7 +147,7 @@ class WebhookService {
             },
         });
         if (!state) {
-            state = await database_1.prisma.conversationState.create({
+            state = await prisma.conversationState.create({
                 data: {
                     instance,
                     phone,
@@ -191,7 +188,7 @@ class WebhookService {
      */
     async sendMessage(instanceName, phone, message) {
         try {
-            const client = (0, evolution_client_1.getEvolutionClient)();
+            const client = getEvolutionClient();
             const normalizedPhone = this.normalizePhoneForSend(phone);
             const result = await client.sendText(instanceName, normalizedPhone, message);
             logger.info({ instanceName, phone: normalizedPhone, messageId: result.messageId }, 'Message sent successfully');
@@ -214,6 +211,5 @@ class WebhookService {
         return cleaned;
     }
 }
-exports.WebhookService = WebhookService;
-exports.webhookService = new WebhookService();
+export const webhookService = new WebhookService();
 //# sourceMappingURL=webhook.service.js.map

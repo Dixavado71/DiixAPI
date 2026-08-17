@@ -1,28 +1,23 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const health_routes_1 = __importDefault(require("./health.routes"));
-const webhook_routes_1 = __importDefault(require("./webhook.routes"));
-const order_routes_1 = require("./order.routes");
-const promotion_routes_1 = require("./promotion.routes");
-const cart_routes_1 = require("./cart.routes");
-const bot_routes_1 = __importDefault(require("./bot.routes"));
-const admin_routes_1 = require("./admin.routes");
-const router = (0, express_1.Router)();
+import { Router } from 'express';
+import healthRoutes from './health.routes';
+import webhookRoutes from './webhook.routes';
+import { createOrderRoutes } from './order.routes';
+import { PromotionRoutes } from './promotion.routes';
+import { CartRoutes } from './cart.routes';
+import botRoutes from './bot.routes';
+import { adminRoutes } from './admin.routes';
+const router = Router();
 // Health check
-router.use('/health', health_routes_1.default);
+router.use('/health', healthRoutes);
 // Webhooks
-router.use('/webhooks', webhook_routes_1.default);
+router.use('/webhooks', webhookRoutes);
 // Store-specific routes
-router.use('/orders', (0, order_routes_1.createOrderRoutes)());
-router.use('/stores/:storeId/promotions', new promotion_routes_1.PromotionRoutes().getRouter());
-router.use('/stores/:storeId/customers/:customerId/cart', new cart_routes_1.CartRoutes().getRouter());
+router.use('/orders', createOrderRoutes());
+router.use('/stores/:storeId/promotions', new PromotionRoutes().getRouter());
+router.use('/stores/:storeId/customers/:customerId/cart', new CartRoutes().getRouter());
 // Bot routes
-router.use('/api/bot', bot_routes_1.default);
+router.use('/api/bot', botRoutes);
 // Admin routes (Auth + RBAC + Audit)
-router.use('/admin', admin_routes_1.adminRoutes);
-exports.default = router;
+router.use('/admin', adminRoutes);
+export default router;
 //# sourceMappingURL=index.js.map

@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.createOrderRoutes = createOrderRoutes;
-const express_1 = require("express");
-const order_controller_1 = require("../controllers/order.controller");
-function createOrderRoutes() {
-    const router = (0, express_1.Router)();
-    const controller = new order_controller_1.OrderController();
+import { Router } from 'express';
+import { OrderController } from '../controllers/order.controller';
+export function createOrderRoutes() {
+    const router = Router();
+    const controller = new OrderController();
     /**
      * @route   POST /api/v1/stores/:storeId/orders
      * @desc    Create a new order from customer's cart

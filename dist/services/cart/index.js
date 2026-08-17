@@ -1,19 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CartService = void 0;
-const cart_repository_1 = require("../../repositories/cart.repository");
-const product_repository_1 = require("../../repositories/product.repository");
-const promotion_1 = require("../promotion");
-const database_1 = require("../../config/database");
-const logger_1 = require("../../utils/logger");
-class CartService {
+import { CartRepository } from '../../repositories/cart.repository';
+import { ProductRepository } from '../../repositories/product.repository';
+import { PromotionService } from '../promotion';
+import { prisma } from '../../config/database';
+import { logger } from '../../utils/logger';
+export class CartService {
     cartRepository;
     productRepository;
     promotionService;
     constructor() {
-        this.cartRepository = new cart_repository_1.CartRepository(database_1.prisma);
-        this.productRepository = new product_repository_1.ProductRepository(database_1.prisma);
-        this.promotionService = new promotion_1.PromotionService();
+        this.cartRepository = new CartRepository(prisma);
+        this.productRepository = new ProductRepository(prisma);
+        this.promotionService = new PromotionService();
     }
     /**
      * Get or create active cart for customer
@@ -32,7 +29,7 @@ class CartService {
             productId,
             quantity,
         };
-        logger_1.logger.info(logContext, 'Adding item to cart');
+        logger.info(logContext, 'Adding item to cart');
         // Verify product exists and belongs to store
         const product = await this.productRepository.findById(productId);
         if (!product) {
@@ -47,7 +44,7 @@ class CartService {
         await this.cartRepository.addItem(cart.id, productId, quantity);
         // Return updated cart
         const updatedCart = await this.cartRepository.findById(cart.id);
-        logger_1.logger.info({ cartId: cart.id }, 'Item added to cart');
+        logger.info({ cartId: cart.id }, 'Item added to cart');
         return updatedCart;
     }
     /**
@@ -60,7 +57,7 @@ class CartService {
             itemId,
             quantity,
         };
-        logger_1.logger.info(logContext, 'Updating cart item');
+        logger.info(logContext, 'Updating cart item');
         // Verify cart belongs to customer and store
         const cart = await this.cartRepository.findActiveCart(storeId, customerId);
         if (!cart) {
@@ -70,7 +67,7 @@ class CartService {
         await this.cartRepository.updateItem(itemId, quantity);
         // Return updated cart
         const updatedCart = await this.cartRepository.findById(cart.id);
-        logger_1.logger.info({ cartId: cart.id, itemId }, 'Cart item updated');
+        logger.info({ cartId: cart.id, itemId }, 'Cart item updated');
         return updatedCart;
     }
     /**
@@ -82,7 +79,7 @@ class CartService {
             customerId,
             itemId,
         };
-        logger_1.logger.info(logContext, 'Removing item from cart');
+        logger.info(logContext, 'Removing item from cart');
         // Verify cart belongs to customer and store
         const cart = await this.cartRepository.findActiveCart(storeId, customerId);
         if (!cart) {
@@ -92,7 +89,7 @@ class CartService {
         await this.cartRepository.removeItem(itemId);
         // Return updated cart
         const updatedCart = await this.cartRepository.findById(cart.id);
-        logger_1.logger.info({ cartId: cart.id, itemId }, 'Item removed from cart');
+        logger.info({ cartId: cart.id, itemId }, 'Item removed from cart');
         return updatedCart;
     }
     /**
@@ -103,7 +100,7 @@ class CartService {
             storeId,
             customerId,
         };
-        logger_1.logger.info(logContext, 'Clearing cart');
+        logger.info(logContext, 'Clearing cart');
         // Verify cart exists
         const cart = await this.cartRepository.findActiveCart(storeId, customerId);
         if (!cart) {
@@ -111,7 +108,7 @@ class CartService {
         }
         // Clear cart
         await this.cartRepository.clearCart(cart.id);
-        logger_1.logger.info({ cartId: cart.id }, 'Cart cleared');
+        logger.info({ cartId: cart.id }, 'Cart cleared');
     }
     /**
      * Get cart totals with promotions applied
@@ -130,7 +127,7 @@ class CartService {
         }));
         // Use promotion service to calculate totals
         const totals = await this.promotionService.applyPromotionsToCart(cart.storeId, items);
-        logger_1.logger.info({ cartId, ...totals }, 'Cart totals calculated');
+        logger.info({ cartId, ...totals }, 'Cart totals calculated');
         return totals;
     }
     /**
@@ -144,13 +141,13 @@ class CartService {
         if (cart.status !== 'ACTIVE') {
             throw new Error('CART_NOT_ACTIVE');
         }
-        logger_1.logger.info({ cartId }, 'Processing cart checkout');
+        logger.info({ cartId }, 'Processing cart checkout');
         // Get cart totals
         const totals = await this.getCartTotals(cartId);
         // Here you would integrate with OrderService to create the order
         // For now, we'll just mark the cart as converted
         await this.cartRepository.updateStatus(cartId, 'CONVERTED');
-        logger_1.logger.info({ cartId, orderId: null }, 'Cart converted to order');
+        logger.info({ cartId, orderId: null }, 'Cart converted to order');
         return {
             cartId,
             storeId: cart.storeId,
@@ -162,5 +159,4 @@ class CartService {
         };
     }
 }
-exports.CartService = CartService;
 //# sourceMappingURL=index.js.map

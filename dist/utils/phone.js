@@ -1,17 +1,11 @@
-"use strict";
 /**
  * Phone normalization utility
  * Normalizes phone numbers to a consistent format for comparison and storage
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.stripNonNumeric = stripNonNumeric;
-exports.normalizePhone = normalizePhone;
-exports.isValidPhone = isValidPhone;
-exports.phonesAreEqual = phonesAreEqual;
 /**
  * Removes all non-numeric characters from a phone number
  */
-function stripNonNumeric(phone) {
+export function stripNonNumeric(phone) {
     return phone.replace(/\D/g, '');
 }
 /**
@@ -24,7 +18,7 @@ function stripNonNumeric(phone) {
  * - "+55 61 99999-9999" -> "5561999999999"
  * - "1234567890" -> "1234567890" (assumes already normalized)
  */
-function normalizePhone(phone) {
+export function normalizePhone(phone) {
     if (!phone || typeof phone !== 'string') {
         throw new Error('Phone must be a non-empty string');
     }
@@ -54,7 +48,7 @@ function normalizePhone(phone) {
  * Validates if a phone number has a valid format
  * Does not verify if the number actually exists
  */
-function isValidPhone(phone) {
+export function isValidPhone(phone) {
     try {
         const normalized = normalizePhone(phone);
         // Minimum reasonable length for international number
@@ -67,7 +61,7 @@ function isValidPhone(phone) {
 /**
  * Compares two phone numbers for equality after normalization
  */
-function phonesAreEqual(phone1, phone2) {
+export function phonesAreEqual(phone1, phone2) {
     try {
         return normalizePhone(phone1) === normalizePhone(phone2);
     }

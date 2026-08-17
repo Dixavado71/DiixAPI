@@ -1,16 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.StoreResolverService = void 0;
-const repositories_1 = require("../../repositories");
-const logger_1 = require("../../utils/logger");
-const logger = (0, logger_1.getLogger)().child({ module: 'store-resolver' });
+import { getStoreRepository } from '../../repositories';
+import { getLogger } from '../../utils/logger';
+const logger = getLogger().child({ module: 'store-resolver' });
 /**
  * StoreResolverService
  *
  * Resolves a store from various identifiers, primarily from Evolution API instance names.
  */
-class StoreResolverService {
-    storeRepository = (0, repositories_1.getStoreRepository)();
+export class StoreResolverService {
+    storeRepository = getStoreRepository();
     /**
      * Resolve store from Evolution API instance name
      */
@@ -41,5 +38,4 @@ class StoreResolverService {
         return this.storeRepository.findBySlug(slug);
     }
 }
-exports.StoreResolverService = StoreResolverService;
 //# sourceMappingURL=store-resolver.service.js.map

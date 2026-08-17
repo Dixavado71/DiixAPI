@@ -1,27 +1,17 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.prisma = void 0;
-exports.getPrismaClient = getPrismaClient;
-exports.connectDatabase = connectDatabase;
-exports.disconnectDatabase = disconnectDatabase;
-exports.checkDatabaseHealth = checkDatabaseHealth;
-const client_1 = require("@prisma/client");
-const pino_1 = __importDefault(require("pino"));
-const logger = (0, pino_1.default)({ name: 'database' });
+import { PrismaClient } from '@prisma/client';
+import pino from 'pino';
+const logger = pino({ name: 'database' });
 let prismaInstance = null;
-exports.prisma = new client_1.PrismaClient({
+export const prisma = new PrismaClient({
     log: [
         { level: 'error', emit: 'stdout' },
         { level: 'info', emit: 'stdout' },
         { level: 'warn', emit: 'stdout' },
     ],
 });
-function getPrismaClient() {
+export function getPrismaClient() {
     if (!prismaInstance) {
-        prismaInstance = new client_1.PrismaClient({
+        prismaInstance = new PrismaClient({
             log: [
                 { level: 'error', emit: 'stdout' },
                 { level: 'info', emit: 'stdout' },
@@ -31,7 +21,7 @@ function getPrismaClient() {
     }
     return prismaInstance;
 }
-async function connectDatabase() {
+export async function connectDatabase() {
     const prisma = getPrismaClient();
     try {
         await prisma.$connect();
@@ -43,14 +33,14 @@ async function connectDatabase() {
         process.exitCode = 1;
     }
 }
-async function disconnectDatabase() {
+export async function disconnectDatabase() {
     if (prismaInstance) {
         await prismaInstance.$disconnect();
         logger.info('Database disconnected');
         prismaInstance = null;
     }
 }
-async function checkDatabaseHealth() {
+export async function checkDatabaseHealth() {
     const prisma = getPrismaClient();
     try {
         await prisma.$queryRaw `SELECT 1`;

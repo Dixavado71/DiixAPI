@@ -1,20 +1,17 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CustomerAuthorizationService = void 0;
-const client_1 = require("@prisma/client");
-const repositories_1 = require("../../repositories");
-const phone_1 = require("../../utils/phone");
+import { StoreCustomerStatus, StoreStatus, CustomerStatus, } from '@prisma/client';
+import { getStoreRepository, getCustomerRepository, getStoreCustomerRepository, getStoreSettingsRepository, } from '../../repositories';
+import { normalizePhone } from '../../utils/phone';
 /**
  * CustomerAuthorizationService
  *
  * Central service for determining if a customer is allowed to interact with a store.
  * This is critical for multi-tenant security and access control.
  */
-class CustomerAuthorizationService {
-    storeRepository = (0, repositories_1.getStoreRepository)();
-    customerRepository = (0, repositories_1.getCustomerRepository)();
-    storeCustomerRepository = (0, repositories_1.getStoreCustomerRepository)();
-    settingsRepository = (0, repositories_1.getStoreSettingsRepository)();
+export class CustomerAuthorizationService {
+    storeRepository = getStoreRepository();
+    customerRepository = getCustomerRepository();
+    storeCustomerRepository = getStoreCustomerRepository();
+    settingsRepository = getStoreSettingsRepository();
     /**
      * Check if a customer is allowed to interact with a store
      *
@@ -34,7 +31,7 @@ class CustomerAuthorizationService {
             };
         }
         // Check store status
-        if (store.status !== client_1.StoreStatus.ACTIVE) {
+        if (store.status !== StoreStatus.ACTIVE) {
             return {
                 allowed: false,
                 reason: 'STORE_INACTIVE',
@@ -54,7 +51,7 @@ class CustomerAuthorizationService {
             };
         }
         // Check global customer status
-        if (customer.status === client_1.CustomerStatus.BLOCKED) {
+        if (customer.status === CustomerStatus.BLOCKED) {
             return {
                 allowed: false,
                 reason: 'CUSTOMER_BLOCKED',
@@ -63,7 +60,7 @@ class CustomerAuthorizationService {
                 customer,
             };
         }
-        if (customer.status === client_1.CustomerStatus.INACTIVE) {
+        if (customer.status === CustomerStatus.INACTIVE) {
             return {
                 allowed: false,
                 reason: 'CUSTOMER_INACTIVE',
@@ -85,7 +82,7 @@ class CustomerAuthorizationService {
                 };
             }
             // Check store-level customer status
-            if (storeCustomer.status === client_1.StoreCustomerStatus.BLOCKED) {
+            if (storeCustomer.status === StoreCustomerStatus.BLOCKED) {
                 return {
                     allowed: false,
                     reason: 'CUSTOMER_BLOCKED_IN_STORE',
@@ -95,7 +92,7 @@ class CustomerAuthorizationService {
                     storeCustomer,
                 };
             }
-            if (storeCustomer.status === client_1.StoreCustomerStatus.INACTIVE) {
+            if (storeCustomer.status === StoreCustomerStatus.INACTIVE) {
                 return {
                     allowed: false,
                     reason: 'CUSTOMER_INACTIVE_IN_STORE',
@@ -107,7 +104,7 @@ class CustomerAuthorizationService {
             }
             // Check if approval is required
             if (settings.customerApprovalRequired) {
-                if (storeCustomer.status !== client_1.StoreCustomerStatus.APPROVED) {
+                if (storeCustomer.status !== StoreCustomerStatus.APPROVED) {
                     return {
                         allowed: false,
                         reason: 'CUSTOMER_PENDING_APPROVAL',
@@ -133,7 +130,7 @@ class CustomerAuthorizationService {
      * Useful for WhatsApp webhook processing
      */
     async isCustomerAllowedByPhone(storeId, phone) {
-        const normalizedPhone = (0, phone_1.normalizePhone)(phone);
+        const normalizedPhone = normalizePhone(phone);
         const customer = await this.customerRepository.findByPhone(normalizedPhone);
         if (!customer) {
             // Customer doesn't exist - check if registration is required
@@ -185,5 +182,4 @@ class CustomerAuthorizationService {
         return storeSettings;
     }
 }
-exports.CustomerAuthorizationService = CustomerAuthorizationService;
 //# sourceMappingURL=customer-authorization.service.js.map
