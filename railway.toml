@@ -4,7 +4,15 @@ builder = "dockerfile"
 [deploy]
 startCommand = "node dist/server.js"
 healthcheckPath = "/api/v1/health"
-healthcheckTimeout = 30
+healthcheckTimeout = 60
 
 [env]
 NODE_ENV = "production"
+PORT = "3000"
+CORS_ORIGIN = "*"
+LOG_LEVEL = "info"
+RATE_LIMIT_WINDOW_MS = "60000"
+RATE_LIMIT_MAX = "100"
+EVOLUTION_API_URL = "https://evolution-api-production-8490.up.railway.app"
+EVOLUTION_API_KEY = "NOVO_SEGREDO_DA_EVOLUTION"
+EVOLUTION_WEBHOOK_SECRET = "OUTRO_SEGREDO"

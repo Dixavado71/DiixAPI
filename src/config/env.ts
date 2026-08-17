@@ -6,11 +6,12 @@ const envSchema = z.object({
     .string()
     .transform((val) => Number(val))
     .pipe(z.number().min(1).max(65535)),
-  DATABASE_URL: z.string().url().startsWith('postgresql://'),
+  DATABASE_URL: z.string().url(),
+  REDIS_URL: z.string().url().optional().or(z.literal('')),
   EVOLUTION_API_URL: z.string().url(),
   EVOLUTION_API_KEY: z.string().min(1),
   EVOLUTION_WEBHOOK_SECRET: z.string().min(1),
-  JWT_SECRET: z.string().min(32),
+  JWT_SECRET: z.string().min(1),
   JWT_EXPIRES_IN: z.string().default('7d'),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
   CORS_ORIGIN: z.string(),

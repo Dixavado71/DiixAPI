@@ -8,11 +8,12 @@ const envSchema = zod_1.z.object({
         .string()
         .transform((val) => Number(val))
         .pipe(zod_1.z.number().min(1).max(65535)),
-    DATABASE_URL: zod_1.z.string().url().startsWith('postgresql://'),
+    DATABASE_URL: zod_1.z.string().url(),
+    REDIS_URL: zod_1.z.string().url().optional().or(zod_1.z.literal('')),
     EVOLUTION_API_URL: zod_1.z.string().url(),
     EVOLUTION_API_KEY: zod_1.z.string().min(1),
     EVOLUTION_WEBHOOK_SECRET: zod_1.z.string().min(1),
-    JWT_SECRET: zod_1.z.string().min(32),
+    JWT_SECRET: zod_1.z.string().min(1),
     JWT_EXPIRES_IN: zod_1.z.string().default('7d'),
     LOG_LEVEL: zod_1.z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
     CORS_ORIGIN: zod_1.z.string(),
