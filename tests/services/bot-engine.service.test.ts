@@ -12,6 +12,7 @@ const mockPrisma = {
     findFirst: vi.fn(),
     create: vi.fn(),
     updateMany: vi.fn(),
+    update: vi.fn(),
   },
 } as unknown as PrismaClient;
 
@@ -45,6 +46,7 @@ describe('BotEngineService', () => {
         state: 'IDLE',
         customerId: 'cust1',
         storeId: 'store1',
+        context: {},
       });
 
       const responses = await botService.processMessage('cust1', 'store1', 'oi');
@@ -61,6 +63,7 @@ describe('BotEngineService', () => {
         customerId: 'cust1',
         storeId: 'store1',
         lastActive: new Date(),
+        context: {},
       });
 
       const responses = await botService.processMessage('cust1', 'store1', 'quero ver catálogo');
@@ -78,6 +81,7 @@ describe('BotEngineService', () => {
         customerId: 'cust1',
         storeId: 'store1',
         lastMessageAt: new Date(),
+        context: {},
       });
 
       const responses = await botService.processMessage('cust1', 'store1', 'preciso de ajuda');
@@ -134,6 +138,7 @@ describe('BotEngineService', () => {
         customerId: 'cust1',
         storeId: 'store1',
         lastMessageAt: new Date(),
+        context: {},
       });
 
       mockProductService.findAll.mockResolvedValueOnce([
@@ -151,6 +156,7 @@ describe('BotEngineService', () => {
         storeId: 'store1',
         currentProductId: 'prod1',
         lastMessageAt: new Date(),
+        context: {},
       });
 
       mockProductService.findById.mockResolvedValue({
@@ -174,6 +180,7 @@ describe('BotEngineService', () => {
         state: 'IDLE',
         customerId: 'cust1',
         storeId: 'store1',
+        context: {},
       });
 
       const responses = await botService.processMessage('cust1', 'store1', 'olá');
@@ -189,6 +196,7 @@ describe('BotEngineService', () => {
         customerId: 'cust1',
         storeId: 'store1',
         lastActive: new Date(),
+        context: {},
       });
 
       mockProductService.findAll.mockResolvedValue([
@@ -220,6 +228,7 @@ describe('BotEngineService', () => {
         customerId: 'cust1',
         storeId: 'store1',
         lastActive: new Date(),
+        context: {},
       });
 
       mockProductService.findAll.mockResolvedValue([]);
@@ -236,6 +245,7 @@ describe('BotEngineService', () => {
         customerId: 'cust1',
         storeId: 'store1',
         lastActive: new Date(),
+        context: {},
       });
 
       await botService.processMessage('cust1', 'store1', 'suporte');
@@ -250,6 +260,7 @@ describe('BotEngineService', () => {
         customerId: 'cust1',
         storeId: 'store1',
         lastActive: new Date(),
+        context: {},
       });
 
       // For "meu pedido", the service should handle it as an unknown command and stay in IDLE
@@ -270,6 +281,7 @@ describe('BotEngineService', () => {
         customerId: 'cust1',
         storeId: 'store1',
         createdAt: new Date(),
+        context: {},
       });
 
       await botService.processMessage('cust1', 'store1', 'oi');
@@ -293,6 +305,7 @@ describe('BotEngineService', () => {
         customerId: 'cust1',
         storeId: 'store1',
         lastMessageAt: new Date(),
+        context: {},
       };
 
       mockPrisma.conversationState.findFirst.mockResolvedValue(existingConversation);

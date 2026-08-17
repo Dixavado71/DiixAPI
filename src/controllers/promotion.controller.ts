@@ -42,8 +42,8 @@ export class PromotionController {
 
       loggerInstance.info({ promotionId: promotion.id }, 'Promotion created');
       res.status(201).json(promotion);
-    } catch (error: any) {
-      loggerInstance.error({ error: error.message }, 'Error creating promotion');
+    } catch (error: unknown) {
+      loggerInstance.error({ error: (error as Error).message }, 'Error creating promotion');
       next(error);
     }
   }
@@ -65,9 +65,9 @@ export class PromotionController {
       }
 
       res.json(promotion);
-    } catch (error: any) {
+    } catch (error: unknown) {
       if ((error as Error).message === 'PROMOTION_NOT_FOUND') {
-        res.status(404).json({ error: error.message });
+        res.status(404).json({ error: (error as Error).message });
         return;
       }
       next(error);
@@ -90,8 +90,8 @@ export class PromotionController {
       });
 
       res.json(promotions);
-    } catch (error: any) {
-      loggerInstance.error({ error: error.message }, 'Error fetching promotions');
+    } catch (error: unknown) {
+      loggerInstance.error({ error: (error as Error).message }, 'Error fetching promotions');
       next(error);
     }
   }
@@ -107,8 +107,8 @@ export class PromotionController {
       const promotions = await this.promotionService.getActivePromotions(storeId);
 
       res.json(promotions);
-    } catch (error: any) {
-      loggerInstance.error({ error: error.message }, 'Error fetching active promotions');
+    } catch (error: unknown) {
+      loggerInstance.error({ error: (error as Error).message }, 'Error fetching active promotions');
       next(error);
     }
   }
@@ -139,12 +139,12 @@ export class PromotionController {
 
       loggerInstance.info({ promotionId: id }, 'Promotion updated');
       res.json(promotion);
-    } catch (error: any) {
+    } catch (error: unknown) {
       if ((error as Error).message === 'PROMOTION_NOT_FOUND') {
-        res.status(404).json({ error: error.message });
+        res.status(404).json({ error: (error as Error).message });
         return;
       }
-      loggerInstance.error({ error: error.message }, 'Error updating promotion');
+      loggerInstance.error({ error: (error as Error).message }, 'Error updating promotion');
       next(error);
     }
   }
@@ -169,12 +169,12 @@ export class PromotionController {
 
       loggerInstance.info({ promotionId: id }, 'Promotion deleted');
       res.status(204).send();
-    } catch (error: any) {
+    } catch (error: unknown) {
       if ((error as Error).message === 'PROMOTION_NOT_FOUND') {
-        res.status(404).json({ error: error.message });
+        res.status(404).json({ error: (error as Error).message });
         return;
       }
-      loggerInstance.error({ error: error.message }, 'Error deleting promotion');
+      loggerInstance.error({ error: (error as Error).message }, 'Error deleting promotion');
       next(error);
     }
   }
@@ -198,12 +198,12 @@ export class PromotionController {
 
       loggerInstance.info({ promotionId: id, ruleId: rule.id }, 'Rule added to promotion');
       res.status(201).json(rule);
-    } catch (error: any) {
+    } catch (error: unknown) {
       if ((error as Error).message === 'PROMOTION_NOT_FOUND') {
-        res.status(404).json({ error: error.message });
+        res.status(404).json({ error: (error as Error).message });
         return;
       }
-      loggerInstance.error({ error: error.message }, 'Error adding rule to promotion');
+      loggerInstance.error({ error: (error as Error).message }, 'Error adding rule to promotion');
       next(error);
     }
   }
@@ -220,8 +220,8 @@ export class PromotionController {
 
       loggerInstance.info({ ruleId }, 'Rule removed from promotion');
       res.status(204).send();
-    } catch (error: any) {
-      loggerInstance.error({ error: error.message }, 'Error removing rule from promotion');
+    } catch (error: unknown) {
+      loggerInstance.error({ error: (error as Error).message }, 'Error removing rule from promotion');
       next(error);
     }
   }
@@ -247,15 +247,15 @@ export class PromotionController {
         'Product added to promotion'
       );
       res.status(201).json(promotionProduct);
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (
         (error as Error).message === 'PROMOTION_NOT_FOUND' ||
-        error.message === 'PRODUCT_NOT_FOUND'
+        (error as Error).message === 'PRODUCT_NOT_FOUND'
       ) {
-        res.status(404).json({ error: error.message });
+        res.status(404).json({ error: (error as Error).message });
         return;
       }
-      loggerInstance.error({ error: error.message }, 'Error adding product to promotion');
+      loggerInstance.error({ error: (error as Error).message }, 'Error adding product to promotion');
       next(error);
     }
   }
@@ -272,8 +272,8 @@ export class PromotionController {
 
       loggerInstance.info({ promotionId: id, productId }, 'Product removed from promotion');
       res.status(204).send();
-    } catch (error: any) {
-      loggerInstance.error({ error: error.message }, 'Error removing product from promotion');
+    } catch (error: unknown) {
+      loggerInstance.error({ error: (error as Error).message }, 'Error removing product from promotion');
       next(error);
     }
   }

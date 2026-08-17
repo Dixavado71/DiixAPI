@@ -10,7 +10,11 @@ export interface AuthRequest extends Request {
   };
 }
 
-export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const authenticate = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -53,7 +57,9 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
   }
 };
 
-export const authorize = (...allowedRoles: Role[]): ((req: AuthRequest, res: Response, next: NextFunction) => void) => {
+export const authorize = (
+  ...allowedRoles: Role[]
+): ((req: AuthRequest, res: Response, next: NextFunction) => void) => {
   return (req: AuthRequest, res: Response, next: NextFunction): void => {
     if (!req.user) {
       res.status(401).json({

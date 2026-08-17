@@ -18,7 +18,6 @@ const getStringParam = (param: string | string[] | undefined): string => {
   return param ?? '';
 };
 
-
 /**
  * POST /bot/:customerId/:storeId/message
  * Envia uma mensagem para o bot e recebe a resposta
