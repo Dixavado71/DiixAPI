@@ -2,48 +2,28 @@
 # Dependencies
 node_modules/
 
-# Build outputs
-dist/
-build/
-target/
-
-# TypeScript/JavaScript build artifacts
-*.tsbuildinfo
-
-# Environment variables
+# Environment
 .env
 .env.local
-*.env.*
+.env.*
 
-# IDE and editor files
-.vscode/
-.idea/
-*.swp
-*.swo
+# Logs and temp files
+*.log
 *.tmp
 
-# Logs
-*.log
+# Editors
+.vscode/
+.idea/
 
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
-
-# Python cache (if any Python files exist in the project)
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
-*.so
-
-# Distribution / packaging
-*.tar.gz
-*.whl
-*.egg-info/
-
-# OS generated files
-.DS_Store
-Thumbs.db
+venv/
+.venv/
+.env
+.env.local
+.env.*
 ```

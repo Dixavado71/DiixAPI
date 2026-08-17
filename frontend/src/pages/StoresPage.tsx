@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { storeService, Store, CreateStoreDto, UpdateStoreDto } from '../services/store.service'
 import { Button } from '../components/Button'
-import { Plus, Pencil, Trash2, Shop, CheckCircle, XCircle } from 'lucide-react'
+import { Plus, Pencil, Trash2, CheckCircle, XCircle } from 'lucide-react'
 
 export default function StoresPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -85,7 +85,7 @@ export default function StoresPage() {
     }
   }
 
-  const handleToggleStatus = (id: string, currentStatus: boolean) => {
+  const handleToggleStatus = (id: string, _currentStatus: boolean) => {
     toggleStatusMutation.mutate(id)
   }
 

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { customerService, Customer, CreateCustomerDto, UpdateCustomerDto } from '../services/customer.service'
 import { Button } from '../components/Button'
-import { Plus, Pencil, Trash2, Users } from 'lucide-react'
+import { Plus, Pencil, Trash2 } from 'lucide-react'
 
 export default function CustomersPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
