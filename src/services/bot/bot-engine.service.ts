@@ -4,10 +4,6 @@ import type {
   BotMessage,
   ConversationContext,
 } from '../../types/bot.types';
-import type { CustomerService } from '../customer/customer.service';
-import type { ProductService } from '../product/product.service';
-import type { CartService } from '../cart/cart.service';
-import type { OrderService } from '../order/order.service';
 
 interface ConversationRecord {
   id: string;
@@ -22,23 +18,9 @@ interface ConversationRecord {
 
 export class BotEngineService {
   private prisma: PrismaClient;
-  private customerService: CustomerService;
-  private productService: ProductService;
-  private cartService: CartService;
-  private orderService: OrderService;
 
-  constructor(
-    prisma: PrismaClient,
-    customerService: CustomerService,
-    productService: ProductService,
-    cartService: CartService,
-    orderService: OrderService
-  ) {
+  constructor(prisma: PrismaClient) {
     this.prisma = prisma;
-    this.customerService = customerService;
-    this.productService = productService;
-    this.cartService = cartService;
-    this.orderService = orderService;
   }
 
   /**

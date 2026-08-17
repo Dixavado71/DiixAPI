@@ -57,7 +57,9 @@ class UsersController {
             const { role } = req.params;
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 20;
-            if (!role || Array.isArray(role) || !['SUPER_ADMIN', 'STORE_OWNER', 'STORE_MANAGER', 'OPERATOR'].includes(role)) {
+            if (!role ||
+                Array.isArray(role) ||
+                !['SUPER_ADMIN', 'STORE_OWNER', 'STORE_MANAGER', 'OPERATOR'].includes(role)) {
                 return res.status(400).json({
                     error: 'Invalid role',
                 });

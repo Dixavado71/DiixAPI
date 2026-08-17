@@ -17,5 +17,13 @@ export declare class BotEngineService {
     private handleCheckout;
     private handleSupport;
     private handleGoodbye;
+    /**
+     * Reseta o contexto da conversa para IDLE
+     */
+    resetContext(customerId: string, _storeId: string): Promise<void>;
+    /**
+     * Marca a conversa como inativa
+     */
+    endConversation(customerId: string, _storeId: string): Promise<void>;
 }
 //# sourceMappingURL=bot-engine.service.d.ts.map
