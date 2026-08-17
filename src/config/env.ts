@@ -2,7 +2,10 @@ import { z } from 'zod';
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-  PORT: z.string().transform((val) => Number(val)).pipe(z.number().min(1).max(65535)),
+  PORT: z
+    .string()
+    .transform((val) => Number(val))
+    .pipe(z.number().min(1).max(65535)),
   DATABASE_URL: z.string().url().startsWith('postgresql://'),
   EVOLUTION_API_URL: z.string().url(),
   EVOLUTION_API_KEY: z.string().min(1),
@@ -11,8 +14,14 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().default('7d'),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
   CORS_ORIGIN: z.string(),
-  RATE_LIMIT_WINDOW_MS: z.string().transform((val) => Number(val)).pipe(z.number().positive()),
-  RATE_LIMIT_MAX: z.string().transform((val) => Number(val)).pipe(z.number().positive()),
+  RATE_LIMIT_WINDOW_MS: z
+    .string()
+    .transform((val) => Number(val))
+    .pipe(z.number().positive()),
+  RATE_LIMIT_MAX: z
+    .string()
+    .transform((val) => Number(val))
+    .pipe(z.number().positive()),
 });
 
 export type Env = z.infer<typeof envSchema>;

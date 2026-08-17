@@ -9,10 +9,7 @@ export class StoreSettingsRepository {
     });
   }
 
-  async create(
-    storeId: string,
-    data: Partial<StoreSettings> = {}
-  ): Promise<StoreSettings> {
+  async create(storeId: string, data: Partial<StoreSettings> = {}): Promise<StoreSettings> {
     return this.prisma.storeSettings.create({
       data: {
         storeId,
@@ -21,20 +18,14 @@ export class StoreSettingsRepository {
     });
   }
 
-  async update(
-    storeId: string,
-    data: Partial<StoreSettings>
-  ): Promise<StoreSettings> {
+  async update(storeId: string, data: Partial<StoreSettings>): Promise<StoreSettings> {
     return this.prisma.storeSettings.update({
       where: { storeId },
       data,
     });
   }
 
-  async upsert(
-    storeId: string,
-    data: Partial<StoreSettings>
-  ): Promise<StoreSettings> {
+  async upsert(storeId: string, data: Partial<StoreSettings>): Promise<StoreSettings> {
     return this.prisma.storeSettings.upsert({
       where: { storeId },
       create: {

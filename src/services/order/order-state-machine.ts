@@ -45,7 +45,7 @@ export class OrderStateMachine {
     if (!this.canTransition(current, next)) {
       throw new Error(
         `Invalid state transition from ${current} to ${next}. ` +
-        `Allowed transitions: ${this.getPossibleNextStates(current).join(', ') || 'none'}`
+          `Allowed transitions: ${this.getPossibleNextStates(current).join(', ') || 'none'}`
       );
     }
     return next;

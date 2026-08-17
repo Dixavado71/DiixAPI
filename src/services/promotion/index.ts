@@ -347,7 +347,12 @@ export class PromotionService {
 
         if (applies) {
           const itemSubtotal = item.unitPrice * item.quantity;
-          const discount = this.calculateDiscount(promotion, item.unitPrice, item.quantity, itemSubtotal);
+          const discount = this.calculateDiscount(
+            promotion,
+            item.unitPrice,
+            item.quantity,
+            itemSubtotal
+          );
 
           if (discount > bestDiscount) {
             bestDiscount = discount;

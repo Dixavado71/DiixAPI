@@ -18,7 +18,7 @@ export class StoreController {
       next(error);
     }
   }
-  
+
   async findById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
@@ -53,14 +53,14 @@ export class StoreController {
       next(error);
     }
   }
-  
+
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const validatedData = createStoreSchema.parse(req.body);
       const store = await storeService.create(validatedData);
 
       logger.info({ storeId: store.id }, 'Store created via API');
-      
+
       res.status(201).json({
         success: true,
         data: store,
@@ -90,7 +90,7 @@ export class StoreController {
       next(error);
     }
   }
-  
+
   async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
@@ -108,7 +108,7 @@ export class StoreController {
       const store = await storeService.update(id, validatedData);
 
       logger.info({ storeId: id }, 'Store updated via API');
-      
+
       res.json({
         success: true,
         data: store,
@@ -148,7 +148,7 @@ export class StoreController {
       next(error);
     }
   }
-  
+
   async activate(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
@@ -183,7 +183,7 @@ export class StoreController {
       next(error);
     }
   }
-  
+
   async deactivate(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
@@ -218,7 +218,7 @@ export class StoreController {
       next(error);
     }
   }
-  
+
   async getSettings(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
@@ -253,7 +253,7 @@ export class StoreController {
       next(error);
     }
   }
-  
+
   async updateSettings(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
@@ -271,7 +271,7 @@ export class StoreController {
       const settings = await storeService.updateSettings(id, validatedData);
 
       logger.info({ storeId: id }, 'Store settings updated via API');
-      
+
       res.json({
         success: true,
         data: settings,

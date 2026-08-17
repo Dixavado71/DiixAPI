@@ -1,6 +1,5 @@
 import { Router, Request, Response } from 'express';
 import { BotEngineService } from '../services/bot/bot-engine.service';
-import { container } from '../config/container';
 import { PrismaClient } from '@prisma/client';
 import { CustomerService } from '../services/customer/customer.service';
 import { ProductService } from '../services/product/product.service';
@@ -16,14 +15,8 @@ const createBotEngineService = () => {
   const productService = new ProductService(prisma);
   const cartService = new CartService(prisma);
   const orderService = new OrderService(prisma);
-  
-  return new BotEngineService(
-    prisma,
-    customerService,
-    productService,
-    cartService,
-    orderService
-  );
+
+  return new BotEngineService(prisma, customerService, productService, cartService, orderService);
 };
 
 /**

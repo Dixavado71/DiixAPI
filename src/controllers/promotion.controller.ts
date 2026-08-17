@@ -242,7 +242,10 @@ export class PromotionController {
         validatedData.productId
       );
 
-      loggerInstance.info({ promotionId: id, productId: validatedData.productId }, 'Product added to promotion');
+      loggerInstance.info(
+        { promotionId: id, productId: validatedData.productId },
+        'Product added to promotion'
+      );
       res.status(201).json(promotionProduct);
     } catch (error: any) {
       if (error.message === 'PROMOTION_NOT_FOUND' || error.message === 'PRODUCT_NOT_FOUND') {

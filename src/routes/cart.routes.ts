@@ -19,10 +19,14 @@ export class CartRoutes {
     this.router.post('/items', (req, res, next) => this.controller.addItem(req, res, next));
 
     // Update cart item
-    this.router.put('/items/:itemId', (req, res, next) => this.controller.updateItem(req, res, next));
+    this.router.put('/items/:itemId', (req, res, next) =>
+      this.controller.updateItem(req, res, next)
+    );
 
     // Remove item from cart
-    this.router.delete('/items/:itemId', (req, res, next) => this.controller.removeItem(req, res, next));
+    this.router.delete('/items/:itemId', (req, res, next) =>
+      this.controller.removeItem(req, res, next)
+    );
 
     // Clear cart
     this.router.delete('/', (req, res, next) => this.controller.clearCart(req, res, next));

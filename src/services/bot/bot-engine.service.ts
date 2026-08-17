@@ -26,7 +26,7 @@ export class BotEngineService {
     this.productService = productService;
     this.cartService = cartService;
     this.orderService = orderService;
-    
+
     this.config = {
       welcomeMessage: 'Olá! Bem-vindo à nossa loja. Como posso ajudar você hoje?',
       timeoutMinutes: 30,
@@ -47,18 +47,18 @@ export class BotEngineService {
   ): Promise<BotMessage[]> {
     // Obtém ou cria contexto da conversação
     const context = await this.getOrCreateContext(customerId, storeId);
-    
+
     // Atualiza timestamp da última mensagem
     context.lastMessageAt = new Date();
-    
+
     // Encontra o step atual baseado no estado
     const step = this.getCurrentStep(context.state);
-    
+
     if (step) {
       // Executa o step atual
       return await step.execute(context, message);
     }
-    
+
     // Se não houver step específico, trata como comando geral
     return await this.handleGeneralCommand(context, message);
   }
@@ -100,7 +100,7 @@ export class BotEngineService {
       currentCartId: conversation.currentCartId || undefined,
       currentOrderId: conversation.currentOrderId || undefined,
       lastMessageAt: conversation.lastMessageAt || new Date(),
-      metadata: conversation.metadata as Record<string, any> || {},
+      metadata: (conversation.metadata as Record<string, any>) || {},
     };
   }
 
@@ -130,15 +130,17 @@ export class BotEngineService {
    */
   private getCurrentStep(state: BotState): FlowStep | null {
     const steps = this.getFlowSteps();
-    return steps.find(step => {
-      const mockContext: ConversationContext = {
-        state,
-        customerId: '',
-        storeId: '',
-        lastMessageAt: new Date(),
-      };
-      return step.trigger(mockContext, '');
-    }) || null;
+    return (
+      steps.find((step) => {
+        const mockContext: ConversationContext = {
+          state,
+          customerId: '',
+          storeId: '',
+          lastMessageAt: new Date(),
+        };
+        return step.trigger(mockContext, '');
+      }) || null
+    );
   }
 
   /**
@@ -169,37 +171,39 @@ export class BotEngineService {
       trigger: async (context) => context.state === 'IDLE',
       execute: async (context, message) => {
         const lowerMessage = message.toLowerCase();
-        
+
         // Comandos principais
         if (lowerMessage.includes('catalog') || lowerMessage.includes('produt')) {
           context.state = 'BROWSE_CATALOG';
           await this.saveContext(context);
           return await this.executeBrowseCatalog(context, message);
         }
-        
+
         if (lowerMessage.includes('carrinho') || lowerMessage.includes('cart')) {
           context.state = 'CART_VIEW';
           await this.saveContext(context);
           return await this.executeCartView(context, message);
         }
-        
+
         if (lowerMessage.includes('pedido') || lowerMessage.includes('order')) {
           context.state = 'ORDER_TRACKING';
           await this.saveContext(context);
           return await this.executeOrderTracking(context, message);
         }
-        
+
         if (lowerMessage.includes('ajuda') || lowerMessage.includes('suporte')) {
           context.state = 'SUPPORT';
           await this.saveContext(context);
           return await this.executeSupport(context, message);
         }
-        
+
         // Mensagem de boas-vindas com opções
-        return [{
-          text: `${this.config.welcomeMessage}\n\nDigite:\n• "catalog" para ver produtos\n• "carrinho" para ver seu carrinho\n• "pedido" para acompanhar pedidos\n• "ajuda" para suporte`,
-          type: 'text' as const,
-        }];
+        return [
+          {
+            text: `${this.config.welcomeMessage}\n\nDigite:\n• "catalog" para ver produtos\n• "carrinho" para ver seu carrinho\n• "pedido" para acompanhar pedidos\n• "ajuda" para suporte`,
+            type: 'text' as const,
+          },
+        ];
       },
       transitions: [],
     };
@@ -228,12 +232,14 @@ export class BotEngineService {
     message: string
   ): Promise<BotMessage[]> {
     const products = await this.productService.findAll(context.storeId);
-    
+
     if (products.length === 0) {
-      return [{
-        text: 'Desculpe, não há produtos disponíveis no momento.',
-        type: 'text',
-      }];
+      return [
+        {
+          text: 'Desculpe, não há produtos disponíveis no momento.',
+          type: 'text',
+        },
+      ];
     }
 
     const buttons = products.slice(0, 5).map((product, index) => ({
@@ -242,11 +248,13 @@ export class BotEngineService {
       type: 'reply' as const,
     }));
 
-    return [{
-      text: `🛍️ *Catálogo de Produtos*\n\nEncontrei ${products.length} produtos. Selecione um para ver detalhes:`,
-      type: 'button',
-      buttons,
-    }];
+    return [
+      {
+        text: `🛍️ *Catálogo de Produtos*\n\nEncontrei ${products.length} produtos. Selecione um para ver detalhes:`,
+        type: 'button',
+        buttons,
+      },
+    ];
   }
 
   /**
@@ -265,22 +273,26 @@ export class BotEngineService {
         }
 
         const product = await this.productService.findById(context.currentProductId);
-        
+
         if (!product) {
-          return [{
-            text: 'Produto não encontrado.',
-            type: 'text',
-          }];
+          return [
+            {
+              text: 'Produto não encontrado.',
+              type: 'text',
+            },
+          ];
         }
 
-        return [{
-          text: `*${product.name}*\n\n${product.description}\n\n💰 *R$ ${product.price.toFixed(2)}*\n\n${product.stockQuantity > 0 ? '✅ Em estoque' : '❌ Sem estoque'}`,
-          type: 'button',
-          buttons: [
-            { id: 'add_to_cart', text: 'Adicionar ao Carrinho', type: 'reply' },
-            { id: 'back_catalog', text: 'Voltar ao Catálogo', type: 'reply' },
-          ],
-        }];
+        return [
+          {
+            text: `*${product.name}*\n\n${product.description}\n\n💰 *R$ ${product.price.toFixed(2)}*\n\n${product.stockQuantity > 0 ? '✅ Em estoque' : '❌ Sem estoque'}`,
+            type: 'button',
+            buttons: [
+              { id: 'add_to_cart', text: 'Adicionar ao Carrinho', type: 'reply' },
+              { id: 'back_catalog', text: 'Voltar ao Catálogo', type: 'reply' },
+            ],
+          },
+        ];
       },
       transitions: [],
     };
@@ -298,15 +310,17 @@ export class BotEngineService {
         // Lógica para adicionar produto ao carrinho
         context.state = 'CART_VIEW';
         await this.saveContext(context);
-        
-        return [{
-          text: '✅ Produto adicionado ao carrinho!\n\nDeseja ver seu carrinho ou continuar comprando?',
-          type: 'button',
-          buttons: [
-            { id: 'view_cart', text: 'Ver Carrinho', type: 'reply' },
-            { id: 'continue_shopping', text: 'Continuar Comprando', type: 'reply' },
-          ],
-        }];
+
+        return [
+          {
+            text: '✅ Produto adicionado ao carrinho!\n\nDeseja ver seu carrinho ou continuar comprando?',
+            type: 'button',
+            buttons: [
+              { id: 'view_cart', text: 'Ver Carrinho', type: 'reply' },
+              { id: 'continue_shopping', text: 'Continuar Comprando', type: 'reply' },
+            ],
+          },
+        ];
       },
       transitions: [],
     };
@@ -335,13 +349,13 @@ export class BotEngineService {
     message: string
   ): Promise<BotMessage[]> {
     // Implementação simplificada - na prática buscaria do banco
-    return [{
-      text: '🛒 *Seu Carrinho*\n\nVocê ainda não tem itens no carrinho.\n\nQue tal começar comprando algum produto?',
-      type: 'button',
-      buttons: [
-        { id: 'browse_catalog', text: 'Ver Catálogo', type: 'reply' },
-      ],
-    }];
+    return [
+      {
+        text: '🛒 *Seu Carrinho*\n\nVocê ainda não tem itens no carrinho.\n\nQue tal começar comprando algum produto?',
+        type: 'button',
+        buttons: [{ id: 'browse_catalog', text: 'Ver Catálogo', type: 'reply' }],
+      },
+    ];
   }
 
   /**
@@ -355,11 +369,13 @@ export class BotEngineService {
       execute: async (context, message) => {
         context.state = 'CHECKOUT_ADDRESS';
         await this.saveContext(context);
-        
-        return [{
-          text: '📦 *Finalizar Compra*\n\nPor favor, informe seu endereço de entrega:',
-          type: 'text',
-        }];
+
+        return [
+          {
+            text: '📦 *Finalizar Compra*\n\nPor favor, informe seu endereço de entrega:',
+            type: 'text',
+          },
+        ];
       },
       transitions: [],
     };
@@ -378,16 +394,18 @@ export class BotEngineService {
         context.metadata = { ...context.metadata, address: message };
         context.state = 'CHECKOUT_PAYMENT';
         await this.saveContext(context);
-        
-        return [{
-          text: '✅ Endereço registrado!\n\nEscolha a forma de pagamento:',
-          type: 'button',
-          buttons: [
-            { id: 'pay_pix', text: 'PIX', type: 'reply' },
-            { id: 'pay_credit', text: 'Cartão de Crédito', type: 'reply' },
-            { id: 'pay_debit', text: 'Cartão de Débito', type: 'reply' },
-          ],
-        }];
+
+        return [
+          {
+            text: '✅ Endereço registrado!\n\nEscolha a forma de pagamento:',
+            type: 'button',
+            buttons: [
+              { id: 'pay_pix', text: 'PIX', type: 'reply' },
+              { id: 'pay_credit', text: 'Cartão de Crédito', type: 'reply' },
+              { id: 'pay_debit', text: 'Cartão de Débito', type: 'reply' },
+            ],
+          },
+        ];
       },
       transitions: [],
     };
@@ -405,11 +423,13 @@ export class BotEngineService {
         // Processar pagamento e criar pedido
         context.state = 'ORDER_TRACKING';
         await this.saveContext(context);
-        
-        return [{
-          text: '✅ Pedido criado com sucesso!\n\nNúmero do pedido: #12345\n\nAcompanhe o status abaixo:',
-          type: 'text',
-        }];
+
+        return [
+          {
+            text: '✅ Pedido criado com sucesso!\n\nNúmero do pedido: #12345\n\nAcompanhe o status abaixo:',
+            type: 'text',
+          },
+        ];
       },
       transitions: [],
     };
@@ -437,10 +457,12 @@ export class BotEngineService {
     context: ConversationContext,
     message: string
   ): Promise<BotMessage[]> {
-    return [{
-      text: '📦 *Acompanhar Pedido*\n\nDigite o número do seu pedido para acompanhar:',
-      type: 'text',
-    }];
+    return [
+      {
+        text: '📦 *Acompanhar Pedido*\n\nDigite o número do seu pedido para acompanhar:',
+        type: 'text',
+      },
+    ];
   }
 
   /**
@@ -465,10 +487,12 @@ export class BotEngineService {
     context: ConversationContext,
     message: string
   ): Promise<BotMessage[]> {
-    return [{
-      text: '🤝 *Suporte*\n\nComo podemos ajudar você?\n\n• Dúvidas sobre produtos\n• Problemas com pedidos\n• Reclamações\n• Outros\n\nDescreva sua dúvida ou problema:',
-      type: 'text',
-    }];
+    return [
+      {
+        text: '🤝 *Suporte*\n\nComo podemos ajudar você?\n\n• Dúvidas sobre produtos\n• Problemas com pedidos\n• Reclamações\n• Outros\n\nDescreva sua dúvida ou problema:',
+        type: 'text',
+      },
+    ];
   }
 
   /**
@@ -479,25 +503,31 @@ export class BotEngineService {
     message: string
   ): Promise<BotMessage[]> {
     const lowerMessage = message.toLowerCase();
-    
+
     if (lowerMessage === 'oi' || lowerMessage === 'olá' || lowerMessage === 'ola') {
-      return [{
-        text: this.config.welcomeMessage,
-        type: 'text',
-      }];
+      return [
+        {
+          text: this.config.welcomeMessage,
+          type: 'text',
+        },
+      ];
     }
-    
+
     if (lowerMessage === 'tchau' || lowerMessage === 'adeus') {
-      return [{
-        text: 'Obrigado pela visita! Volte sempre! 👋',
-        type: 'text',
-      }];
+      return [
+        {
+          text: 'Obrigado pela visita! Volte sempre! 👋',
+          type: 'text',
+        },
+      ];
     }
-    
-    return [{
-      text: 'Desculpe, não entendi. Digite "ajuda" para ver as opções disponíveis.',
-      type: 'text',
-    }];
+
+    return [
+      {
+        text: 'Desculpe, não entendi. Digite "ajuda" para ver as opções disponíveis.',
+        type: 'text',
+      },
+    ];
   }
 
   /**

@@ -161,11 +161,7 @@ export class CartController {
       const cart = await this.cartService.getOrCreateCart(storeId, customerId);
 
       // Process checkout
-      const result = await this.cartService.checkout(
-        cart.id,
-        customerAddressId,
-        paymentMethodId
-      );
+      const result = await this.cartService.checkout(cart.id, customerAddressId, paymentMethodId);
 
       logger.info({ cartId: cart.id, result }, 'Cart checkout processed');
       res.status(201).json(result);

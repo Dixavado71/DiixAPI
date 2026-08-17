@@ -13,7 +13,7 @@ export interface CustomerResolutionResult {
 
 /**
  * CustomerResolverService
- * 
+ *
  * Resolves a customer from phone number and their relationship with a store.
  */
 export class CustomerResolverService {
@@ -26,7 +26,7 @@ export class CustomerResolverService {
   async resolveByPhone(phone: string): Promise<Customer | null> {
     const normalizedPhone = normalizePhone(phone);
     const customer = await this.customerRepository.findByPhone(normalizedPhone);
-    
+
     if (customer) {
       logger.debug({ customerId: customer.id }, 'Customer resolved by phone');
     } else {
@@ -78,12 +78,9 @@ export class CustomerResolverService {
    * Find or create customer by phone
    * Use with caution - only when customer registration is not required
    */
-  async findOrCreateByPhone(
-    phone: string,
-    name?: string
-  ): Promise<Customer> {
+  async findOrCreateByPhone(phone: string, name?: string): Promise<Customer> {
     const normalizedPhone = normalizePhone(phone);
-    
+
     let customer = await this.customerRepository.findByPhone(normalizedPhone);
 
     if (customer) {

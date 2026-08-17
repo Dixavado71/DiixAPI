@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { auditService } from '../../services/audit/audit.service.js';
 import type { AuthRequest } from '../../middlewares/auth.middleware.js';
 
@@ -13,7 +13,7 @@ export class AuditController {
       const limit = parseInt(req.query.limit as string) || 50;
       const { action, entity, userId, startDate, endDate } = req.query;
 
-      const filters: any = {};
+      const filters: Record<string, unknown> = {};
       if (action) filters.action = action as string;
       if (entity) filters.entity = entity as string;
       if (userId) filters.userId = userId as string;
@@ -25,9 +25,10 @@ export class AuditController {
       return res.json({
         ...result,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(500).json({
-        error: error.message || 'Failed to fetch audit logs',
+        error: err.message || 'Failed to fetch audit logs',
       });
     }
   }
@@ -46,9 +47,10 @@ export class AuditController {
       return res.json({
         logs,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(500).json({
-        error: error.message || 'Failed to fetch audit logs',
+        error: err.message || 'Failed to fetch audit logs',
       });
     }
   }
@@ -67,9 +69,10 @@ export class AuditController {
       return res.json({
         logs,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(500).json({
-        error: error.message || 'Failed to fetch audit logs',
+        error: err.message || 'Failed to fetch audit logs',
       });
     }
   }
@@ -87,9 +90,10 @@ export class AuditController {
       return res.json({
         logs,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(500).json({
-        error: error.message || 'Failed to fetch recent audit logs',
+        error: err.message || 'Failed to fetch recent audit logs',
       });
     }
   }
@@ -110,9 +114,10 @@ export class AuditController {
       return res.json({
         stats,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(500).json({
-        error: error.message || 'Failed to fetch audit statistics',
+        error: err.message || 'Failed to fetch audit statistics',
       });
     }
   }
@@ -131,9 +136,10 @@ export class AuditController {
         message: 'Audit logs cleaned successfully',
         ...result,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(500).json({
-        error: error.message || 'Failed to clean audit logs',
+        error: err.message || 'Failed to clean audit logs',
       });
     }
   }

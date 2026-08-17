@@ -27,7 +27,7 @@ export interface WebhookConfig {
 
 /**
  * Evolution API Client - Centralizes all communication with Evolution API v2.3.7
- * 
+ *
  * IMPORTANT: Only implement methods that are confirmed to exist in the API version.
  * If a method is not implemented, it will throw NOT_IMPLEMENTED error.
  */
@@ -39,7 +39,7 @@ export class EvolutionClient {
       baseURL: config.baseUrl,
       headers: {
         'Content-Type': 'application/json',
-        'apikey': config.apiKey,
+        apikey: config.apiKey,
       },
       timeout: config.timeout || 30000,
     });
@@ -94,11 +94,7 @@ export class EvolutionClient {
    * Send text message
    * POST /message/sendText/:instanceName
    */
-  async sendText(
-    instanceName: string,
-    to: string,
-    message: string
-  ): Promise<SendMessageResult> {
+  async sendText(instanceName: string, to: string, message: string): Promise<SendMessageResult> {
     try {
       const response = await this.client.post(`/message/sendText/${instanceName}`, {
         number: to,
@@ -147,10 +143,7 @@ export class EvolutionClient {
    * Set webhook URL
    * POST /webhook/set/:instanceName
    */
-  async setWebhook(
-    instanceName: string,
-    config: WebhookConfig
-  ): Promise<{ success: boolean }> {
+  async setWebhook(instanceName: string, config: WebhookConfig): Promise<{ success: boolean }> {
     try {
       const response = await this.client.post(`/webhook/set/${instanceName}`, {
         url: config.url,

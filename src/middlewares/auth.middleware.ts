@@ -10,11 +10,7 @@ export interface AuthRequest extends Request {
   };
 }
 
-export const authenticate = async (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -41,7 +37,7 @@ export const authenticate = async (
     };
 
     next();
-  } catch (error) {
+  } catch {
     return res.status(500).json({
       error: 'Internal server error during authentication',
     });
@@ -72,24 +68,11 @@ export const requireSuperAdmin = authorize('SUPER_ADMIN');
 
 export const requireStoreOwner = authorize('STORE_OWNER', 'SUPER_ADMIN');
 
-export const requireStoreManager = authorize(
-  'STORE_MANAGER',
-  'STORE_OWNER',
-  'SUPER_ADMIN'
-);
+export const requireStoreManager = authorize('STORE_MANAGER', 'STORE_OWNER', 'SUPER_ADMIN');
 
-export const requireOperator = authorize(
-  'OPERATOR',
-  'STORE_MANAGER',
-  'STORE_OWNER',
-  'SUPER_ADMIN'
-);
+export const requireOperator = authorize('OPERATOR', 'STORE_MANAGER', 'STORE_OWNER', 'SUPER_ADMIN');
 
-export const optionalAuth = async (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export const optionalAuth = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -107,7 +90,7 @@ export const optionalAuth = async (
     }
 
     next();
-  } catch (error) {
+  } catch {
     next();
   }
 };

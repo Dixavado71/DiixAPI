@@ -52,7 +52,7 @@ export class OrderController {
       });
     } catch (error: any) {
       logger.error({ error: error.message }, 'Error creating order');
-      
+
       const errorMap: Record<string, { status: number; code: string }> = {
         CUSTOMER_NOT_AUTHORIZED: { status: 403, code: 'CUSTOMER_NOT_AUTHORIZED' },
         STORE_SETTINGS_NOT_FOUND: { status: 404, code: 'STORE_SETTINGS_NOT_FOUND' },
@@ -138,7 +138,7 @@ export class OrderController {
       });
     } catch (error: any) {
       logger.error({ error: error.message }, 'Error getting order');
-      
+
       if (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH') {
         res.status(404).json({
           success: false,
@@ -189,7 +189,7 @@ export class OrderController {
       });
     } catch (error: any) {
       logger.error({ error: error.message }, 'Error updating order status');
-      
+
       if (error.message.includes('Invalid state transition')) {
         res.status(422).json({
           success: false,
@@ -251,7 +251,7 @@ export class OrderController {
       });
     } catch (error: any) {
       logger.error({ error: error.message }, 'Error cancelling order');
-      
+
       if (error.message.includes('ORDER_CANNOT_BE_CANCELLED')) {
         res.status(422).json({
           success: false,
@@ -305,7 +305,7 @@ export class OrderController {
       });
     } catch (error: any) {
       logger.error({ error: error.message }, 'Error getting possible states');
-      
+
       if (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH') {
         res.status(404).json({
           success: false,

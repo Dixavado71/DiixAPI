@@ -9,10 +9,7 @@ export class StoreCustomerRepository {
     });
   }
 
-  async findByStoreAndCustomer(
-    storeId: string,
-    customerId: string
-  ): Promise<StoreCustomer | null> {
+  async findByStoreAndCustomer(storeId: string, customerId: string): Promise<StoreCustomer | null> {
     return this.prisma.storeCustomer.findUnique({
       where: {
         storeId_customerId: {
@@ -81,24 +78,15 @@ export class StoreCustomerRepository {
     return this.updateStatus(storeId, customerId, StoreCustomerStatus.BLOCKED);
   }
 
-  async deactivate(
-    storeId: string,
-    customerId: string
-  ): Promise<StoreCustomer> {
+  async deactivate(storeId: string, customerId: string): Promise<StoreCustomer> {
     return this.updateStatus(storeId, customerId, StoreCustomerStatus.INACTIVE);
   }
 
-  async reactivate(
-    storeId: string,
-    customerId: string
-  ): Promise<StoreCustomer> {
+  async reactivate(storeId: string, customerId: string): Promise<StoreCustomer> {
     return this.updateStatus(storeId, customerId, StoreCustomerStatus.PENDING);
   }
 
-  async deleteByStoreAndCustomer(
-    storeId: string,
-    customerId: string
-  ): Promise<void> {
+  async deleteByStoreAndCustomer(storeId: string, customerId: string): Promise<void> {
     await this.prisma.storeCustomer.delete({
       where: {
         storeId_customerId: {

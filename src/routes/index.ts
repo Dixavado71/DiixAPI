@@ -18,10 +18,7 @@ router.use('/webhooks', webhookRoutes);
 // Store-specific routes
 router.use('/orders', createOrderRoutes());
 router.use('/stores/:storeId/promotions', new PromotionRoutes().getRouter());
-router.use(
-  '/stores/:storeId/customers/:customerId/cart',
-  new CartRoutes().getRouter()
-);
+router.use('/stores/:storeId/customers/:customerId/cart', new CartRoutes().getRouter());
 
 // Bot routes
 router.use('/api/bot', botRoutes);

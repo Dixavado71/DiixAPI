@@ -6,7 +6,7 @@ const logger = getLogger().child({ module: 'store-resolver' });
 
 /**
  * StoreResolverService
- * 
+ *
  * Resolves a store from various identifiers, primarily from Evolution API instance names.
  */
 export class StoreResolverService {
@@ -22,7 +22,7 @@ export class StoreResolverService {
     }
 
     const store = await this.storeRepository.findByEvolutionInstance(instanceName);
-    
+
     if (store) {
       logger.debug({ storeId: store.id, slug: store.slug }, 'Store resolved by instance');
     } else {

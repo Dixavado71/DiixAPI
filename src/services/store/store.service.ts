@@ -157,10 +157,7 @@ export class StoreService {
     return settings;
   }
 
-  async updateSettings(
-    storeId: string,
-    data: UpdateStoreSettingsInput
-  ): Promise<StoreSettings> {
+  async updateSettings(storeId: string, data: UpdateStoreSettingsInput): Promise<StoreSettings> {
     const store = await this.storeRepository.findById(storeId);
     if (!store) {
       throw new Error('STORE_NOT_FOUND');

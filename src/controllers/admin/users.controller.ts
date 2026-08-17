@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { adminAuthService } from '../../services/admin/admin-auth.service.js';
 import { auditService } from '../../services/audit/audit.service.js';
 import type { AuthRequest } from '../../middlewares/auth.middleware.js';
@@ -19,9 +19,10 @@ export class UsersController {
       return res.json({
         ...result,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(500).json({
-        error: error.message || 'Failed to fetch users',
+        error: err.message || 'Failed to fetch users',
       });
     }
   }
@@ -39,9 +40,10 @@ export class UsersController {
       return res.json({
         user,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(404).json({
-        error: error.message || 'User not found',
+        error: err.message || 'User not found',
       });
     }
   }
@@ -62,18 +64,15 @@ export class UsersController {
         });
       }
 
-      const result = await adminAuthService.getUsersByRole(
-        role as Role,
-        page,
-        limit
-      );
+      const result = await adminAuthService.getUsersByRole(role as Role, page, limit);
 
       return res.json({
         ...result,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(500).json({
-        error: error.message || 'Failed to fetch users',
+        error: err.message || 'Failed to fetch users',
       });
     }
   }
@@ -104,7 +103,6 @@ export class UsersController {
 
       // If role changed, log it
       if (role) {
-        const currentUser = await adminAuthService.getUserById(id);
         await auditService.logRoleChange(
           req.user!.userId,
           id,
@@ -118,9 +116,10 @@ export class UsersController {
         message: 'User updated successfully',
         user,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(400).json({
-        error: error.message || 'Failed to update user',
+        error: err.message || 'Failed to update user',
       });
     }
   }
@@ -142,9 +141,10 @@ export class UsersController {
         message: 'User deactivated successfully',
         user,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(400).json({
-        error: error.message || 'Failed to deactivate user',
+        error: err.message || 'Failed to deactivate user',
       });
     }
   }
@@ -172,9 +172,10 @@ export class UsersController {
         message: 'User activated successfully',
         user,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(400).json({
-        error: error.message || 'Failed to activate user',
+        error: err.message || 'Failed to activate user',
       });
     }
   }
@@ -209,9 +210,10 @@ export class UsersController {
       return res.json({
         message: 'Password reset successfully',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(400).json({
-        error: error.message || 'Failed to reset password',
+        error: err.message || 'Failed to reset password',
       });
     }
   }
@@ -233,9 +235,10 @@ export class UsersController {
         message: 'User deleted successfully',
         user,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(400).json({
-        error: error.message || 'Failed to delete user',
+        error: err.message || 'Failed to delete user',
       });
     }
   }

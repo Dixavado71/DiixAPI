@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { adminAuthService } from '../../services/admin/admin-auth.service.js';
 import { auditService } from '../../services/audit/audit.service.js';
 import type { AuthRequest } from '../../middlewares/auth.middleware.js';
 import type { Role } from '@prisma/client';
 
 export class AdminController {
-  async register(req: Request, res: Response) {
+  async register(req: AuthRequest, res: Response) {
     try {
       const { email, password, name, role } = req.body;
 
@@ -28,14 +28,15 @@ export class AdminController {
         message: 'User created successfully',
         user,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(400).json({
-        error: error.message || 'Failed to create user',
+        error: err.message || 'Failed to create user',
       });
     }
   }
 
-  async login(req: Request, res: Response) {
+  async login(req: AuthRequest, res: Response) {
     try {
       const { email, password } = req.body;
 
@@ -53,9 +54,10 @@ export class AdminController {
         message: 'Login successful',
         ...result,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(401).json({
-        error: error.message || 'Login failed',
+        error: err.message || 'Login failed',
       });
     }
   }
@@ -73,9 +75,10 @@ export class AdminController {
       return res.json({
         user,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(404).json({
-        error: error.message || 'User not found',
+        error: err.message || 'User not found',
       });
     }
   }
@@ -106,9 +109,10 @@ export class AdminController {
         message: 'Profile updated successfully',
         user,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(400).json({
-        error: error.message || 'Failed to update profile',
+        error: err.message || 'Failed to update profile',
       });
     }
   }
@@ -129,20 +133,17 @@ export class AdminController {
         });
       }
 
-      await adminAuthService.changePassword(
-        req.user.userId,
-        currentPassword,
-        newPassword
-      );
+      await adminAuthService.changePassword(req.user.userId, currentPassword, newPassword);
 
       await auditService.logPasswordChange(req.user.userId, req.ip || undefined);
 
       return res.json({
         message: 'Password changed successfully',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(400).json({
-        error: error.message || 'Failed to change password',
+        error: err.message || 'Failed to change password',
       });
     }
   }
@@ -160,9 +161,10 @@ export class AdminController {
       return res.json({
         message: 'Logout successful',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return res.status(500).json({
-        error: error.message || 'Failed to logout',
+        error: err.message || 'Failed to logout',
       });
     }
   }

@@ -74,7 +74,7 @@ export function createApp(): Application {
   // Global error handler
   app.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
     logger.error({ err }, 'Unhandled error');
-    
+
     if (res.headersSent) {
       return next(err);
     }
