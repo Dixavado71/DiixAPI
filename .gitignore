@@ -1,60 +1,29 @@
 ```
-# Docker related
-.dockerignore
-Dockerfile.*
-
 # Dependencies
 node_modules/
-.venv/
-venv/
-__pycache__/
-*.egg-info/
-dist-packages/
-
-# Build artifacts
-build/
-dist/
-target/
-*.pyc
-*.class
-*.o
-*.obj
-*.so
-*.dll
-*.exe
-
-# Logs and temporary files
-*.log
-*.tmp
-*.swp
-*.swo
 
 # Environment
 .env
 .env.local
 .env.*
 
+# Logs and temp files
+*.log
+*.tmp
+
 # Editors
 .vscode/
 .idea/
-*.iml
-*.ipr
-*.iws
 
-# OS
-.DS_Store
-Thumbs.db
-
-# Coverage
-.coverage
-coverage/
-htmlcov/
-
-# Python specific
+# Python
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
+*.pyc
+*.pyo
+*.pyd
 .Python
-*.sqlite3
+venv/
+.venv/
+.env
+.env.local
+.env.*
 ```
