@@ -1,11 +1,14 @@
-import { Router } from 'express';
-import { PromotionController } from '../controllers/promotion.controller';
-export class PromotionRoutes {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PromotionRoutes = void 0;
+const express_1 = require("express");
+const promotion_controller_1 = require("../controllers/promotion.controller");
+class PromotionRoutes {
     router;
     controller;
     constructor() {
-        this.router = Router();
-        this.controller = new PromotionController();
+        this.router = (0, express_1.Router)();
+        this.controller = new promotion_controller_1.PromotionController();
         this.initializeRoutes();
     }
     initializeRoutes() {
@@ -34,4 +37,5 @@ export class PromotionRoutes {
         return this.router;
     }
 }
+exports.PromotionRoutes = PromotionRoutes;
 //# sourceMappingURL=promotion.routes.js.map

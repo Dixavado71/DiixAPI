@@ -1,25 +1,28 @@
-import { z } from 'zod';
-import { OrderStatus, PaymentMethod, DeliveryMethod } from '@prisma/client';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.orderQuerySchema = exports.cancelOrderSchema = exports.updateOrderStatusSchema = exports.createOrderSchema = void 0;
+const zod_1 = require("zod");
+const client_1 = require("@prisma/client");
 // Schema for creating an order
-export const createOrderSchema = z.object({
-    paymentMethod: z.nativeEnum(PaymentMethod).optional(),
-    deliveryMethod: z.nativeEnum(DeliveryMethod).optional(),
-    deliveryAddress: z.string().min(5).max(500).optional(),
-    notes: z.string().max(1000).optional(),
+exports.createOrderSchema = zod_1.z.object({
+    paymentMethod: zod_1.z.nativeEnum(client_1.PaymentMethod).optional(),
+    deliveryMethod: zod_1.z.nativeEnum(client_1.DeliveryMethod).optional(),
+    deliveryAddress: zod_1.z.string().min(5).max(500).optional(),
+    notes: zod_1.z.string().max(1000).optional(),
 });
 // Schema for updating order status
-export const updateOrderStatusSchema = z.object({
-    status: z.nativeEnum(OrderStatus),
+exports.updateOrderStatusSchema = zod_1.z.object({
+    status: zod_1.z.nativeEnum(client_1.OrderStatus),
 });
 // Schema for cancelling an order
-export const cancelOrderSchema = z.object({
-    reason: z.string().max(500).optional(),
+exports.cancelOrderSchema = zod_1.z.object({
+    reason: zod_1.z.string().max(500).optional(),
 });
 // Schema for query parameters
-export const orderQuerySchema = z.object({
-    status: z.nativeEnum(OrderStatus).optional(),
-    customerId: z.string().cuid().optional(),
-    limit: z.coerce.number().min(1).max(100).optional().default(50),
-    offset: z.coerce.number().min(0).optional().default(0),
+exports.orderQuerySchema = zod_1.z.object({
+    status: zod_1.z.nativeEnum(client_1.OrderStatus).optional(),
+    customerId: zod_1.z.string().cuid().optional(),
+    limit: zod_1.z.coerce.number().min(1).max(100).optional().default(50),
+    offset: zod_1.z.coerce.number().min(0).optional().default(0),
 });
 //# sourceMappingURL=order.validator.js.map

@@ -1,4 +1,7 @@
-export class PromotionRepository {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PromotionRepository = void 0;
+class PromotionRepository {
     prisma;
     constructor(prisma) {
         this.prisma = prisma;
@@ -174,4 +177,5 @@ export class PromotionRepository {
         });
     }
 }
+exports.PromotionRepository = PromotionRepository;
 //# sourceMappingURL=promotion.repository.js.map

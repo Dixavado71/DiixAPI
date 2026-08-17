@@ -1,11 +1,14 @@
-import { PromotionService } from '../services/promotion';
-import { createPromotionSchema, updatePromotionSchema, addPromotionRuleSchema, addPromotionProductSchema, listPromotionsQuerySchema, promotionIdParamsSchema, } from '../validators/promotion';
-import { logger } from '../utils/logger';
-const loggerInstance = logger;
-export class PromotionController {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PromotionController = void 0;
+const promotion_1 = require("../services/promotion");
+const promotion_2 = require("../validators/promotion");
+const logger_1 = require("../utils/logger");
+const loggerInstance = logger_1.logger;
+class PromotionController {
     promotionService;
     constructor() {
-        this.promotionService = new PromotionService();
+        this.promotionService = new promotion_1.PromotionService();
     }
     /**
      * Create a new promotion
@@ -16,7 +19,7 @@ export class PromotionController {
             const storeId = req.params.storeId;
             const body = req.body;
             // Parse and validate input
-            const validatedData = createPromotionSchema.parse({
+            const validatedData = promotion_2.createPromotionSchema.parse({
                 ...body,
                 startDate: body.startDate ? new Date(body.startDate) : undefined,
                 endDate: body.endDate ? new Date(body.endDate) : undefined,
@@ -39,7 +42,7 @@ export class PromotionController {
      */
     async getPromotion(req, res, next) {
         try {
-            const { id } = promotionIdParamsSchema.parse(req.params);
+            const { id } = promotion_2.promotionIdParamsSchema.parse(req.params);
             const promotion = await this.promotionService.getPromotionById(id);
             // Verify promotion belongs to store
             if (promotion.storeId !== req.params.storeId) {
@@ -63,7 +66,7 @@ export class PromotionController {
     async getPromotions(req, res, next) {
         try {
             const storeId = req.params.storeId;
-            const query = listPromotionsQuerySchema.parse(req.query);
+            const query = promotion_2.listPromotionsQuerySchema.parse(req.query);
             const promotions = await this.promotionService.getPromotionsByStore(storeId, {
                 active: query.active,
                 limit: query.limit,
@@ -97,10 +100,10 @@ export class PromotionController {
      */
     async updatePromotion(req, res, next) {
         try {
-            const { id } = promotionIdParamsSchema.parse(req.params);
+            const { id } = promotion_2.promotionIdParamsSchema.parse(req.params);
             const body = req.body;
             // Parse and validate input
-            const validatedData = updatePromotionSchema.parse({
+            const validatedData = promotion_2.updatePromotionSchema.parse({
                 ...body,
                 startDate: body.startDate ? new Date(body.startDate) : undefined,
                 endDate: body.endDate ? new Date(body.endDate) : undefined,
@@ -129,7 +132,7 @@ export class PromotionController {
      */
     async deletePromotion(req, res, next) {
         try {
-            const { id } = promotionIdParamsSchema.parse(req.params);
+            const { id } = promotion_2.promotionIdParamsSchema.parse(req.params);
             const promotion = await this.promotionService.getPromotionById(id);
             // Verify promotion belongs to store
             if (promotion.storeId !== req.params.storeId) {
@@ -155,9 +158,9 @@ export class PromotionController {
      */
     async addRule(req, res, next) {
         try {
-            const { id } = promotionIdParamsSchema.parse(req.params);
+            const { id } = promotion_2.promotionIdParamsSchema.parse(req.params);
             const body = req.body;
-            const validatedData = addPromotionRuleSchema.parse(body);
+            const validatedData = promotion_2.addPromotionRuleSchema.parse(body);
             const rule = await this.promotionService.addRuleToPromotion(id, validatedData.type, validatedData.value);
             loggerInstance.info({ promotionId: id, ruleId: rule.id }, 'Rule added to promotion');
             res.status(201).json(rule);
@@ -193,9 +196,9 @@ export class PromotionController {
      */
     async addProduct(req, res, next) {
         try {
-            const { id } = promotionIdParamsSchema.parse(req.params);
+            const { id } = promotion_2.promotionIdParamsSchema.parse(req.params);
             const body = req.body;
-            const validatedData = addPromotionProductSchema.parse(body);
+            const validatedData = promotion_2.addPromotionProductSchema.parse(body);
             const promotionProduct = await this.promotionService.addProductToPromotion(id, validatedData.productId);
             loggerInstance.info({ promotionId: id, productId: validatedData.productId }, 'Product added to promotion');
             res.status(201).json(promotionProduct);
@@ -227,4 +230,5 @@ export class PromotionController {
         }
     }
 }
+exports.PromotionController = PromotionController;
 //# sourceMappingURL=promotion.controller.js.map

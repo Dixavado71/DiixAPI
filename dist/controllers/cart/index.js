@@ -1,9 +1,12 @@
-import { CartService } from '../../services/cart';
-import { logger } from '../../utils/logger';
-export class CartController {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CartController = void 0;
+const cart_1 = require("../../services/cart");
+const logger_1 = require("../../utils/logger");
+class CartController {
     cartService;
     constructor() {
-        this.cartService = new CartService();
+        this.cartService = new cart_1.CartService();
     }
     /**
      * Get or create cart for customer
@@ -22,7 +25,7 @@ export class CartController {
             });
         }
         catch (error) {
-            logger.error({ error: error.message }, 'Error getting cart');
+            logger_1.logger.error({ error: error.message }, 'Error getting cart');
             next(error);
         }
     }
@@ -38,7 +41,7 @@ export class CartController {
             const cart = await this.cartService.addItem(storeId, customerId, productId, quantity);
             // Calculate totals with promotions
             const totals = await this.cartService.getCartTotals(cart.id);
-            logger.info({ cartId: cart.id, productId }, 'Item added to cart');
+            logger_1.logger.info({ cartId: cart.id, productId }, 'Item added to cart');
             res.status(201).json({
                 ...cart,
                 totals,
@@ -49,7 +52,7 @@ export class CartController {
                 res.status(400).json({ error: error.message });
                 return;
             }
-            logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error adding item to cart');
+            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error adding item to cart');
             next(error);
         }
     }
@@ -66,7 +69,7 @@ export class CartController {
             const cart = await this.cartService.updateItem(storeId, customerId, itemId, quantity);
             // Calculate totals with promotions
             const totals = await this.cartService.getCartTotals(cart.id);
-            logger.info({ cartId: cart.id, itemId }, 'Cart item updated');
+            logger_1.logger.info({ cartId: cart.id, itemId }, 'Cart item updated');
             res.json({
                 ...cart,
                 totals,
@@ -77,7 +80,7 @@ export class CartController {
                 res.status(404).json({ error: error.message });
                 return;
             }
-            logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error updating cart item');
+            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error updating cart item');
             next(error);
         }
     }
@@ -93,7 +96,7 @@ export class CartController {
             const cart = await this.cartService.removeItem(storeId, customerId, itemId);
             // Calculate totals with promotions
             const totals = await this.cartService.getCartTotals(cart.id);
-            logger.info({ cartId: cart.id, itemId }, 'Item removed from cart');
+            logger_1.logger.info({ cartId: cart.id, itemId }, 'Item removed from cart');
             res.json({
                 ...cart,
                 totals,
@@ -104,7 +107,7 @@ export class CartController {
                 res.status(404).json({ error: error.message });
                 return;
             }
-            logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error removing item from cart');
+            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error removing item from cart');
             next(error);
         }
     }
@@ -117,7 +120,7 @@ export class CartController {
             const storeId = req.params.storeId;
             const customerId = req.params.customerId;
             await this.cartService.clearCart(storeId, customerId);
-            logger.info({ storeId, customerId }, 'Cart cleared');
+            logger_1.logger.info({ storeId, customerId }, 'Cart cleared');
             res.status(204).send();
         }
         catch (error) {
@@ -125,7 +128,7 @@ export class CartController {
                 res.status(404).json({ error: error.message });
                 return;
             }
-            logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error clearing cart');
+            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error clearing cart');
             next(error);
         }
     }
@@ -142,7 +145,7 @@ export class CartController {
             const cart = await this.cartService.getOrCreateCart(storeId, customerId);
             // Process checkout
             const result = await this.cartService.checkout(cart.id, customerAddressId, paymentMethodId);
-            logger.info({ cartId: cart.id, result }, 'Cart checkout processed');
+            logger_1.logger.info({ cartId: cart.id, result }, 'Cart checkout processed');
             res.status(201).json(result);
         }
         catch (error) {
@@ -151,9 +154,10 @@ export class CartController {
                 res.status(400).json({ error: error.message });
                 return;
             }
-            logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error processing checkout');
+            logger_1.logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error processing checkout');
             next(error);
         }
     }
 }
+exports.CartController = CartController;
 //# sourceMappingURL=index.js.map

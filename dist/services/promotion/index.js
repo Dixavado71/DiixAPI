@@ -1,13 +1,16 @@
-import { PromotionRepository } from '../../repositories/promotion.repository';
-import { ProductRepository } from '../../repositories/product.repository';
-import { prisma } from '../../config/database';
-import { logger } from '../../utils/logger';
-export class PromotionService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PromotionService = void 0;
+const promotion_repository_1 = require("../../repositories/promotion.repository");
+const product_repository_1 = require("../../repositories/product.repository");
+const database_1 = require("../../config/database");
+const logger_1 = require("../../utils/logger");
+class PromotionService {
     promotionRepository;
     productRepository;
     constructor() {
-        this.promotionRepository = new PromotionRepository(prisma);
-        this.productRepository = new ProductRepository(prisma);
+        this.promotionRepository = new promotion_repository_1.PromotionRepository(database_1.prisma);
+        this.productRepository = new product_repository_1.ProductRepository(database_1.prisma);
     }
     /**
      * Validate promotion date range
@@ -18,7 +21,7 @@ export class PromotionService {
         }
         const now = new Date();
         if (startDate < now) {
-            logger.warn({ startDate, now }, 'Promotion start date is in the past');
+            logger_1.logger.warn({ startDate, now }, 'Promotion start date is in the past');
         }
     }
     /**
@@ -44,7 +47,7 @@ export class PromotionService {
             name,
             type,
         };
-        logger.info(logContext, 'Creating promotion');
+        logger_1.logger.info(logContext, 'Creating promotion');
         // Validate date range
         this.validateDateRange(startDate, endDate);
         // Validate value
@@ -72,7 +75,7 @@ export class PromotionService {
             rules,
             productIds,
         });
-        logger.info({ promotionId: promotion.id }, 'Promotion created successfully');
+        logger_1.logger.info({ promotionId: promotion.id }, 'Promotion created successfully');
         return promotion;
     }
     /**
@@ -115,7 +118,7 @@ export class PromotionService {
             this.validateValue(existingPromotion.type, input.value);
         }
         const promotion = await this.promotionRepository.update(id, input);
-        logger.info({ promotionId: id }, 'Promotion updated successfully');
+        logger_1.logger.info({ promotionId: id }, 'Promotion updated successfully');
         return promotion;
     }
     /**
@@ -124,7 +127,7 @@ export class PromotionService {
     async deletePromotion(id) {
         await this.getPromotionById(id); // Verify exists
         await this.promotionRepository.delete(id);
-        logger.info({ promotionId: id }, 'Promotion deleted successfully');
+        logger_1.logger.info({ promotionId: id }, 'Promotion deleted successfully');
     }
     /**
      * Add rule to promotion
@@ -132,7 +135,7 @@ export class PromotionService {
     async addRuleToPromotion(promotionId, type, value) {
         await this.getPromotionById(promotionId); // Verify exists
         const rule = await this.promotionRepository.addRule(promotionId, type, value);
-        logger.info({ promotionId, ruleId: rule.id, type }, 'Rule added to promotion');
+        logger_1.logger.info({ promotionId, ruleId: rule.id, type }, 'Rule added to promotion');
         return rule;
     }
     /**
@@ -140,7 +143,7 @@ export class PromotionService {
      */
     async removeRuleFromPromotion(ruleId) {
         await this.promotionRepository.removeRule(ruleId);
-        logger.info({ ruleId }, 'Rule removed from promotion');
+        logger_1.logger.info({ ruleId }, 'Rule removed from promotion');
     }
     /**
      * Add product to promotion
@@ -152,7 +155,7 @@ export class PromotionService {
             throw new Error('PRODUCT_NOT_FOUND');
         }
         const promotionProduct = await this.promotionRepository.addProduct(promotionId, productId);
-        logger.info({ promotionId, productId }, 'Product added to promotion');
+        logger_1.logger.info({ promotionId, productId }, 'Product added to promotion');
         return promotionProduct;
     }
     /**
@@ -161,7 +164,7 @@ export class PromotionService {
     async removeProductFromPromotion(promotionId, productId) {
         await this.getPromotionById(promotionId); // Verify exists
         await this.promotionRepository.removeProduct(promotionId, productId);
-        logger.info({ promotionId, productId }, 'Product removed from promotion');
+        logger_1.logger.info({ promotionId, productId }, 'Product removed from promotion');
     }
     /**
      * Check if promotion applies to a product
@@ -260,4 +263,5 @@ export class PromotionService {
         };
     }
 }
+exports.PromotionService = PromotionService;
 //# sourceMappingURL=index.js.map

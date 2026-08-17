@@ -1,9 +1,12 @@
-import { StoreService } from '../services/store/store.service';
-import { createStoreSchema, updateStoreSchema } from '../validators/store.validator';
-import { logger as baseLogger } from '../utils/logger';
-const logger = baseLogger.child({ module: 'store-controller' });
-const storeService = new StoreService();
-export class StoreController {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StoreController = void 0;
+const store_service_1 = require("../services/store/store.service");
+const store_validator_1 = require("../validators/store.validator");
+const logger_1 = require("../utils/logger");
+const logger = logger_1.logger.child({ module: 'store-controller' });
+const storeService = new store_service_1.StoreService();
+class StoreController {
     async findAll(_req, res, next) {
         try {
             const stores = await storeService.findAll();
@@ -51,7 +54,7 @@ export class StoreController {
     }
     async create(req, res, next) {
         try {
-            const validatedData = createStoreSchema.parse(req.body);
+            const validatedData = store_validator_1.createStoreSchema.parse(req.body);
             const store = await storeService.create(validatedData);
             logger.info({ storeId: store.id }, 'Store created via API');
             res.status(201).json({
@@ -97,7 +100,7 @@ export class StoreController {
                 });
                 return;
             }
-            const validatedData = updateStoreSchema.parse(req.body);
+            const validatedData = store_validator_1.updateStoreSchema.parse(req.body);
             const store = await storeService.update(id, validatedData);
             logger.info({ storeId: id }, 'Store updated via API');
             res.json({
@@ -279,5 +282,6 @@ export class StoreController {
         }
     }
 }
-export default new StoreController();
+exports.StoreController = StoreController;
+exports.default = new StoreController();
 //# sourceMappingURL=store.controller.js.map

@@ -1,7 +1,15 @@
-import pino from 'pino';
-const logger = pino({
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.logger = void 0;
+exports.getLogger = getLogger;
+exports.createChildLogger = createChildLogger;
+const pino_1 = __importDefault(require("pino"));
+const logger = (0, pino_1.default)({
     level: process.env.LOG_LEVEL || 'info',
-    timestamp: pino.stdTimeFunctions.isoTime,
+    timestamp: pino_1.default.stdTimeFunctions.isoTime,
     formatters: {
         level: (label) => ({ level: label }),
     },
@@ -9,11 +17,11 @@ const logger = pino({
         service: 'ecms6',
     },
 });
-export function getLogger() {
+exports.logger = logger;
+function getLogger() {
     return logger;
 }
-export function createChildLogger(name) {
+function createChildLogger(name) {
     return logger.child({ module: name });
 }
-export { logger };
 //# sourceMappingURL=logger.js.map

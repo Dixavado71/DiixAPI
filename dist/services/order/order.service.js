@@ -1,25 +1,28 @@
-import { prisma } from '../../config/database';
-import { OrderRepository } from '../../repositories/order.repository';
-import { CartRepository } from '../../repositories/cart.repository';
-import { ProductRepository } from '../../repositories/product.repository';
-import { StoreSettingsRepository } from '../../repositories/store-settings.repository';
-import { CustomerAuthorizationService } from '../customer/customer-authorization.service';
-import { PromotionService } from '../promotion';
-import { OrderStateMachine } from './order-state-machine';
-import { getLogger } from '../../utils/logger';
-const logger = getLogger();
-export class OrderService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OrderService = void 0;
+const database_1 = require("../../config/database");
+const order_repository_1 = require("../../repositories/order.repository");
+const cart_repository_1 = require("../../repositories/cart.repository");
+const product_repository_1 = require("../../repositories/product.repository");
+const store_settings_repository_1 = require("../../repositories/store-settings.repository");
+const customer_authorization_service_1 = require("../customer/customer-authorization.service");
+const promotion_1 = require("../promotion");
+const order_state_machine_1 = require("./order-state-machine");
+const logger_1 = require("../../utils/logger");
+const logger = (0, logger_1.getLogger)();
+class OrderService {
     orderRepository;
     cartRepository;
     productRepository;
     storeSettingsRepository;
     promotionService;
     constructor() {
-        this.orderRepository = new OrderRepository(prisma);
-        this.cartRepository = new CartRepository(prisma);
-        this.productRepository = new ProductRepository(prisma);
-        this.storeSettingsRepository = new StoreSettingsRepository(prisma);
-        this.promotionService = new PromotionService();
+        this.orderRepository = new order_repository_1.OrderRepository(database_1.prisma);
+        this.cartRepository = new cart_repository_1.CartRepository(database_1.prisma);
+        this.productRepository = new product_repository_1.ProductRepository(database_1.prisma);
+        this.storeSettingsRepository = new store_settings_repository_1.StoreSettingsRepository(database_1.prisma);
+        this.promotionService = new promotion_1.PromotionService();
     }
     /**
      * Generate unique order number
@@ -42,7 +45,7 @@ export class OrderService {
         };
         logger.info(logContext, 'Creating order from cart');
         // 1. Verify customer authorization
-        const auth = new CustomerAuthorizationService();
+        const auth = new customer_authorization_service_1.CustomerAuthorizationService();
         const isAllowed = await auth.isCustomerAllowed(storeId, customerId);
         if (!isAllowed) {
             logger.warn(logContext, 'Customer not authorized for this store');
@@ -186,7 +189,7 @@ export class OrderService {
     async updateOrderStatus(orderId, storeId, newStatus) {
         const order = await this.getOrderById(orderId, storeId);
         // Validate state transition
-        OrderStateMachine.transition(order.status, newStatus);
+        order_state_machine_1.OrderStateMachine.transition(order.status, newStatus);
         const updatedOrder = await this.orderRepository.updateStatus(orderId, newStatus);
         logger.info({ orderId, oldStatus: order.status, newStatus }, 'Order status updated');
         return updatedOrder;
@@ -197,7 +200,7 @@ export class OrderService {
     async cancelOrder(orderId, storeId, reason) {
         const order = await this.getOrderById(orderId, storeId);
         // Check if order can be cancelled
-        if (!OrderStateMachine.canCancel(order.status)) {
+        if (!order_state_machine_1.OrderStateMachine.canCancel(order.status)) {
             throw new Error(`ORDER_CANNOT_BE_CANCELLED: Current status is ${order.status}`);
         }
         const cancelledOrder = await this.orderRepository.updateStatus(orderId, 'CANCELLED');
@@ -212,7 +215,7 @@ export class OrderService {
         const updatedOrder = await this.orderRepository.updatePaymentStatus(orderId, paymentStatus);
         // If payment is confirmed and order is in PAYMENT_PENDING, transition to PAID or PREPARING
         if (paymentStatus === 'PAID' && order.status === 'PAYMENT_PENDING') {
-            const nextStatus = OrderStateMachine.canTransition('PAYMENT_PENDING', 'PAID')
+            const nextStatus = order_state_machine_1.OrderStateMachine.canTransition('PAYMENT_PENDING', 'PAID')
                 ? 'PAID'
                 : 'PREPARING';
             return this.orderRepository.updateStatus(orderId, nextStatus);
@@ -220,4 +223,5 @@ export class OrderService {
         return updatedOrder;
     }
 }
+exports.OrderService = OrderService;
 //# sourceMappingURL=order.service.js.map

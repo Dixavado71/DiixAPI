@@ -1,10 +1,13 @@
-import { z } from 'zod';
-import { CustomerStatus } from '@prisma/client';
-export const createCustomerSchema = z.object({
-    name: z.string().min(1).max(255).optional(),
-    phone: z.string().min(10).max(20),
-    email: z.string().email().max(255).optional(),
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.customerStatusSchema = exports.updateCustomerSchema = exports.createCustomerSchema = void 0;
+const zod_1 = require("zod");
+const client_1 = require("@prisma/client");
+exports.createCustomerSchema = zod_1.z.object({
+    name: zod_1.z.string().min(1).max(255).optional(),
+    phone: zod_1.z.string().min(10).max(20),
+    email: zod_1.z.string().email().max(255).optional(),
 });
-export const updateCustomerSchema = createCustomerSchema.partial();
-export const customerStatusSchema = z.nativeEnum(CustomerStatus);
+exports.updateCustomerSchema = exports.createCustomerSchema.partial();
+exports.customerStatusSchema = zod_1.z.nativeEnum(client_1.CustomerStatus);
 //# sourceMappingURL=customer.validator.js.map

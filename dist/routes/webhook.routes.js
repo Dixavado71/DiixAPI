@@ -1,18 +1,20 @@
-import { Router } from 'express';
-import { z } from 'zod';
-import { getLogger } from '../utils/logger';
-import { webhookService } from '../services/webhook/webhook.service';
-const router = Router();
-const logger = getLogger().child({ module: 'webhook' });
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const zod_1 = require("zod");
+const logger_1 = require("../utils/logger");
+const webhook_service_1 = require("../services/webhook/webhook.service");
+const router = (0, express_1.Router)();
+const logger = (0, logger_1.getLogger)().child({ module: 'webhook' });
 /**
  * Schema for validating Evolution API webhook payload
  * Adjust based on actual Evolution API v2.3.7 payload structure
  */
-const webhookPayloadSchema = z
+const webhookPayloadSchema = zod_1.z
     .object({
-    event: z.string(),
-    instance: z.string(),
-    data: z.record(z.unknown()).optional(),
+    event: zod_1.z.string(),
+    instance: zod_1.z.string(),
+    data: zod_1.z.record(zod_1.z.unknown()).optional(),
 })
     .passthrough();
 /**
@@ -39,7 +41,7 @@ router.post('/evolution', async (req, res) => {
             hasData: !!payload.data,
         }, 'Webhook received from Evolution API');
         // Process webhook through service
-        const result = await webhookService.processWebhook(payload);
+        const result = await webhook_service_1.webhookService.processWebhook(payload);
         // Acknowledge receipt
         res.status(200).json({
             status: 'processed',
@@ -55,5 +57,5 @@ router.post('/evolution', async (req, res) => {
         });
     }
 });
-export default router;
+exports.default = router;
 //# sourceMappingURL=webhook.routes.js.map

@@ -1,9 +1,12 @@
-import { getStoreRepository, getStoreSettingsRepository } from '../../repositories';
-import { getLogger } from '../../utils/logger';
-const logger = getLogger().child({ module: 'store-service' });
-export class StoreService {
-    storeRepository = getStoreRepository();
-    settingsRepository = getStoreSettingsRepository();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StoreService = void 0;
+const repositories_1 = require("../../repositories");
+const logger_1 = require("../../utils/logger");
+const logger = (0, logger_1.getLogger)().child({ module: 'store-service' });
+class StoreService {
+    storeRepository = (0, repositories_1.getStoreRepository)();
+    settingsRepository = (0, repositories_1.getStoreSettingsRepository)();
     async findAll() {
         return this.storeRepository.findAll();
     }
@@ -133,4 +136,5 @@ export class StoreService {
         return settings;
     }
 }
+exports.StoreService = StoreService;
 //# sourceMappingURL=store.service.js.map

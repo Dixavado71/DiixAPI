@@ -1,4 +1,7 @@
-export class DeliveryRepository {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DeliveryRepository = void 0;
+class DeliveryRepository {
     prisma;
     constructor(prisma) {
         this.prisma = prisma;
@@ -54,4 +57,5 @@ export class DeliveryRepository {
         });
     }
 }
+exports.DeliveryRepository = DeliveryRepository;
 //# sourceMappingURL=delivery.repository.js.map

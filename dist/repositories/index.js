@@ -1,34 +1,40 @@
-import { getPrismaClient } from '../config/database';
-import { StoreRepository } from './store.repository';
-import { StoreSettingsRepository } from './store-settings.repository';
-import { CustomerRepository } from './customer.repository';
-import { StoreCustomerRepository } from './store-customer.repository';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getStoreRepository = getStoreRepository;
+exports.getStoreSettingsRepository = getStoreSettingsRepository;
+exports.getCustomerRepository = getCustomerRepository;
+exports.getStoreCustomerRepository = getStoreCustomerRepository;
+const database_1 = require("../config/database");
+const store_repository_1 = require("./store.repository");
+const store_settings_repository_1 = require("./store-settings.repository");
+const customer_repository_1 = require("./customer.repository");
+const store_customer_repository_1 = require("./store-customer.repository");
 // Singleton instances
 let storeRepository = null;
 let storeSettingsRepository = null;
 let customerRepository = null;
 let storeCustomerRepository = null;
-export function getStoreRepository() {
+function getStoreRepository() {
     if (!storeRepository) {
-        storeRepository = new StoreRepository(getPrismaClient());
+        storeRepository = new store_repository_1.StoreRepository((0, database_1.getPrismaClient)());
     }
     return storeRepository;
 }
-export function getStoreSettingsRepository() {
+function getStoreSettingsRepository() {
     if (!storeSettingsRepository) {
-        storeSettingsRepository = new StoreSettingsRepository(getPrismaClient());
+        storeSettingsRepository = new store_settings_repository_1.StoreSettingsRepository((0, database_1.getPrismaClient)());
     }
     return storeSettingsRepository;
 }
-export function getCustomerRepository() {
+function getCustomerRepository() {
     if (!customerRepository) {
-        customerRepository = new CustomerRepository(getPrismaClient());
+        customerRepository = new customer_repository_1.CustomerRepository((0, database_1.getPrismaClient)());
     }
     return customerRepository;
 }
-export function getStoreCustomerRepository() {
+function getStoreCustomerRepository() {
     if (!storeCustomerRepository) {
-        storeCustomerRepository = new StoreCustomerRepository(getPrismaClient());
+        storeCustomerRepository = new store_customer_repository_1.StoreCustomerRepository((0, database_1.getPrismaClient)());
     }
     return storeCustomerRepository;
 }

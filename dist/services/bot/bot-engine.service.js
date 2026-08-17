@@ -1,4 +1,7 @@
-export class BotEngineService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BotEngineService = void 0;
+class BotEngineService {
     prisma;
     constructor(prisma) {
         this.prisma = prisma;
@@ -204,4 +207,5 @@ export class BotEngineService {
         });
     }
 }
+exports.BotEngineService = BotEngineService;
 //# sourceMappingURL=bot-engine.service.js.map
