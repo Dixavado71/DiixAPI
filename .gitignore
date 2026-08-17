@@ -1,60 +1,49 @@
 ```
-# Docker related
-.dockerignore
-Dockerfile.*
-
 # Dependencies
 node_modules/
-.venv/
-venv/
-__pycache__/
-*.egg-info/
-dist-packages/
 
-# Build artifacts
-build/
+# Build outputs
 dist/
+build/
 target/
-*.pyc
-*.class
-*.o
-*.obj
-*.so
-*.dll
-*.exe
 
-# Logs and temporary files
-*.log
-*.tmp
-*.swp
-*.swo
+# TypeScript/JavaScript build artifacts
+*.tsbuildinfo
 
-# Environment
+# Environment variables
 .env
 .env.local
-.env.*
+*.env.*
 
-# Editors
+# IDE and editor files
 .vscode/
 .idea/
-*.iml
-*.ipr
-*.iws
+*.swp
+*.swo
+*.tmp
 
-# OS
-.DS_Store
-Thumbs.db
+# Logs
+*.log
 
-# Coverage
-.coverage
+# Coverage reports
 coverage/
 htmlcov/
+.coverage
 
-# Python specific
+# Python cache (if any Python files exist in the project)
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
+*.pyc
+*.pyo
+*.pyd
 .Python
-*.sqlite3
+*.so
+
+# Distribution / packaging
+*.tar.gz
+*.whl
+*.egg-info/
+
+# OS generated files
+.DS_Store
+Thumbs.db
 ```
