@@ -11,6 +11,7 @@ export declare const env: {
     PORT: number;
     DATABASE_URL: string;
     EVOLUTION_WEBHOOK_SECRET: string;
+    REDIS_URL?: string | undefined;
 };
 export declare const PORT: number;
 export declare const NODE_ENV: "production" | "development" | "test";
