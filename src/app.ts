@@ -55,23 +55,7 @@ export function createApp(): Application {
   // API routes
   app.use('/api/v1', routes);
 
-  // Serve static files from frontend build in production
-  const isProduction = process.env.NODE_ENV === 'production';
-  if (isProduction) {
-    const distPath = path.join(__dirname, '..', 'frontend', 'dist');
-    logger.info({ distPath }, 'Serving static files from');
-    app.use(express.static(distPath));
-
-    // SPA fallback - serve index.html for all non-API routes
-    app.get('*', (req, res, next) => {
-      if (req.url.startsWith('/api')) {
-        return next();
-      }
-      res.sendFile(path.join(distPath, 'index.html'));
-    });
-  }
-
-  // Root endpoint
+  // Root endpoint (must be before static files and SPA fallback)
   app.get('/' as const, (_req: Request, res: Response) => {
     res.json({
       service: 'ecms6',
@@ -79,6 +63,39 @@ export function createApp(): Application {
       documentation: '/api/v1/health',
     });
   });
+
+  // Serve static files from frontend build in production
+  const isProduction = process.env.NODE_ENV === 'production';
+  if (isProduction) {
+    const distPath = path.join(__dirname, '..', 'frontend', 'dist');
+    logger.info({ distPath, __dirname }, 'Serving static files from');
+    
+    try {
+      const fs = require('fs');
+      if (fs.existsSync(distPath)) {
+        logger.info({ files: fs.readdirSync(distPath) }, 'Frontend dist files');
+        app.use(express.static(distPath));
+
+        // SPA fallback - serve index.html for all non-API routes
+        app.get('*', (req, res, next) => {
+          if (req.url.startsWith('/api')) {
+            return next();
+          }
+          const indexPath = path.join(distPath, 'index.html');
+          if (fs.existsSync(indexPath)) {
+            res.sendFile(indexPath);
+          } else {
+            logger.error({ indexPath }, 'index.html not found');
+            res.status(404).json({ status: 'error', message: 'Frontend not found' });
+          }
+        });
+      } else {
+        logger.warn({ distPath }, 'Frontend dist path does not exist');
+      }
+    } catch (error) {
+      logger.error({ error }, 'Error setting up static files');
+    }
+  }
 
   // 404 handler
   app.use((_req: Request, res: Response) => {
