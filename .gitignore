@@ -1,1 +1,5 @@
-(docs/deployment/environment-variables.md, docs/development/developer-guide.md, docs/development/roadmap.md, docs/resources/faq.md, docs/resources/glossary.md, docs/security/security-checklist.md, docs/security/security-policy.md, docs/README.md)
+```
+# Build artifacts
+dist/
+*.js.map
+```
