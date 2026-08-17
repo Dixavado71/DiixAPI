@@ -1,5 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { WebhookService, WebhookPayload, MessageData } from '../../src/services/webhook/webhook.service';
+import {
+  WebhookService,
+  WebhookPayload,
+  MessageData,
+} from '../../src/services/webhook/webhook.service';
 import { prisma } from '../../src/config/database';
 
 // Mock prisma client
@@ -52,9 +56,16 @@ describe('WebhookService', () => {
       vi.mocked(prisma.webhookEvent.findUnique).mockResolvedValue(null);
       vi.mocked(prisma.webhookEvent.create).mockResolvedValue({ id: 'event-1' } as any);
       vi.mocked(prisma.customer.findUnique).mockResolvedValue(null);
-      vi.mocked(prisma.customer.create).mockResolvedValue({ id: 'customer-1', phone: '5511999999999' } as any);
+      vi.mocked(prisma.customer.create).mockResolvedValue({
+        id: 'customer-1',
+        phone: '5511999999999',
+      } as any);
       vi.mocked(prisma.conversationState.findUnique).mockResolvedValue(null);
-      vi.mocked(prisma.conversationState.create).mockResolvedValue({ id: 'state-1', state: 'IDLE', context: {} } as any);
+      vi.mocked(prisma.conversationState.create).mockResolvedValue({
+        id: 'state-1',
+        state: 'IDLE',
+        context: {},
+      } as any);
       vi.mocked(prisma.webhookEvent.updateMany).mockResolvedValue({ count: 1 } as any);
       vi.mocked(prisma.conversationState.update).mockResolvedValue({ id: 'state-1' } as any);
 

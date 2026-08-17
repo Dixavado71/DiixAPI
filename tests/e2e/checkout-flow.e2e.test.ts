@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import request from 'supertest';
 import { app } from '../../src/app';
 
 /**
  * Testes End-to-End para fluxo completo de checkout
- * 
+ *
  * Este teste simula o fluxo completo de uma compra:
  * 1. Criação de loja
  * 2. Cadastro de cliente
@@ -49,9 +49,7 @@ describe('E2E Tests - Checkout Flow', () => {
 
   describe('Step 1: Create Store', () => {
     it('should create a new store', async () => {
-      const response = await request(app)
-        .post('/api/v1/stores')
-        .send(storeData);
+      const response = await request(app).post('/api/v1/stores').send(storeData);
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('id');
@@ -168,8 +166,7 @@ describe('E2E Tests - Checkout Flow', () => {
 
   describe('Step 7: Verify Order', () => {
     it('should retrieve created order with all details', async () => {
-      const response = await request(app)
-        .get(`/api/v1/stores/${storeId}/orders/${orderId}`);
+      const response = await request(app).get(`/api/v1/stores/${storeId}/orders/${orderId}`);
 
       expect(response.status).toBe(200);
       expect(response.body.id).toBe(orderId);
@@ -180,8 +177,7 @@ describe('E2E Tests - Checkout Flow', () => {
     });
 
     it('should have order in correct status', async () => {
-      const response = await request(app)
-        .get(`/api/v1/stores/${storeId}/orders/${orderId}`);
+      const response = await request(app).get(`/api/v1/stores/${storeId}/orders/${orderId}`);
 
       expect(response.body.status).toBe('PENDING_PAYMENT');
     });

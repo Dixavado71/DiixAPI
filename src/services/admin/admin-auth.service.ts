@@ -304,7 +304,7 @@ export class AdminAuthService {
         email: decoded.email,
         role: decoded.role,
       };
-    } catch (error) {
+    } catch {
       return {
         valid: false,
         error: 'Invalid or expired token',

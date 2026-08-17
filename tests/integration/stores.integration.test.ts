@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import request from 'supertest';
 import { app } from '../../src/app';
 
@@ -17,15 +17,13 @@ describe('Integration Tests - Stores API', () => {
         isActive: true,
       };
 
-      const response = await request(app)
-        .post('/api/v1/stores')
-        .send(storeData);
+      const response = await request(app).post('/api/v1/stores').send(storeData);
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('id');
       expect(response.body.name).toBe(storeData.name);
       expect(response.body.slug).toBe(storeData.slug);
-      
+
       createdStoreId = response.body.id;
     });
 
@@ -39,9 +37,7 @@ describe('Integration Tests - Stores API', () => {
         isActive: true,
       };
 
-      const response = await request(app)
-        .post('/api/v1/stores')
-        .send(storeData);
+      const response = await request(app).post('/api/v1/stores').send(storeData);
 
       expect(response.status).toBe(409);
     });
@@ -49,8 +45,7 @@ describe('Integration Tests - Stores API', () => {
 
   describe('GET /api/v1/stores', () => {
     it('should return list of stores', async () => {
-      const response = await request(app)
-        .get('/api/v1/stores');
+      const response = await request(app).get('/api/v1/stores');
 
       expect(response.status).toBe(200);
       expect(response.body).toBeInstanceOf(Array);
@@ -70,23 +65,19 @@ describe('Integration Tests - Stores API', () => {
           isActive: true,
         };
 
-        const createResponse = await request(app)
-          .post('/api/v1/stores')
-          .send(storeData);
-        
+        const createResponse = await request(app).post('/api/v1/stores').send(storeData);
+
         createdStoreId = createResponse.body.id;
       }
 
-      const response = await request(app)
-        .get(`/api/v1/stores/${createdStoreId}`);
+      const response = await request(app).get(`/api/v1/stores/${createdStoreId}`);
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('id', createdStoreId);
     });
 
     it('should return 404 for non-existent store', async () => {
-      const response = await request(app)
-        .get('/api/v1/stores/non-existent-id');
+      const response = await request(app).get('/api/v1/stores/non-existent-id');
 
       expect(response.status).toBe(404);
     });
@@ -99,9 +90,7 @@ describe('Integration Tests - Stores API', () => {
         phone: '+5511988888888',
       };
 
-      const response = await request(app)
-        .put(`/api/v1/stores/${createdStoreId}`)
-        .send(updateData);
+      const response = await request(app).put(`/api/v1/stores/${createdStoreId}`).send(updateData);
 
       expect(response.status).toBe(200);
       expect(response.body.name).toBe(updateData.name);
@@ -110,8 +99,7 @@ describe('Integration Tests - Stores API', () => {
 
   describe('DELETE /api/v1/stores/:id', () => {
     it('should deactivate store (soft delete)', async () => {
-      const response = await request(app)
-        .delete(`/api/v1/stores/${createdStoreId}`);
+      const response = await request(app).delete(`/api/v1/stores/${createdStoreId}`);
 
       expect(response.status).toBe(200);
     });

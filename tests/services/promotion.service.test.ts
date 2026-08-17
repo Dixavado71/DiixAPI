@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { PromotionService } from '../../src/services/promotion';
 import { PromotionRepository } from '../../src/repositories/promotion.repository';
 import { ProductRepository } from '../../src/repositories/product.repository';
-import { prisma } from '../../src/config/database';
+// import { prisma } from '../../src/config/database';
 
 // Mock repositories
 vi.mock('../../src/repositories/promotion.repository');
@@ -134,7 +134,10 @@ describe('PromotionService', () => {
 
       const result = await promotionService.createPromotion(input);
 
-      expect(mockPromotionRepository.create).toHaveBeenCalledWith(input.storeId, expect.any(Object));
+      expect(mockPromotionRepository.create).toHaveBeenCalledWith(
+        input.storeId,
+        expect.any(Object)
+      );
       expect(result).toEqual(mockPromotion);
     });
 
@@ -154,7 +157,9 @@ describe('PromotionService', () => {
         storeId: 'store-2', // Different store
       } as any);
 
-      await expect(promotionService.createPromotion(input)).rejects.toThrow('PRODUCT_STORE_MISMATCH');
+      await expect(promotionService.createPromotion(input)).rejects.toThrow(
+        'PRODUCT_STORE_MISMATCH'
+      );
     });
   });
 
@@ -206,7 +211,7 @@ describe('PromotionService', () => {
       } as any;
 
       const result = await promotionService.promotionAppliesToProduct('promo-1', 'product-1');
-      
+
       global.Date = originalDate;
       expect(result).toBe(false);
     });
@@ -215,7 +220,7 @@ describe('PromotionService', () => {
       const now = new Date();
       const startDate = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
       const endDate = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
-      
+
       mockPromotionRepository.findById.mockResolvedValue({
         id: 'promo-1',
         active: true,

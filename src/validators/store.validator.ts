@@ -3,9 +3,13 @@ import { StoreStatus } from '@prisma/client';
 
 export const createStoreSchema = z.object({
   name: z.string().min(1).max(255),
-  slug: z.string().min(1).max(100).regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, {
-    message: 'Slug must contain only lowercase letters, numbers and hyphens',
-  }),
+  slug: z
+    .string()
+    .min(1)
+    .max(100)
+    .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, {
+      message: 'Slug must contain only lowercase letters, numbers and hyphens',
+    }),
   description: z.string().max(500).optional(),
   phone: z.string().max(20).optional(),
   timezone: z.string().default('America/Sao_Paulo'),

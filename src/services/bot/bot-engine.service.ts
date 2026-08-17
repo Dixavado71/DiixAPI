@@ -43,7 +43,7 @@ export class BotEngineService {
   async processMessage(
     customerId: string,
     storeId: string,
-    message: string
+    _message: string
   ): Promise<BotMessage[]> {
     // Obtém ou cria contexto da conversação
     const context = await this.getOrCreateContext(customerId, storeId);
@@ -168,8 +168,8 @@ export class BotEngineService {
     return {
       id: 'idle',
       name: 'Estado Inicial',
-      trigger: async (context) => context.state === 'IDLE',
-      execute: async (context, message) => {
+      trigger: async (_context) => context.state === 'IDLE',
+      execute: async (_context, _message) => {
         const lowerMessage = message.toLowerCase();
 
         // Comandos principais
@@ -216,8 +216,8 @@ export class BotEngineService {
     return {
       id: 'browse_catalog',
       name: 'Navegar Catálogo',
-      trigger: async (context) => context.state === 'BROWSE_CATALOG',
-      execute: async (context, message) => {
+      trigger: async (_context) => context.state === 'BROWSE_CATALOG',
+      execute: async (_context, _message) => {
         return await this.executeBrowseCatalog(context, message);
       },
       transitions: [],
@@ -228,8 +228,8 @@ export class BotEngineService {
    * Executa lógica de navegação do catálogo
    */
   private async executeBrowseCatalog(
-    context: ConversationContext,
-    message: string
+    _context: ConversationContext,
+    _message: string
   ): Promise<BotMessage[]> {
     const products = await this.productService.findAll(context.storeId);
 
@@ -242,7 +242,7 @@ export class BotEngineService {
       ];
     }
 
-    const buttons = products.slice(0, 5).map((product, index) => ({
+    const buttons = products.slice(0, 5).map((product, _index) => ({
       id: `view_product_${product.id}`,
       text: product.name.substring(0, 20),
       type: 'reply' as const,
@@ -264,8 +264,8 @@ export class BotEngineService {
     return {
       id: 'view_product',
       name: 'Ver Produto',
-      trigger: async (context) => context.state === 'VIEW_PRODUCT',
-      execute: async (context, message) => {
+      trigger: async (_context) => context.state === 'VIEW_PRODUCT',
+      execute: async (_context, _message) => {
         if (!context.currentProductId) {
           context.state = 'BROWSE_CATALOG';
           await this.saveContext(context);
@@ -305,8 +305,8 @@ export class BotEngineService {
     return {
       id: 'cart_add',
       name: 'Adicionar ao Carrinho',
-      trigger: async (context) => context.state === 'CART_ADD',
-      execute: async (context, message) => {
+      trigger: async (_context) => context.state === 'CART_ADD',
+      execute: async (_context, _message) => {
         // Lógica para adicionar produto ao carrinho
         context.state = 'CART_VIEW';
         await this.saveContext(context);
@@ -333,8 +333,8 @@ export class BotEngineService {
     return {
       id: 'cart_view',
       name: 'Ver Carrinho',
-      trigger: async (context) => context.state === 'CART_VIEW',
-      execute: async (context, message) => {
+      trigger: async (_context) => context.state === 'CART_VIEW',
+      execute: async (_context, _message) => {
         return await this.executeCartView(context, message);
       },
       transitions: [],
@@ -345,8 +345,8 @@ export class BotEngineService {
    * Executa lógica de visualização do carrinho
    */
   private async executeCartView(
-    context: ConversationContext,
-    message: string
+    _context: ConversationContext,
+    _message: string
   ): Promise<BotMessage[]> {
     // Implementação simplificada - na prática buscaria do banco
     return [
@@ -365,8 +365,8 @@ export class BotEngineService {
     return {
       id: 'checkout_start',
       name: 'Iniciar Checkout',
-      trigger: async (context) => context.state === 'CHECKOUT_START',
-      execute: async (context, message) => {
+      trigger: async (_context) => context.state === 'CHECKOUT_START',
+      execute: async (_context, _message) => {
         context.state = 'CHECKOUT_ADDRESS';
         await this.saveContext(context);
 
@@ -388,8 +388,8 @@ export class BotEngineService {
     return {
       id: 'checkout_address',
       name: 'Endereço de Entrega',
-      trigger: async (context) => context.state === 'CHECKOUT_ADDRESS',
-      execute: async (context, message) => {
+      trigger: async (_context) => context.state === 'CHECKOUT_ADDRESS',
+      execute: async (_context, _message) => {
         // Salvar endereço no metadata
         context.metadata = { ...context.metadata, address: message };
         context.state = 'CHECKOUT_PAYMENT';
@@ -418,8 +418,8 @@ export class BotEngineService {
     return {
       id: 'checkout_payment',
       name: 'Pagamento',
-      trigger: async (context) => context.state === 'CHECKOUT_PAYMENT',
-      execute: async (context, message) => {
+      trigger: async (_context) => context.state === 'CHECKOUT_PAYMENT',
+      execute: async (_context, _message) => {
         // Processar pagamento e criar pedido
         context.state = 'ORDER_TRACKING';
         await this.saveContext(context);
@@ -442,8 +442,8 @@ export class BotEngineService {
     return {
       id: 'order_tracking',
       name: 'Acompanhamento de Pedido',
-      trigger: async (context) => context.state === 'ORDER_TRACKING',
-      execute: async (context, message) => {
+      trigger: async (_context) => context.state === 'ORDER_TRACKING',
+      execute: async (_context, _message) => {
         return await this.executeOrderTracking(context, message);
       },
       transitions: [],
@@ -454,8 +454,8 @@ export class BotEngineService {
    * Executa lógica de acompanhamento de pedido
    */
   private async executeOrderTracking(
-    context: ConversationContext,
-    message: string
+    _context: ConversationContext,
+    _message: string
   ): Promise<BotMessage[]> {
     return [
       {
@@ -472,8 +472,8 @@ export class BotEngineService {
     return {
       id: 'support',
       name: 'Suporte',
-      trigger: async (context) => context.state === 'SUPPORT',
-      execute: async (context, message) => {
+      trigger: async (_context) => context.state === 'SUPPORT',
+      execute: async (_context, _message) => {
         return await this.executeSupport(context, message);
       },
       transitions: [],
@@ -484,8 +484,8 @@ export class BotEngineService {
    * Executa lógica de suporte
    */
   private async executeSupport(
-    context: ConversationContext,
-    message: string
+    _context: ConversationContext,
+    _message: string
   ): Promise<BotMessage[]> {
     return [
       {
@@ -499,8 +499,8 @@ export class BotEngineService {
    * Trata comandos gerais quando não há step específico
    */
   private async handleGeneralCommand(
-    context: ConversationContext,
-    message: string
+    _context: ConversationContext,
+    _message: string
   ): Promise<BotMessage[]> {
     const lowerMessage = message.toLowerCase();
 

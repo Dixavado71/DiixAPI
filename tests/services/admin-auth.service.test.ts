@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { AdminAuthService } from '../../src/services/admin/admin-auth.service.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 // Mock dependencies
 vi.mock('bcryptjs', () => ({
   default: {
-    hash: vi.fn((password: string, rounds: number) => Promise.resolve(`hashed_${password}`)),
+    hash: vi.fn((password: string, _rounds: number) => Promise.resolve(`hashed_${password}`)),
     compare: vi.fn((password: string, hash: string) => {
       if (hash === 'hashed_correct_password') {
         return Promise.resolve(true);
@@ -21,8 +21,8 @@ vi.mock('bcryptjs', () => ({
 
 vi.mock('jsonwebtoken', () => ({
   default: {
-    sign: vi.fn((payload: any, secret: string, options: any) => 'mock_jwt_token'),
-    verify: vi.fn((token: string, secret: string) => {
+    sign: vi.fn((_payload: any, _secret: string, _options: any) => 'mock_jwt_token'),
+    verify: vi.fn((token: string, _secret: string) => {
       if (token === 'valid_token') {
         return { userId: 'user123', email: 'test@example.com', role: 'SUPER_ADMIN' };
       }

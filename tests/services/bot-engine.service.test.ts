@@ -8,16 +8,16 @@ import { OrderService } from '../../src/services/order/order.service';
 // Mocks
 const mockPrisma = {
   conversation: {
-    findFirst: jest.fn(),
-    create: jest.fn(),
-    updateMany: jest.fn(),
+    findFirst: vi.fn(),
+    create: vi.fn(),
+    updateMany: vi.fn(),
   },
 } as unknown as PrismaClient;
 
 const mockCustomerService = {} as CustomerService;
 const mockProductService = {
-  findAll: jest.fn(),
-  findById: jest.fn(),
+  findAll: vi.fn(),
+  findById: vi.fn(),
 } as unknown as ProductService;
 const mockCartService = {} as CartService;
 const mockOrderService = {} as OrderService;
@@ -66,7 +66,7 @@ describe('BotEngineService', () => {
         {
           id: 'prod1',
           name: 'Produto Teste',
-          price: 99.90,
+          price: 99.9,
           description: 'Descrição do produto',
           stockQuantity: 10,
         },
@@ -164,7 +164,7 @@ describe('BotEngineService', () => {
       mockProductService.findById.mockResolvedValue({
         id: 'prod1',
         name: 'Produto Teste',
-        price: 99.90,
+        price: 99.9,
         description: 'Descrição completa',
         stockQuantity: 5,
       });
@@ -216,8 +216,9 @@ describe('BotEngineService', () => {
     it('should handle prisma errors gracefully', async () => {
       mockPrisma.conversation.findFirst.mockRejectedValue(new Error('Database error'));
 
-      await expect(botService.processMessage('cust1', 'store1', 'test'))
-        .rejects.toThrow('Database error');
+      await expect(botService.processMessage('cust1', 'store1', 'test')).rejects.toThrow(
+        'Database error'
+      );
     });
   });
 
