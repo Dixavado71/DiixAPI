@@ -24,7 +24,7 @@ const authenticate = async (req, res, next) => {
         };
         next();
     }
-    catch (error) {
+    catch {
         return res.status(500).json({
             error: 'Internal server error during authentication',
         });
@@ -69,7 +69,7 @@ const optionalAuth = async (req, res, next) => {
         }
         next();
     }
-    catch (error) {
+    catch {
         next();
     }
 };

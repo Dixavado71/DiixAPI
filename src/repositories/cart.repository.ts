@@ -122,7 +122,7 @@ export class CartRepository {
   async updateStatus(cartId: string, status: string) {
     return this.prisma.cart.update({
       where: { id: cartId },
-      data: { status: status as any },
+      data: { status: status as 'ACTIVE' | 'INACTIVE' | 'CHECKED_OUT' | 'ABANDONED' },
     });
   }
 }

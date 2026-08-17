@@ -2,6 +2,8 @@ export declare const env: {
     LOG_LEVEL: "info" | "fatal" | "error" | "warn" | "debug" | "trace";
     EVOLUTION_API_URL: string;
     EVOLUTION_API_KEY: string;
+    JWT_SECRET: string;
+    JWT_EXPIRES_IN: string;
     CORS_ORIGIN: string;
     RATE_LIMIT_WINDOW_MS: number;
     RATE_LIMIT_MAX: number;
@@ -9,8 +11,6 @@ export declare const env: {
     PORT: number;
     DATABASE_URL: string;
     EVOLUTION_WEBHOOK_SECRET: string;
-    JWT_SECRET: string;
-    JWT_EXPIRES_IN: string;
 };
 export declare const PORT: number;
 export declare const NODE_ENV: "production" | "development" | "test";

@@ -48,7 +48,8 @@ class CartController {
             });
         }
         catch (error) {
-            if (error.message === 'PRODUCT_NOT_FOUND' || error.message === 'PRODUCT_STORE_MISMATCH') {
+            if (error.message === 'PRODUCT_NOT_FOUND' ||
+                error.message === 'PRODUCT_STORE_MISMATCH') {
                 res.status(400).json({ error: error.message });
                 return;
             }

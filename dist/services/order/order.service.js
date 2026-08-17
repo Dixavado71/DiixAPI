@@ -73,7 +73,10 @@ class OrderService {
         // 5. Validate delivery method if provided
         if (deliveryMethod) {
             const deliveryEnabled = (deliveryMethod === 'PICKUP' && settings.pickupEnabled) ||
-                ((deliveryMethod === 'STORE_DELIVERY' || deliveryMethod === 'COURIER' || deliveryMethod === 'THIRD_PARTY') && settings.deliveryEnabled);
+                ((deliveryMethod === 'STORE_DELIVERY' ||
+                    deliveryMethod === 'COURIER' ||
+                    deliveryMethod === 'THIRD_PARTY') &&
+                    settings.deliveryEnabled);
             if (!deliveryEnabled) {
                 throw new Error(`DELIVERY_METHOD_NOT_ENABLED: ${deliveryMethod}`);
             }
@@ -212,7 +215,9 @@ class OrderService {
         const updatedOrder = await this.orderRepository.updatePaymentStatus(orderId, paymentStatus);
         // If payment is confirmed and order is in PAYMENT_PENDING, transition to PAID or PREPARING
         if (paymentStatus === 'PAID' && order.status === 'PAYMENT_PENDING') {
-            const nextStatus = order_state_machine_1.OrderStateMachine.canTransition('PAYMENT_PENDING', 'PAID') ? 'PAID' : 'PREPARING';
+            const nextStatus = order_state_machine_1.OrderStateMachine.canTransition('PAYMENT_PENDING', 'PAID')
+                ? 'PAID'
+                : 'PREPARING';
             return this.orderRepository.updateStatus(orderId, nextStatus);
         }
         return updatedOrder;

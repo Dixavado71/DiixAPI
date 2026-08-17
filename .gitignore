@@ -1,69 +1,31 @@
 ```
+# Compiled and build artifacts
+dist/
+*.d.ts
+*.js
+*.map
+
 # Dependencies
 node_modules/
 
-# Build artifacts
-dist/
-build/
-target/
-
-# Temporary files
-*.tmp
-*.swp
-
-# Logs
+# Logs and temp files
 *.log
+*.tmp
+
+# Editors
+.vscode/
+.idea/
 
 # Environment
 .env
 .env.local
 .env.*
 
-# Editors
-.vscode/
-.idea/
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Java
-*.class
-*.jar
-*.war
-*.ear
-*.nar
-*.hprof
-hs_err_pid*
-
-# C/C++
-*.o
-*.obj
-*.so
-*.a
-*.lib
-*.dll
-*.dylib
-*.exe
-*.out
-
-# Node.js
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Vite/Vitest
-.node/
-.vite/
-
 # Coverage
 coverage/
-.nyc_output/
-istanbul-reports/
+htmlcov/
+.coverage
 
-# OS
-.DS_Store
-Thumbs.db
+# Vite/Vitest cache
+node_modules/.vite/
 ```

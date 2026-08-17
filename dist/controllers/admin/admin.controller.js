@@ -25,8 +25,9 @@ class AdminController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(400).json({
-                error: error.message || 'Failed to create user',
+                error: err.message || 'Failed to create user',
             });
         }
     }
@@ -46,8 +47,9 @@ class AdminController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(401).json({
-                error: error.message || 'Login failed',
+                error: err.message || 'Login failed',
             });
         }
     }
@@ -64,8 +66,9 @@ class AdminController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(404).json({
-                error: error.message || 'User not found',
+                error: err.message || 'User not found',
             });
         }
     }
@@ -88,8 +91,9 @@ class AdminController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(400).json({
-                error: error.message || 'Failed to update profile',
+                error: err.message || 'Failed to update profile',
             });
         }
     }
@@ -113,8 +117,9 @@ class AdminController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(400).json({
-                error: error.message || 'Failed to change password',
+                error: err.message || 'Failed to change password',
             });
         }
     }
@@ -131,8 +136,9 @@ class AdminController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(500).json({
-                error: error.message || 'Failed to logout',
+                error: err.message || 'Failed to logout',
             });
         }
     }

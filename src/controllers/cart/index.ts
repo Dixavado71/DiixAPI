@@ -27,8 +27,8 @@ export class CartController {
         ...cart,
         totals,
       });
-    } catch (error: any) {
-      logger.error({ error: error.message }, 'Error getting cart');
+    } catch (error: unknown) {
+      logger.error({ error: (error as Error).message }, 'Error getting cart');
       next(error);
     }
   }
@@ -53,12 +53,15 @@ export class CartController {
         ...cart,
         totals,
       });
-    } catch (error: any) {
-      if (error.message === 'PRODUCT_NOT_FOUND' || error.message === 'PRODUCT_STORE_MISMATCH') {
+    } catch (error: unknown) {
+      if (
+        (error as Error).message === 'PRODUCT_NOT_FOUND' ||
+        error.message === 'PRODUCT_STORE_MISMATCH'
+      ) {
         res.status(400).json({ error: error.message });
         return;
       }
-      logger.error({ error: error.message }, 'Error adding item to cart');
+      logger.error({ error: (error as Error).message }, 'Error adding item to cart');
       next(error);
     }
   }
@@ -84,12 +87,12 @@ export class CartController {
         ...cart,
         totals,
       });
-    } catch (error: any) {
-      if (error.message === 'CART_NOT_FOUND') {
+    } catch (error: unknown) {
+      if ((error as Error).message === 'CART_NOT_FOUND') {
         res.status(404).json({ error: error.message });
         return;
       }
-      logger.error({ error: error.message }, 'Error updating cart item');
+      logger.error({ error: (error as Error).message }, 'Error updating cart item');
       next(error);
     }
   }
@@ -114,12 +117,12 @@ export class CartController {
         ...cart,
         totals,
       });
-    } catch (error: any) {
-      if (error.message === 'CART_NOT_FOUND') {
+    } catch (error: unknown) {
+      if ((error as Error).message === 'CART_NOT_FOUND') {
         res.status(404).json({ error: error.message });
         return;
       }
-      logger.error({ error: error.message }, 'Error removing item from cart');
+      logger.error({ error: (error as Error).message }, 'Error removing item from cart');
       next(error);
     }
   }
@@ -137,12 +140,12 @@ export class CartController {
 
       logger.info({ storeId, customerId }, 'Cart cleared');
       res.status(204).send();
-    } catch (error: any) {
-      if (error.message === 'CART_NOT_FOUND') {
+    } catch (error: unknown) {
+      if ((error as Error).message === 'CART_NOT_FOUND') {
         res.status(404).json({ error: error.message });
         return;
       }
-      logger.error({ error: error.message }, 'Error clearing cart');
+      logger.error({ error: (error as Error).message }, 'Error clearing cart');
       next(error);
     }
   }
@@ -165,12 +168,12 @@ export class CartController {
 
       logger.info({ cartId: cart.id, result }, 'Cart checkout processed');
       res.status(201).json(result);
-    } catch (error: any) {
-      if (error.message === 'CART_NOT_FOUND' || error.message === 'CART_NOT_ACTIVE') {
+    } catch (error: unknown) {
+      if ((error as Error).message === 'CART_NOT_FOUND' || error.message === 'CART_NOT_ACTIVE') {
         res.status(400).json({ error: error.message });
         return;
       }
-      logger.error({ error: error.message }, 'Error processing checkout');
+      logger.error({ error: (error as Error).message }, 'Error processing checkout');
       next(error);
     }
   }

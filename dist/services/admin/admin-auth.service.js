@@ -7,8 +7,22 @@ exports.adminAuthService = exports.AdminAuthService = void 0;
 const client_1 = require("@prisma/client");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const index_js_1 = require("../config/index.js");
 const prisma = new client_1.PrismaClient();
+// Lazy load config to avoid import issues in tests
+let envConfig;
+const getConfig = () => {
+    if (envConfig)
+        return envConfig;
+    try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        envConfig = require('../config/index.js').env;
+    }
+    catch {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        envConfig = require('../config/env.js');
+    }
+    return envConfig;
+};
 class AdminAuthService {
     async createUser(input) {
         const { email, password, name, role = 'OPERATOR' } = input;
@@ -56,11 +70,14 @@ class AdminAuthService {
             where: { id: user.id },
             data: { lastLogin: new Date() },
         });
+        const config = getConfig();
+        const JWT_SECRET = config.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
+        const JWT_EXPIRES_IN = config.JWT_EXPIRES_IN || process.env.JWT_EXPIRES_IN || '24h';
         const token = jsonwebtoken_1.default.sign({
             userId: user.id,
             email: user.email,
             role: user.role,
-        }, index_js_1.JWT_SECRET, { expiresIn: index_js_1.JWT_EXPIRES_IN });
+        }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
         return {
             token,
             user: {
@@ -209,7 +226,9 @@ class AdminAuthService {
     }
     async verifyToken(token) {
         try {
-            const decoded = jsonwebtoken_1.default.verify(token, index_js_1.JWT_SECRET);
+            const config = getConfig();
+            const JWT_SECRET = config.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
+            const decoded = jsonwebtoken_1.default.verify(token, JWT_SECRET);
             const user = await prisma.adminUser.findUnique({
                 where: { id: decoded.userId },
                 select: { id: true, active: true, role: true },
@@ -224,7 +243,7 @@ class AdminAuthService {
                 role: decoded.role,
             };
         }
-        catch (error) {
+        catch {
             return {
                 valid: false,
                 error: 'Invalid or expired token',

@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client';
-import { BotMessage, BotConfig } from '../types/bot.types';
-import { ProductService } from './product/product.service';
-import { CartService } from './cart/cart.service';
-import { OrderService } from './order/order.service';
-import { CustomerService } from './customer/customer.service';
+import { BotMessage, BotConfig } from '../../types/bot.types';
+import { ProductService } from '../product/product.service';
+import { CartService } from '../cart/index';
+import { OrderService } from '../order/order.service';
+import { CustomerService } from '../customer/customer.service';
 export declare class BotEngineService {
     private prisma;
     private customerService;

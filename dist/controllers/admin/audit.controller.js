@@ -29,8 +29,9 @@ class AuditController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(500).json({
-                error: error.message || 'Failed to fetch audit logs',
+                error: err.message || 'Failed to fetch audit logs',
             });
         }
     }
@@ -48,8 +49,9 @@ class AuditController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(500).json({
-                error: error.message || 'Failed to fetch audit logs',
+                error: err.message || 'Failed to fetch audit logs',
             });
         }
     }
@@ -67,8 +69,9 @@ class AuditController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(500).json({
-                error: error.message || 'Failed to fetch audit logs',
+                error: err.message || 'Failed to fetch audit logs',
             });
         }
     }
@@ -85,8 +88,9 @@ class AuditController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(500).json({
-                error: error.message || 'Failed to fetch recent audit logs',
+                error: err.message || 'Failed to fetch recent audit logs',
             });
         }
     }
@@ -105,8 +109,9 @@ class AuditController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(500).json({
-                error: error.message || 'Failed to fetch audit statistics',
+                error: err.message || 'Failed to fetch audit statistics',
             });
         }
     }
@@ -124,8 +129,9 @@ class AuditController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(500).json({
-                error: error.message || 'Failed to clean audit logs',
+                error: err.message || 'Failed to clean audit logs',
             });
         }
     }

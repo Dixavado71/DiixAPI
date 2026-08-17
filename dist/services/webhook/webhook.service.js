@@ -15,7 +15,7 @@ class WebhookService {
             logger.info({
                 eventId,
                 event: payload.event,
-                instance: payload.instance
+                instance: payload.instance,
             }, 'Processing webhook');
             // Check for idempotency - prevent duplicate processing
             const existingEvent = await database_1.prisma.webhookEvent.findUnique({

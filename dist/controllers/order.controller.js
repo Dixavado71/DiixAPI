@@ -122,7 +122,8 @@ class OrderController {
         }
         catch (error) {
             logger_1.logger.error({ error: error.message }, 'Error getting order');
-            if (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH') {
+            if (error.message === 'ORDER_NOT_FOUND' ||
+                error.message === 'ORDER_STORE_MISMATCH') {
                 res.status(404).json({
                     success: false,
                     error: {
@@ -174,7 +175,8 @@ class OrderController {
                 });
                 return;
             }
-            if (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH') {
+            if (error.message === 'ORDER_NOT_FOUND' ||
+                error.message === 'ORDER_STORE_MISMATCH') {
                 res.status(404).json({
                     success: false,
                     error: {
@@ -226,7 +228,8 @@ class OrderController {
                 });
                 return;
             }
-            if (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH') {
+            if (error.message === 'ORDER_NOT_FOUND' ||
+                error.message === 'ORDER_STORE_MISMATCH') {
                 res.status(404).json({
                     success: false,
                     error: {
@@ -264,7 +267,8 @@ class OrderController {
         }
         catch (error) {
             logger_1.logger.error({ error: error.message }, 'Error getting possible states');
-            if (error.message === 'ORDER_NOT_FOUND' || error.message === 'ORDER_STORE_MISMATCH') {
+            if (error.message === 'ORDER_NOT_FOUND' ||
+                error.message === 'ORDER_STORE_MISMATCH') {
                 res.status(404).json({
                     success: false,
                     error: {

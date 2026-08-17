@@ -18,8 +18,9 @@ class UsersController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(500).json({
-                error: error.message || 'Failed to fetch users',
+                error: err.message || 'Failed to fetch users',
             });
         }
     }
@@ -36,8 +37,9 @@ class UsersController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(404).json({
-                error: error.message || 'User not found',
+                error: err.message || 'User not found',
             });
         }
     }
@@ -61,8 +63,9 @@ class UsersController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(500).json({
-                error: error.message || 'Failed to fetch users',
+                error: err.message || 'Failed to fetch users',
             });
         }
     }
@@ -84,7 +87,6 @@ class UsersController {
             await audit_service_js_1.auditService.logUserUpdate(req.user.userId, id, { name, email, role, active }, req.ip || undefined);
             // If role changed, log it
             if (role) {
-                const currentUser = await admin_auth_service_js_1.adminAuthService.getUserById(id);
                 await audit_service_js_1.auditService.logRoleChange(req.user.userId, id, 'UNKNOWN', role, req.ip || undefined);
             }
             return res.json({
@@ -93,8 +95,9 @@ class UsersController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(400).json({
-                error: error.message || 'Failed to update user',
+                error: err.message || 'Failed to update user',
             });
         }
     }
@@ -114,8 +117,9 @@ class UsersController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(400).json({
-                error: error.message || 'Failed to deactivate user',
+                error: err.message || 'Failed to deactivate user',
             });
         }
     }
@@ -141,8 +145,9 @@ class UsersController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(400).json({
-                error: error.message || 'Failed to activate user',
+                error: err.message || 'Failed to activate user',
             });
         }
     }
@@ -174,8 +179,9 @@ class UsersController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(400).json({
-                error: error.message || 'Failed to reset password',
+                error: err.message || 'Failed to reset password',
             });
         }
     }
@@ -195,8 +201,9 @@ class UsersController {
             });
         }
         catch (error) {
+            const err = error;
             return res.status(400).json({
-                error: error.message || 'Failed to delete user',
+                error: err.message || 'Failed to delete user',
             });
         }
     }

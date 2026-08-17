@@ -10,11 +10,13 @@ const logger = (0, logger_1.getLogger)().child({ module: 'webhook' });
  * Schema for validating Evolution API webhook payload
  * Adjust based on actual Evolution API v2.3.7 payload structure
  */
-const webhookPayloadSchema = zod_1.z.object({
+const webhookPayloadSchema = zod_1.z
+    .object({
     event: zod_1.z.string(),
     instance: zod_1.z.string(),
     data: zod_1.z.record(zod_1.z.unknown()).optional(),
-}).passthrough();
+})
+    .passthrough();
 /**
  * POST /api/v1/webhooks/evolution
  * Receives webhooks from Evolution API

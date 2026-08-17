@@ -1,14 +1,14 @@
 import { ProductRepository } from '../../repositories/product.repository';
 import { prisma } from '../../config/database';
-import type { Product, Prisma } from '@prisma/client';
+import type { Product } from '@prisma/client';
 
 export class ProductService {
   private repository: ProductRepository;
-
+  
   constructor() {
     this.repository = new ProductRepository(prisma);
   }
-
+  
   async findAll(
     storeId: string,
     filters?: {
@@ -18,22 +18,50 @@ export class ProductService {
       maxPrice?: number;
     }
   ): Promise<Product[]> {
-    return this.repository.findAll(storeId, filters);
+    const result = await this.repository.findByStore(storeId, {
+      categoryId: filters?.category,
+      active: true,
+    });
+    return result.products;
   }
-
+  
   async findById(id: string): Promise<Product | null> {
     return this.repository.findById(id);
   }
-
-  async create(data: Prisma.ProductCreateInput): Promise<Product> {
+  
+  async create(data: {
+    storeId: string;
+    categoryId?: string;
+    name: string;
+    description?: string;
+    sku?: string;
+    price: number;
+    promoPrice?: number;
+    stock?: number;
+    active?: boolean;
+    images?: string[];
+  }): Promise<Product> {
     return this.repository.create(data);
   }
-
-  async update(id: string, data: Prisma.ProductUpdateInput): Promise<Product> {
+  
+  async update(
+    id: string,
+    data: Partial<{
+      name: string;
+      description?: string;
+      sku?: string;
+      price: number;
+      promoPrice?: number;
+      stock?: number;
+      active: boolean;
+      images: string[];
+      categoryId?: string;
+    }>
+  ): Promise<Product> {
     return this.repository.update(id, data);
   }
-
+  
   async delete(id: string): Promise<void> {
-    return this.repository.delete(id);
+    await this.repository.deactivate(id);
   }
 }

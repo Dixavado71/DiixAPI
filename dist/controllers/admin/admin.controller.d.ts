@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import type { AuthRequest } from '../../middlewares/auth.middleware.js';
 export declare class AdminController {
-    register(req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
-    login(req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
+    register(req: AuthRequest, res: Response): Promise<Response<any, Record<string, any>>>;
+    login(req: AuthRequest, res: Response): Promise<Response<any, Record<string, any>>>;
     getProfile(req: AuthRequest, res: Response): Promise<Response<any, Record<string, any>>>;
     updateProfile(req: AuthRequest, res: Response): Promise<Response<any, Record<string, any>>>;
     changePassword(req: AuthRequest, res: Response): Promise<Response<any, Record<string, any>>>;
