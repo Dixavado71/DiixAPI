@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { LayoutDashboard, Users, Shop, Settings, LogOut, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Users, Store, Settings, LogOut, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 
@@ -15,7 +15,7 @@ export default function DashboardLayout({ children }: SidebarProps) {
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Clientes', href: '/customers', icon: Users },
-    { name: 'Lojas', href: '/stores', icon: Shop },
+    { name: 'Lojas', href: '/stores', icon: Store },
     { name: 'Configurações', href: '/settings', icon: Settings },
   ]
 

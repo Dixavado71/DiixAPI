@@ -1,13 +1,13 @@
 import { useAuth } from '../context/AuthContext'
 import DashboardLayout from '../components/DashboardLayout'
-import { BarChart, Users, Shop, DollarSign } from 'lucide-react'
+import { BarChart, Users, Store, DollarSign } from 'lucide-react'
 
 export default function DashboardPage() {
   const { user } = useAuth()
 
   const stats = [
     { name: 'Total de Clientes', value: '0', icon: Users, color: 'bg-blue-500' },
-    { name: 'Lojas Ativas', value: '0', icon: Shop, color: 'bg-green-500' },
+    { name: 'Lojas Ativas', value: '0', icon: Store, color: 'bg-green-500' },
     { name: 'Pedidos Hoje', value: '0', icon: BarChart, color: 'bg-purple-500' },
     { name: 'Receita Mensal', value: 'R$ 0,00', icon: DollarSign, color: 'bg-yellow-500' },
   ]

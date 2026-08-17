@@ -9,6 +9,7 @@ const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const pino_http_1 = __importDefault(require("pino-http"));
+const path_1 = __importDefault(require("path"));
 const logger_1 = require("./utils/logger");
 const routes_1 = __importDefault(require("./routes"));
 const logger = (0, logger_1.getLogger)();
@@ -47,6 +48,20 @@ function createApp() {
     }));
     // API routes
     app.use('/api/v1', routes_1.default);
+    // Serve static files from frontend build in production
+    const isProduction = process.env.NODE_ENV === 'production';
+    if (isProduction) {
+        const distPath = path_1.default.join(__dirname, '..', '..', 'frontend', 'dist');
+        logger.info({ distPath }, 'Serving static files from');
+        app.use(express_1.default.static(distPath));
+        // SPA fallback - serve index.html for all non-API routes
+        app.get('*', (req, res, next) => {
+            if (req.url.startsWith('/api')) {
+                return next();
+            }
+            res.sendFile(path_1.default.join(distPath, 'index.html'));
+        });
+    }
     // Root endpoint
     app.get('/', (_req, res) => {
         res.json({
