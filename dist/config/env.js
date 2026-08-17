@@ -10,6 +10,7 @@ const envSchema = zod_1.z.object({
     EVOLUTION_API_KEY: zod_1.z.string().min(1),
     EVOLUTION_WEBHOOK_SECRET: zod_1.z.string().min(1),
     JWT_SECRET: zod_1.z.string().min(32),
+    JWT_EXPIRES_IN: zod_1.z.string().default('7d'),
     LOG_LEVEL: zod_1.z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
     CORS_ORIGIN: zod_1.z.string(),
     RATE_LIMIT_WINDOW_MS: zod_1.z.string().transform((val) => Number(val)).pipe(zod_1.z.number().positive()),
