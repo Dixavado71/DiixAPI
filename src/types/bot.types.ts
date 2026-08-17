@@ -3,7 +3,7 @@
  * Types for conversation states, message types, and bot responses
  */
 
-export type ConversationState = 
+export type ConversationState =
   | 'IDLE'
   | 'BROWSE_CATALOG'
   | 'VIEW_PRODUCT'
@@ -63,7 +63,7 @@ export interface ConversationContext {
   metadata?: Record<string, unknown>;
 }
 
-export type FlowStep = 
+export type FlowStep =
   | 'INIT'
   | 'SELECT_CATEGORY'
   | 'SELECT_PRODUCT'

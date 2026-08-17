@@ -140,7 +140,11 @@ export class BotEngineService {
   private async handleIdle(context: ConversationContext, message: string): Promise<BotMessage[]> {
     const normalizedMessage = message.toLowerCase().trim();
 
-    if (normalizedMessage.includes('catalog') || normalizedMessage.includes('produto')) {
+    if (
+      normalizedMessage.includes('catalog') ||
+      normalizedMessage.includes('catálogo') ||
+      normalizedMessage.includes('produto')
+    ) {
       return this.handleBrowseCatalog(context, message);
     }
 

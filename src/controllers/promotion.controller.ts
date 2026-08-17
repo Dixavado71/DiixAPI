@@ -221,7 +221,10 @@ export class PromotionController {
       loggerInstance.info({ ruleId }, 'Rule removed from promotion');
       res.status(204).send();
     } catch (error: unknown) {
-      loggerInstance.error({ error: (error as Error).message }, 'Error removing rule from promotion');
+      loggerInstance.error(
+        { error: (error as Error).message },
+        'Error removing rule from promotion'
+      );
       next(error);
     }
   }
@@ -255,7 +258,10 @@ export class PromotionController {
         res.status(404).json({ error: (error as Error).message });
         return;
       }
-      loggerInstance.error({ error: (error as Error).message }, 'Error adding product to promotion');
+      loggerInstance.error(
+        { error: (error as Error).message },
+        'Error adding product to promotion'
+      );
       next(error);
     }
   }
@@ -273,7 +279,10 @@ export class PromotionController {
       loggerInstance.info({ promotionId: id, productId }, 'Product removed from promotion');
       res.status(204).send();
     } catch (error: unknown) {
-      loggerInstance.error({ error: (error as Error).message }, 'Error removing product from promotion');
+      loggerInstance.error(
+        { error: (error as Error).message },
+        'Error removing product from promotion'
+      );
       next(error);
     }
   }

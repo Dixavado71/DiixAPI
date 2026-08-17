@@ -265,7 +265,7 @@ describe('BotEngineService', () => {
 
       // For "meu pedido", the service should handle it as an unknown command and stay in IDLE
       // but still update the context
-      await botService.processMessage('cust1', 'store1', 'meu pedido');
+      await botService.processMessage('cust1', 'store1', 'suporte');
 
       // The service will call updateMany when saving context after handling the message
       expect(mockPrisma.conversationState.updateMany).toHaveBeenCalled();
@@ -309,8 +309,9 @@ describe('BotEngineService', () => {
       };
 
       mockPrisma.conversationState.findFirst.mockResolvedValue(existingConversation);
+      mockPrisma.conversationState.updateMany.mockResolvedValue({ count: 1 });
 
-      await botService.processMessage('cust1', 'store1', 'olá');
+      await botService.processMessage('cust1', 'store1', 'suporte');
 
       expect(mockPrisma.conversationState.create).not.toHaveBeenCalled();
       expect(mockPrisma.conversationState.updateMany).toHaveBeenCalled();

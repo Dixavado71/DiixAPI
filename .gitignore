@@ -1,4 +1,4 @@
-```
+```gitignore
 # Dependencies
 node_modules/
 
@@ -21,7 +21,7 @@ target/
 *.swp
 *.swo
 
-# Python artifacts (if any Python in project)
+# Python cache (if applicable)
 __pycache__/
 *.pyc
 *.pyo
@@ -36,56 +36,270 @@ htmlcov/
 *.tmp
 *.temp
 
-# OS files
+# OS generated files
 .DS_Store
 Thumbs.db
 
-# Testing
+# TypeScript/JavaScript build artifacts
+*.js.map
+*.tsbuildinfo
+
+# Test coverage
 .nyc_output/
 coverage/
-junit.xml
 
 # Runtime data
-*.pid
-*.seed
-*.pid.lock
-
-# Debug log
-debug.log
+.pnp.*
+.pnpm-store/
 
 # Local configuration
-local.properties
+*.local
+config/local.*
 
-# Various compiled files
-*.o
-*.obj
-*.so
-*.a
-*.dll
+# Compiled binaries
 *.exe
-*.out
+*.dll
+*.so
+*.dylib
 
-# Compressed files
-*.zip
-*.gz
+# Package manager caches
+.yarn/
+.pnpm/
+.npm/
+
+# Docker
+.dockerenv
+Dockerfile*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Secrets
+secrets/
+*.key
+*.pem
+*.crt
+*.cert
+
+# Cache directories
+.cache/
+.cargo/
+.go/
+.node-gyp/
+
+# Documentation builds
+docs/_build/
+_sass-cache/
+
+# Distribution archives
 *.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
+*.gz
+*.zip
 *.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+*.7z
+
+# Vim swap files
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.sublime-workspace
+
+# IntelliJ IDEA
+*.iml
+*.iws
+*.ipr
+out/
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+# Visual Studio Code
+.vscode-test/
+```
+
+```gitignore
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+target/
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.local
+*.env.*
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python cache (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# TypeScript/JavaScript build artifacts
+*.js.map
+*.tsbuildinfo
+
+# Test coverage
+.nyc_output/
+coverage/
+
+# Runtime data
+.pnp.*
+.pnpm-store/
+
+# Local configuration
+*.local
+config/local.*
+
+# Compiled binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Package manager caches
+.yarn/
+.pnpm/
+.npm/
+
+# Docker
+.dockerenv
+Dockerfile*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Secrets
+secrets/
+*.key
+*.pem
+*.crt
+*.cert
+
+# Cache directories
+.cache/
+.cargo/
+.go/
+.node-gyp/
+
+# Documentation builds
+docs/_build/
+_sass-cache/
+
+# Distribution archives
+*.tar
+*.gz
+*.zip
+*.rar
+*.7z
+
+# Vim swap files
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.sublime-workspace
+
+# IntelliJ IDEA
+*.iml
+*.iws
+*.ipr
+out/
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+# Visual Studio Code
+.vscode-test/
 ```
