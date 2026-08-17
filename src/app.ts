@@ -74,23 +74,25 @@ export function createApp(): Application {
   const isProduction = process.env.NODE_ENV === 'production';
   if (isProduction) {
     const distPath = path.join(__dirname, '..', 'frontend', 'dist');
-    
+
     logger.info({ distPath, __dirname }, 'Checking frontend build');
-    
+
     // Verify frontend build exists
     const indexHtmlPath = path.join(distPath, 'index.html');
     const frontendExists = fs.existsSync(distPath) && fs.existsSync(indexHtmlPath);
-    
+
     if (frontendExists) {
       const files = fs.readdirSync(distPath);
       logger.info({ distPath, files }, 'Frontend build found, serving static files');
-      
+
       // Serve static assets with proper caching
-      app.use(express.static(distPath, {
-        maxAge: '1d',
-        etag: true,
-        lastModified: true,
-      }));
+      app.use(
+        express.static(distPath, {
+          maxAge: '1d',
+          etag: true,
+          lastModified: true,
+        })
+      );
 
       // SPA fallback: serve index.html for all non-API routes
       app.get('*', (req: Request, res: Response, next: NextFunction) => {
@@ -98,13 +100,13 @@ export function createApp(): Application {
         if (req.path.startsWith('/api/') || req.path === '/api') {
           return next();
         }
-        
+
         // Skip if file exists in dist
         const filePath = path.join(distPath, req.path);
         if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
           return next();
         }
-        
+
         // Serve index.html for SPA routing
         logger.info({ path: req.path }, 'SPA fallback serving index.html');
         res.sendFile(indexHtmlPath);
