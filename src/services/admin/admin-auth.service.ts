@@ -111,7 +111,7 @@ export class AdminAuthService {
 
     const config = getConfig();
     const JWT_SECRET = config?.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
-    const JWT_EXPIRES_IN = config?.JWT_EXPIRES_IN || process.env.JWT_EXPIRES_IN || '24h';
+    const JWT_EXPIRES_IN = (config?.JWT_EXPIRES_IN || process.env.JWT_EXPIRES_IN || '24h') as string;
 
     const signOptions: SignOptions = { expiresIn: JWT_EXPIRES_IN };
 

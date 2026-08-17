@@ -72,7 +72,7 @@ class AdminAuthService {
         });
         const config = getConfig();
         const JWT_SECRET = config?.JWT_SECRET || process.env.JWT_SECRET || 'default-secret';
-        const JWT_EXPIRES_IN = config?.JWT_EXPIRES_IN || process.env.JWT_EXPIRES_IN || '24h';
+        const JWT_EXPIRES_IN = (config?.JWT_EXPIRES_IN || process.env.JWT_EXPIRES_IN || '24h');
         const signOptions = { expiresIn: JWT_EXPIRES_IN };
         const token = jsonwebtoken_1.default.sign({
             userId: user.id,

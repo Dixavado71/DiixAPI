@@ -1,22 +1,13 @@
 import { Router, Request, Response } from 'express';
 import { BotEngineService } from '../services/bot/bot-engine.service';
 import { PrismaClient } from '@prisma/client';
-import { CustomerService } from '../services/customer/customer.service';
-import { ProductService } from '../services/product/product.service';
-import { CartService } from '../services/cart/cart.service';
-import { OrderService } from '../services/order/order.service';
 
 const router = Router();
 
 // Factory para criar instância do BotEngineService
 const createBotEngineService = () => {
   const prisma = new PrismaClient();
-  const customerService = new CustomerService(prisma);
-  const productService = new ProductService(prisma);
-  const cartService = new CartService(prisma);
-  const orderService = new OrderService(prisma);
-
-  return new BotEngineService(prisma, customerService, productService, cartService, orderService);
+  return new BotEngineService(prisma);
 };
 
 /**
@@ -63,8 +54,23 @@ router.post('/:customerId/:storeId/reset', async (req: Request, res: Response) =
   try {
     const { customerId, storeId } = req.params;
 
-    const botService = createBotEngineService();
-    await botService.resetContext(customerId, storeId);
+    if (!customerId || !storeId) {
+      return res.status(400).json({
+        error: 'customerId and storeId are required',
+      });
+    }
+
+    const prisma = new PrismaClient();
+    await prisma.conversationState.updateMany({
+      where: {
+        instance: 'whatsapp',
+        phone: customerId,
+      },
+      data: {
+        state: 'IDLE',
+        context: {},
+      },
+    });
 
     res.json({
       success: true,
@@ -89,8 +95,23 @@ router.post('/:customerId/:storeId/end', async (req: Request, res: Response) => 
   try {
     const { customerId, storeId } = req.params;
 
-    const botService = createBotEngineService();
-    await botService.endConversation(customerId, storeId);
+    if (!customerId || !storeId) {
+      return res.status(400).json({
+        error: 'customerId and storeId are required',
+      });
+    }
+
+    const prisma = new PrismaClient();
+    await prisma.conversationState.updateMany({
+      where: {
+        instance: 'whatsapp',
+        phone: customerId,
+      },
+      data: {
+        state: 'GOODBYE',
+        lastActive: new Date(),
+      },
+    });
 
     res.json({
       success: true,
@@ -114,16 +135,22 @@ router.post('/:customerId/:storeId/end', async (req: Request, res: Response) => 
 router.get('/:customerId/:storeId/context', async (req: Request, res: Response) => {
   try {
     const { customerId, storeId } = req.params;
+
+    if (!customerId || !storeId) {
+      return res.status(400).json({
+        error: 'customerId and storeId are required',
+      });
+    }
+
     const prisma = new PrismaClient();
 
-    const conversation = await prisma.conversation.findFirst({
+    const conversation = await prisma.conversationState.findFirst({
       where: {
-        customerId,
-        storeId,
-        isActive: true,
+        instance: 'whatsapp',
+        phone: customerId,
       },
       orderBy: {
-        createdAt: 'desc',
+        lastActive: 'desc',
       },
     });
 
@@ -132,6 +159,7 @@ router.get('/:customerId/:storeId/context', async (req: Request, res: Response) 
         success: true,
         data: {
           hasActiveConversation: false,
+          context: null,
         },
       });
     }
@@ -140,15 +168,10 @@ router.get('/:customerId/:storeId/context', async (req: Request, res: Response) 
       success: true,
       data: {
         hasActiveConversation: true,
-        conversation: {
-          id: conversation.id,
+        context: {
           state: conversation.state,
-          currentProductId: conversation.currentProductId,
-          currentCartId: conversation.currentCartId,
-          currentOrderId: conversation.currentOrderId,
-          lastMessageAt: conversation.lastMessageAt,
-          metadata: conversation.metadata,
-          createdAt: conversation.createdAt,
+          metadata: conversation.context,
+          lastActive: conversation.lastActive,
         },
       },
     });
@@ -160,5 +183,3 @@ router.get('/:customerId/:storeId/context', async (req: Request, res: Response) 
     });
   }
 });
-
-export { router as botRoutes };

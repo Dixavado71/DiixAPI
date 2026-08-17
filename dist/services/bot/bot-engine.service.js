@@ -3,484 +3,176 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BotEngineService = void 0;
 class BotEngineService {
     prisma;
-    productService;
-    handlers;
-    constructor(prisma, productService) {
+    constructor(prisma) {
         this.prisma = prisma;
-        this.productService = productService;
-        this.handlers = new Map();
-        this.initializeHandlers();
-    }
-    initializeHandlers() {
-        this.handlers.set('IDLE', this.handleIdle.bind(this));
-        this.handlers.set('BROWSE_CATALOG', this.handleBrowseCatalog.bind(this));
-        this.handlers.set('VIEW_PRODUCT', this.handleViewProduct.bind(this));
-        this.handlers.set('ADD_TO_CART', this.handleAddToCart.bind(this));
-        this.handlers.set('VIEW_CART', this.handleViewCart.bind(this));
-        this.handlers.set('CHECKOUT', this.handleCheckout.bind(this));
-        this.handlers.set('SUPPORT', this.handleSupport.bind(this));
-        this.handlers.set('GOODBYE', this.handleGoodbye.bind(this));
     }
     /**
      * Processa uma mensagem recebida e retorna as respostas do bot
      */
     async processMessage(customerId, storeId, message) {
-        // Obtém ou cria contexto da conversação
         const context = await this.getOrCreateContext(customerId, storeId);
-        // Atualiza timestamp da última mensagem
-        context.lastMessageAt = new Date();
-        // Salva o contexto atualizado
-        await this.saveContext(context);
-        // Encontra o step atual baseado no estado
-        const step = this.getCurrentStep(context.state);
-        if (step) {
-            // Executa o step atual
-            return await step.execute(context, message);
+        const currentState = context.state;
+        let responses = [];
+        switch (currentState) {
+            case 'IDLE':
+                responses = await this.handleIdle(context, message);
+                break;
+            case 'BROWSE_CATALOG':
+                responses = await this.handleBrowseCatalog(context, message);
+                break;
+            case 'VIEW_PRODUCT':
+                responses = await this.handleViewProduct(context, message);
+                break;
+            case 'ADD_TO_CART':
+                responses = await this.handleAddToCart(context, message);
+                break;
+            case 'VIEW_CART':
+                responses = await this.handleViewCart(context, message);
+                break;
+            case 'CHECKOUT':
+                responses = await this.handleCheckout(context, message);
+                break;
+            case 'SUPPORT':
+                responses = await this.handleSupport(context, message);
+                break;
+            case 'GOODBYE':
+                responses = await this.handleGoodbye(context, message);
+                break;
+            default:
+                responses = await this.handleIdle(context, message);
         }
-        // Se não houver step específico, trata como comando geral
-        return await this.handleGeneralCommand(context, message);
+        return responses;
     }
-    /**
-     * Obtém ou cria contexto de conversação
-     */
     async getOrCreateContext(customerId, storeId) {
-        let conversation = await this.prisma.conversation.findFirst({
+        const phone = customerId;
+        const instance = 'whatsapp';
+        let conversation = await this.prisma.conversationState.findFirst({
             where: {
-                customerId,
-                storeId,
-                isActive: true,
-            },
-            orderBy: {
-                createdAt: 'desc',
+                instance,
+                phone,
             },
         });
         if (!conversation) {
-            conversation = await this.prisma.conversation.create({
+            conversation = await this.prisma.conversationState.create({
                 data: {
-                    customerId,
+                    instance,
+                    phone,
                     storeId,
+                    customerId,
                     state: 'IDLE',
-                    isActive: true,
+                    context: {},
                 },
             });
         }
         return {
-            state: conversation.state,
             customerId,
             storeId,
-            currentProductId: conversation.currentProductId || undefined,
-            currentCartId: conversation.currentCartId || undefined,
-            currentOrderId: conversation.currentOrderId || undefined,
-            lastMessageAt: conversation.lastMessageAt || new Date(),
-            metadata: conversation.metadata || {},
+            state: conversation.state,
+            metadata: conversation.context || {},
         };
     }
-    /**
-     * Salva o contexto da conversação
-     */
     async saveContext(context) {
-        await this.prisma.conversation.updateMany({
+        const contextData = context.metadata ? JSON.parse(JSON.stringify(context.metadata)) : {};
+        await this.prisma.conversationState.updateMany({
             where: {
-                customerId: context.customerId,
-                storeId: context.storeId,
-                isActive: true,
+                instance: 'whatsapp',
+                phone: context.customerId,
             },
             data: {
                 state: context.state,
-                currentProductId: context.currentProductId,
-                currentCartId: context.currentCartId,
-                currentOrderId: context.currentOrderId,
-                lastMessageAt: context.lastMessageAt,
-                metadata: context.metadata,
+                context: contextData,
+                lastActive: new Date(),
             },
         });
     }
-    /**
-     * Retorna o step atual baseado no estado
-     */
-    getCurrentStep(state) {
-        const steps = this.getFlowSteps();
-        return (steps.find((step) => {
-            const mockContext = {
-                state,
-                customerId: '',
-                storeId: '',
-                lastMessageAt: new Date(),
-            };
-            return step.trigger(mockContext, '');
-        }) || null);
-    }
-    /**
-     * Define todos os passos do fluxo de conversação
-     */
-    getFlowSteps() {
-        return [
-            this.createIdleStep(),
-            this.createBrowseCatalogStep(),
-            this.createViewProductStep(),
-            this.createCartAddStep(),
-            this.createCartViewStep(),
-            this.createCheckoutStartStep(),
-            this.createCheckoutAddressStep(),
-            this.createCheckoutPaymentStep(),
-            this.createOrderTrackingStep(),
-            this.createSupportStep(),
-        ];
-    }
-    /**
-     * Step: Estado inicial (IDLE)
-     */
-    createIdleStep() {
-        return {
-            id: 'idle',
-            name: 'Estado Inicial',
-            trigger: async (context) => context.state === 'IDLE',
-            execute: async (context, message) => {
-                const lowerMessage = message.toLowerCase();
-                // Comandos principais
-                if (lowerMessage.includes('catalog') || lowerMessage.includes('produt')) {
-                    context.state = 'BROWSE_CATALOG';
-                    await this.saveContext(context);
-                    return await this.executeBrowseCatalog(context, message);
-                }
-                if (lowerMessage.includes('carrinho') || lowerMessage.includes('cart')) {
-                    context.state = 'CART_VIEW';
-                    await this.saveContext(context);
-                    return await this.executeCartView(context, message);
-                }
-                if (lowerMessage.includes('pedido') || lowerMessage.includes('order')) {
-                    context.state = 'ORDER_TRACKING';
-                    await this.saveContext(context);
-                    return await this.executeOrderTracking(context, message);
-                }
-                if (lowerMessage.includes('ajuda') || lowerMessage.includes('suporte')) {
-                    context.state = 'SUPPORT';
-                    await this.saveContext(context);
-                    return await this.executeSupport(context, message);
-                }
-                // Mensagem de boas-vindas com opções
-                return [
-                    {
-                        text: `${this.config.welcomeMessage}\n\nDigite:\n• "catalog" para ver produtos\n• "carrinho" para ver seu carrinho\n• "pedido" para acompanhar pedidos\n• "ajuda" para suporte`,
-                        type: 'text',
-                    },
-                ];
-            },
-            transitions: [],
-        };
-    }
-    /**
-     * Step: Navegar catálogo
-     */
-    createBrowseCatalogStep() {
-        return {
-            id: 'browse_catalog',
-            name: 'Navegar Catálogo',
-            trigger: async (context) => context.state === 'BROWSE_CATALOG',
-            execute: async (context, message) => {
-                return await this.executeBrowseCatalog(context, message);
-            },
-            transitions: [],
-        };
-    }
-    /**
-     * Executa lógica de navegação do catálogo
-     */
-    async executeBrowseCatalog(_context, _message) {
-        const products = await this.productService.findAll(_context.storeId);
-        if (!products || products.length === 0) {
-            return [
-                {
-                    text: 'Desculpe, não há produtos disponíveis no momento.',
-                    type: 'text',
-                },
-            ];
+    async handleIdle(context, message) {
+        const normalizedMessage = message.toLowerCase().trim();
+        if (normalizedMessage.includes('catalog') || normalizedMessage.includes('produto')) {
+            return this.handleBrowseCatalog(context, message);
         }
-        const buttons = products.slice(0, 5).map((product) => ({
-            id: `view_product_${product.id}`,
-            text: product.name.substring(0, 20),
-            type: 'reply',
-        }));
+        if (normalizedMessage.includes('ajuda') || normalizedMessage.includes('suporte')) {
+            return this.handleSupport(context, message);
+        }
+        if (normalizedMessage.includes('tchau') || normalizedMessage.includes('adeus')) {
+            return this.handleGoodbye(context, message);
+        }
         return [
             {
-                text: `🛍️ *Catálogo de Produtos*\n\nEncontrei ${products.length} produtos. Selecione um para ver detalhes:`,
                 type: 'button',
-                buttons,
+                text: '👋 Olá! Bem-vindo à nossa loja!\n\nComo posso ajudar você hoje?',
+                buttons: [
+                    { id: 'catalog', label: 'Ver Catálogo', payload: 'catalog' },
+                    { id: 'support', label: 'Ajuda', payload: 'support' },
+                ],
             },
         ];
     }
-    /**
-     * Step: Ver produto
-     */
-    createViewProductStep() {
-        return {
-            id: 'view_product',
-            name: 'Ver Produto',
-            trigger: async (context) => context.state === 'VIEW_PRODUCT',
-            execute: async (context, message) => {
-                if (!context.currentProductId) {
-                    context.state = 'BROWSE_CATALOG';
-                    await this.saveContext(context);
-                    return await this.executeBrowseCatalog(context, message);
-                }
-                const product = await this.productService.findById(context.currentProductId);
-                if (!product) {
-                    return [
-                        {
-                            text: 'Produto não encontrado.',
-                            type: 'text',
-                        },
-                    ];
-                }
-                return [
-                    {
-                        text: `*${product.name}*\n\n${product.description}\n\n💰 *R$ ${product.price.toFixed(2)}*\n\n${product.stockQuantity > 0 ? '✅ Em estoque' : '❌ Sem estoque'}`,
-                        type: 'button',
-                        buttons: [
-                            { id: 'add_to_cart', text: 'Adicionar ao Carrinho', type: 'reply' },
-                            { id: 'back_catalog', text: 'Voltar ao Catálogo', type: 'reply' },
-                        ],
-                    },
-                ];
-            },
-            transitions: [],
-        };
-    }
-    /**
-     * Step: Adicionar ao carrinho
-     */
-    createCartAddStep() {
-        return {
-            id: 'cart_add',
-            name: 'Adicionar ao Carrinho',
-            trigger: async (context) => context.state === 'CART_ADD',
-            execute: async (context, _message) => {
-                // Lógica para adicionar produto ao carrinho
-                context.state = 'CART_VIEW';
-                await this.saveContext(context);
-                return [
-                    {
-                        text: '✅ Produto adicionado ao carrinho!\n\nDeseja ver seu carrinho ou continuar comprando?',
-                        type: 'button',
-                        buttons: [
-                            { id: 'view_cart', text: 'Ver Carrinho', type: 'reply' },
-                            { id: 'continue_shopping', text: 'Continuar Comprando', type: 'reply' },
-                        ],
-                    },
-                ];
-            },
-            transitions: [],
-        };
-    }
-    /**
-     * Step: Ver carrinho
-     */
-    createCartViewStep() {
-        return {
-            id: 'cart_view',
-            name: 'Ver Carrinho',
-            trigger: async (context) => context.state === 'CART_VIEW',
-            execute: async (context, message) => {
-                return await this.executeCartView(context, message);
-            },
-            transitions: [],
-        };
-    }
-    /**
-     * Executa lógica de visualização do carrinho
-     */
-    async executeCartView(_context, _message) {
-        // Implementação simplificada - na prática buscaria do banco
+    async handleBrowseCatalog(context, _message) {
+        await this.saveContext({ ...context, state: 'BROWSE_CATALOG' });
         return [
             {
-                text: '🛒 *Seu Carrinho*\n\nVocê ainda não tem itens no carrinho.\n\nQue tal começar comprando algum produto?',
+                type: 'text',
+                text: '🛍️ *Catálogo de Produtos*\n\nNavegue pelos nossos produtos disponíveis.',
+            },
+        ];
+    }
+    async handleViewProduct(context, _message) {
+        await this.saveContext({ ...context, state: 'VIEW_PRODUCT' });
+        return [
+            {
+                type: 'text',
+                text: '📦 *Detalhes do Produto*\n\nVeja mais informações sobre este produto.',
+            },
+        ];
+    }
+    async handleAddToCart(context, _message) {
+        await this.saveContext({ ...context, state: 'ADD_TO_CART' });
+        return [
+            {
+                type: 'text',
+                text: '🛒 *Produto Adicionado*\n\nItem adicionado ao seu carrinho com sucesso!',
+            },
+        ];
+    }
+    async handleViewCart(context, _message) {
+        await this.saveContext({ ...context, state: 'VIEW_CART' });
+        return [
+            {
+                type: 'text',
+                text: '🛒 *Seu Carrinho*\n\nVeja os itens no seu carrinho.',
+            },
+        ];
+    }
+    async handleCheckout(context, _message) {
+        await this.saveContext({ ...context, state: 'CHECKOUT' });
+        return [
+            {
                 type: 'button',
-                buttons: [{ id: 'browse_catalog', text: 'Ver Catálogo', type: 'reply' }],
+                text: '💳 *Finalizar Compra*\n\nVamos prosseguir para o pagamento?',
+                buttons: [
+                    { id: 'confirm_payment', label: 'Confirmar Pagamento', payload: 'confirm' },
+                    { id: 'cancel', label: 'Cancelar', payload: 'cancel' },
+                ],
             },
         ];
     }
-    /**
-     * Step: Iniciar checkout
-     */
-    createCheckoutStartStep() {
-        return {
-            id: 'checkout_start',
-            name: 'Iniciar Checkout',
-            trigger: async (context) => context.state === 'CHECKOUT_START',
-            execute: async (context, _message) => {
-                context.state = 'CHECKOUT_ADDRESS';
-                await this.saveContext(context);
-                return [
-                    {
-                        text: '📦 *Finalizar Compra*\n\nPor favor, informe seu endereço de entrega:',
-                        type: 'text',
-                    },
-                ];
-            },
-            transitions: [],
-        };
-    }
-    /**
-     * Step: Endereço de entrega
-     */
-    createCheckoutAddressStep() {
-        return {
-            id: 'checkout_address',
-            name: 'Endereço de Entrega',
-            trigger: async (context) => context.state === 'CHECKOUT_ADDRESS',
-            execute: async (context, message) => {
-                // Salvar endereço no metadata
-                context.metadata = { ...context.metadata, address: message };
-                context.state = 'CHECKOUT_PAYMENT';
-                await this.saveContext(context);
-                return [
-                    {
-                        text: '✅ Endereço registrado!\n\nEscolha a forma de pagamento:',
-                        type: 'button',
-                        buttons: [
-                            { id: 'pay_pix', text: 'PIX', type: 'reply' },
-                            { id: 'pay_credit', text: 'Cartão de Crédito', type: 'reply' },
-                            { id: 'pay_debit', text: 'Cartão de Débito', type: 'reply' },
-                        ],
-                    },
-                ];
-            },
-            transitions: [],
-        };
-    }
-    /**
-     * Step: Pagamento
-     */
-    createCheckoutPaymentStep() {
-        return {
-            id: 'checkout_payment',
-            name: 'Pagamento',
-            trigger: async (context) => context.state === 'CHECKOUT_PAYMENT',
-            execute: async (context, _message) => {
-                // Processar pagamento e criar pedido
-                context.state = 'ORDER_TRACKING';
-                await this.saveContext(context);
-                return [
-                    {
-                        text: '✅ Pedido criado com sucesso!\n\nNúmero do pedido: #12345\n\nAcompanhe o status abaixo:',
-                        type: 'text',
-                    },
-                ];
-            },
-            transitions: [],
-        };
-    }
-    /**
-     * Step: Acompanhamento de pedido
-     */
-    createOrderTrackingStep() {
-        return {
-            id: 'order_tracking',
-            name: 'Acompanhamento de Pedido',
-            trigger: async (context) => context.state === 'ORDER_TRACKING',
-            execute: async (context, message) => {
-                return await this.executeOrderTracking(context, message);
-            },
-            transitions: [],
-        };
-    }
-    /**
-     * Executa lógica de acompanhamento de pedido
-     */
-    async executeOrderTracking(_context, _message) {
+    async handleSupport(context, _message) {
+        await this.saveContext({ ...context, state: 'SUPPORT' });
         return [
             {
-                text: '📦 *Acompanhar Pedido*\n\nDigite o número do seu pedido para acompanhar:',
                 type: 'text',
+                text: '🤝 *Suporte*\n\nComo podemos ajudar você?\n\nDigite sua dúvida ou solicitação.',
             },
         ];
     }
-    /**
-     * Step: Suporte
-     */
-    createSupportStep() {
-        return {
-            id: 'support',
-            name: 'Suporte',
-            trigger: async (context) => context.state === 'SUPPORT',
-            execute: async (context, message) => {
-                return await this.executeSupport(context, message);
-            },
-            transitions: [],
-        };
-    }
-    /**
-     * Executa lógica de suporte
-     */
-    async executeSupport(_context, _message) {
+    async handleGoodbye(context, _message) {
+        await this.saveContext({ ...context, state: 'GOODBYE' });
         return [
             {
-                text: '🤝 *Suporte*\n\nComo podemos ajudar você?\n\n• Dúvidas sobre produtos\n• Problemas com pedidos\n• Reclamações\n• Outros\n\nDescreva sua dúvida ou problema:',
                 type: 'text',
+                text: '👋 Obrigado pela visita!\n\nVolte sempre que precisar. Tenha um ótimo dia!',
             },
         ];
-    }
-    /**
-     * Trata comandos gerais quando não há step específico
-     */
-    async handleGeneralCommand(context, message) {
-        const lowerMessage = message.toLowerCase();
-        if (lowerMessage === 'oi' || lowerMessage === 'olá' || lowerMessage === 'ola') {
-            return [
-                {
-                    text: this.config.welcomeMessage,
-                    type: 'text',
-                },
-            ];
-        }
-        if (lowerMessage === 'tchau' || lowerMessage === 'adeus') {
-            return [
-                {
-                    text: 'Obrigado pela visita! Volte sempre! 👋',
-                    type: 'text',
-                },
-            ];
-        }
-        return [
-            {
-                text: 'Desculpe, não entendi. Digite "ajuda" para ver as opções disponíveis.',
-                type: 'text',
-            },
-        ];
-    }
-    /**
-     * Reseta o contexto da conversação
-     */
-    async resetContext(customerId, storeId) {
-        await this.prisma.conversation.updateMany({
-            where: {
-                customerId,
-                storeId,
-                isActive: true,
-            },
-            data: {
-                state: 'IDLE',
-                currentProductId: null,
-                currentCartId: null,
-                currentOrderId: null,
-                metadata: null,
-            },
-        });
-    }
-    /**
-     * Finaliza a conversação
-     */
-    async endConversation(customerId, storeId) {
-        await this.prisma.conversation.updateMany({
-            where: {
-                customerId,
-                storeId,
-                isActive: true,
-            },
-            data: {
-                isActive: false,
-            },
-        });
     }
 }
 exports.BotEngineService = BotEngineService;

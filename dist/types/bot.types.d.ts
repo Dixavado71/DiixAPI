@@ -35,4 +35,14 @@ export interface BotResponse {
     nextState: ConversationState;
     context?: Partial<BotContext>;
 }
+export interface ConversationContext {
+    customerId: string;
+    storeId: string;
+    state: ConversationState;
+    step?: FlowStep;
+    lastProductId?: string;
+    lastCategoryId?: string;
+    metadata?: Record<string, unknown>;
+}
+export type FlowStep = 'INIT' | 'SELECT_CATEGORY' | 'SELECT_PRODUCT' | 'VIEW_DETAILS' | 'ADD_TO_CART' | 'CONFIRM_CART' | 'ENTER_ADDRESS' | 'CONFIRM_PAYMENT' | 'WAITING_PAYMENT' | 'ORDER_COMPLETE';
 //# sourceMappingURL=bot.types.d.ts.map

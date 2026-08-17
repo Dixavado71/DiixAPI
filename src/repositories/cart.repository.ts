@@ -119,10 +119,10 @@ export class CartRepository {
     });
   }
 
-  async updateStatus(cartId: string, status: string) {
+  async updateStatus(cartId: string, status: 'ACTIVE' | 'ABANDONED' | 'CONVERTED') {
     return this.prisma.cart.update({
       where: { id: cartId },
-      data: { status: status as 'ACTIVE' | 'INACTIVE' | 'CHECKED_OUT' | 'ABANDONED' },
+      data: { status },
     });
   }
 }

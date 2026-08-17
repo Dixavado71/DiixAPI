@@ -124,7 +124,7 @@ export declare class CartRepository {
         quantity: number;
     }>;
     clearCart(cartId: string): Promise<import(".prisma/client").Prisma.BatchPayload>;
-    updateStatus(cartId: string, status: string): Promise<{
+    updateStatus(cartId: string, status: 'ACTIVE' | 'ABANDONED' | 'CONVERTED'): Promise<{
         status: import(".prisma/client").$Enums.CartStatus;
         id: string;
         createdAt: Date;

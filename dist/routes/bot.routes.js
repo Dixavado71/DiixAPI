@@ -1,23 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.botRoutes = void 0;
 const express_1 = require("express");
 const bot_engine_service_1 = require("../services/bot/bot-engine.service");
 const client_1 = require("@prisma/client");
-const customer_service_1 = require("../services/customer/customer.service");
-const product_service_1 = require("../services/product/product.service");
-const cart_service_1 = require("../services/cart/cart.service");
-const order_service_1 = require("../services/order/order.service");
 const router = (0, express_1.Router)();
-exports.botRoutes = router;
 // Factory para criar instância do BotEngineService
 const createBotEngineService = () => {
     const prisma = new client_1.PrismaClient();
-    const customerService = new customer_service_1.CustomerService(prisma);
-    const productService = new product_service_1.ProductService(prisma);
-    const cartService = new cart_service_1.CartService(prisma);
-    const orderService = new order_service_1.OrderService(prisma);
-    return new bot_engine_service_1.BotEngineService(prisma, customerService, productService, cartService, orderService);
+    return new bot_engine_service_1.BotEngineService(prisma);
 };
 /**
  * POST /bot/:customerId/:storeId/message
@@ -59,8 +49,22 @@ router.post('/:customerId/:storeId/message', async (req, res) => {
 router.post('/:customerId/:storeId/reset', async (req, res) => {
     try {
         const { customerId, storeId } = req.params;
-        const botService = createBotEngineService();
-        await botService.resetContext(customerId, storeId);
+        if (!customerId || !storeId) {
+            return res.status(400).json({
+                error: 'customerId and storeId are required',
+            });
+        }
+        const prisma = new client_1.PrismaClient();
+        await prisma.conversationState.updateMany({
+            where: {
+                instance: 'whatsapp',
+                phone: customerId,
+            },
+            data: {
+                state: 'IDLE',
+                context: {},
+            },
+        });
         res.json({
             success: true,
             data: {
@@ -83,8 +87,22 @@ router.post('/:customerId/:storeId/reset', async (req, res) => {
 router.post('/:customerId/:storeId/end', async (req, res) => {
     try {
         const { customerId, storeId } = req.params;
-        const botService = createBotEngineService();
-        await botService.endConversation(customerId, storeId);
+        if (!customerId || !storeId) {
+            return res.status(400).json({
+                error: 'customerId and storeId are required',
+            });
+        }
+        const prisma = new client_1.PrismaClient();
+        await prisma.conversationState.updateMany({
+            where: {
+                instance: 'whatsapp',
+                phone: customerId,
+            },
+            data: {
+                state: 'GOODBYE',
+                lastActive: new Date(),
+            },
+        });
         res.json({
             success: true,
             data: {
@@ -107,15 +125,19 @@ router.post('/:customerId/:storeId/end', async (req, res) => {
 router.get('/:customerId/:storeId/context', async (req, res) => {
     try {
         const { customerId, storeId } = req.params;
+        if (!customerId || !storeId) {
+            return res.status(400).json({
+                error: 'customerId and storeId are required',
+            });
+        }
         const prisma = new client_1.PrismaClient();
-        const conversation = await prisma.conversation.findFirst({
+        const conversation = await prisma.conversationState.findFirst({
             where: {
-                customerId,
-                storeId,
-                isActive: true,
+                instance: 'whatsapp',
+                phone: customerId,
             },
             orderBy: {
-                createdAt: 'desc',
+                lastActive: 'desc',
             },
         });
         if (!conversation) {
@@ -123,6 +145,7 @@ router.get('/:customerId/:storeId/context', async (req, res) => {
                 success: true,
                 data: {
                     hasActiveConversation: false,
+                    context: null,
                 },
             });
         }
@@ -130,15 +153,10 @@ router.get('/:customerId/:storeId/context', async (req, res) => {
             success: true,
             data: {
                 hasActiveConversation: true,
-                conversation: {
-                    id: conversation.id,
+                context: {
                     state: conversation.state,
-                    currentProductId: conversation.currentProductId,
-                    currentCartId: conversation.currentCartId,
-                    currentOrderId: conversation.currentOrderId,
-                    lastMessageAt: conversation.lastMessageAt,
-                    metadata: conversation.metadata,
-                    createdAt: conversation.createdAt,
+                    metadata: conversation.context,
+                    lastActive: conversation.lastActive,
                 },
             },
         });

@@ -111,7 +111,7 @@ class CartRepository {
     async updateStatus(cartId, status) {
         return this.prisma.cart.update({
             where: { id: cartId },
-            data: { status: status },
+            data: { status },
         });
     }
 }
